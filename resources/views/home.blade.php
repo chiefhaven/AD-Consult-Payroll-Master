@@ -12,7 +12,7 @@
 
 @section('css')
     {{-- Add here extra stylesheets --}}
-    <link rel="stylesheet" href="/css/haven.css">
+    <link rel="stylesheet" href="/css/app.css">
 @stop
 
 @section('js')

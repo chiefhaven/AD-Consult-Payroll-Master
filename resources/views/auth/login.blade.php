@@ -12,8 +12,6 @@
 
     .login-box{
         background: #09579B;
-        left: 345px !important;
-        position: relative;
     }
 
     .login-logo a, .register-logo a {
@@ -22,6 +20,8 @@
         margin-top: .9rem !important;
     }
 
-
+    .card-primary.card-outline {
+        border-top: none !important;
+    }
 </style>
 @endpush
