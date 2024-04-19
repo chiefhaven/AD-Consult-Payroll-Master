@@ -32,21 +32,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function adminlte_image()
-    {
-        return 'https://picsum.photos/300/300';
-    }
-
-    public function adminlte_desc()
-    {
-        return 'I\'m a nice guy';
-    }
-
-    public function adminlte_profile_url()
-    {
-        return 'profile/username';
-    }
-
     /**
      * Get the attributes that should be cast.
      *
