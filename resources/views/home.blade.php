@@ -27,6 +27,15 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h4>Notifications</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-lg-3">
             <div class="card">
