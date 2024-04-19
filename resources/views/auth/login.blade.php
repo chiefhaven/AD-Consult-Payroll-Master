@@ -1,7 +1,8 @@
 @extends('adminlte::auth.login')
 
 @push('css')
-<style type="text/css">
+
+{{-- <style type="text/css">
 
     .card {
         border-radius: 0px !important;
@@ -23,5 +24,5 @@
     .card-primary.card-outline {
         border-top: none !important;
     }
-</style>
+</style> --}}
 @endpush

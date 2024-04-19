@@ -1,0 +1,36 @@
+.card {
+    border-radius: 0px !important;
+}
+.card-title {
+    font-weight: 600;
+}
+
+.login-box{
+    background: #09579B;
+}
+
+.login-logo a, .register-logo a {
+    color: #ffffff !important;
+    font-size: 2.0rem !important;
+    margin-top: .9rem !important;
+}
+
+.card-primary.card-outline {
+    border-top: none !important;
+}
+
+[class*=sidebar-dark-] {
+    background-color: #09579B !important;
+}
+
+.sidebar .fa {
+    margin: 10px;
+}
+
+[class*=sidebar-dark] .brand-link {
+    border-bottom: 1px solid #ffffff;
+}
+
+.brand-link .brand-image {
+    float:none !important;
+}

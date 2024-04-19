@@ -384,7 +384,7 @@ return [
         [
             'text' => 'Payroll',
             'url' => '#',
-            'icon' => 'fas fa-money-check fa',
+            'icon' => 'fa fa-money-check',
         ],
         [
             'text' => 'Leaves',
@@ -404,7 +404,7 @@ return [
         [
             'text' => 'Notifications',
             'url' => '#',
-            'icon' => 'fas fa-bell',
+            'icon' => 'fa fa-bell',
         ],
         //['header' => 'account_settings'],
         [
@@ -420,7 +420,7 @@ return [
         [
             'text' => 'Settings',
             'url' => '#',
-            'icon' => 'fas fa-fw fa-cog',
+            'icon' => 'fa fa-fw fa-cog',
         ],
     ],
 
