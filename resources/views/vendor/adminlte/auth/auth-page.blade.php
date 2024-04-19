@@ -17,10 +17,12 @@
 
 @section('body')
     <div class="row">
-        <div class="col-lg-10">
-
+        <div class="col-lg-6">
+            &nbsp;
         </div>
         <div class="col-lg-2">
+        </div>
+        <div class="col-lg-4">
             <div class="{{ $auth_type ?? 'login' }}-box">
 
                 {{-- Logo --}}

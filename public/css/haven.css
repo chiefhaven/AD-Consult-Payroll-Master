@@ -34,3 +34,15 @@
 .brand-link .brand-image {
     float:none !important;
 }
+
+.login-side-right{
+    background-image: url('/img/background.jpg');
+    background-repeat: repeat, no-repeat;
+    background-size: auto, cover;
+}
+
+.login-page, .register-page {
+    background-image: url(/img/background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
