@@ -312,6 +312,7 @@ return [
                 [
                     'text' => 'List employees',
                     'url' => '#',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
                 // [
                 //     'text' => 'level_one',
@@ -340,6 +341,7 @@ return [
                 [
                     'text' => 'Add employee',
                     'url' => '#',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
             ],
         ],
@@ -350,6 +352,7 @@ return [
                 [
                     'text' => 'List client',
                     'url' => '#',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
                 // [
                 //     'text' => 'level_one',
@@ -378,6 +381,7 @@ return [
                 [
                     'text' => 'Add client',
                     'url' => '#',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
             ],
         ],
@@ -576,5 +580,5 @@ return [
     |
     */
 
-    'livewire' => false,
+    'livewire' => true,
 ];
