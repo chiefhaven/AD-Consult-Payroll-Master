@@ -6,7 +6,7 @@
 }
 
 .login-box{
-    background: #09579B;
+    background: #0a276a;
 }
 
 .login-logo a, .register-logo a {
@@ -20,7 +20,7 @@
 }
 
 [class*=sidebar-dark-] {
-    background-color: #09579B !important;
+    background-color: #0a276a !important;
 }
 
 .sidebar .fa {
@@ -50,3 +50,19 @@
 .nav-treeview .nav-link  {
     padding-left: 50px;
 }
+
+.spinner {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    border: 3px solid;
+    border-color: #0a276a;
+    border-right-color: #ffffff;
+    animation: spinner-d3wgkg 1.4s infinite linear;
+ }
+
+ @keyframes spinner-d3wgkg {
+    to {
+       transform: rotate(1turn);
+    }
+ }
