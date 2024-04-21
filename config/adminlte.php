@@ -302,16 +302,17 @@ return [
         // Sidebar items:
         [
             'text' => 'Home',
-            'url' => '#',
+            'url' => '/',
             'icon' => 'fa fas fa-tachometer-alt',
         ],
         [
             'text' => 'Employees',
             'icon' => 'fa fa-fw fa-users',
+            'url' => 'employees',
             'submenu' => [
                 [
                     'text' => 'List employees',
-                    'url' => '/employees',
+                    'url' => 'employees',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
                 // [
@@ -351,7 +352,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'List client',
-                    'url' => '#',
+                    'url' => '/',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
                 // [
