@@ -341,7 +341,7 @@ return [
                 // ],
                 [
                     'text' => 'Add employee',
-                    'url' => '#',
+                    'url' => 'add-employee',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
             ],
@@ -352,7 +352,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'List client',
-                    'url' => '/',
+                    'url' => 'clients',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
                 // [
@@ -381,14 +381,14 @@ return [
                 // ],
                 [
                     'text' => 'Add client',
-                    'url' => '#',
+                    'url' => 'add-client',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
             ],
         ],
         [
             'text' => 'Payroll',
-            'url' => '#',
+            'url' => 'payroll',
             'icon' => 'fa fa-money-check',
         ],
         [
@@ -403,8 +403,19 @@ return [
         ],
         [
             'text' => 'Tax Rates',
-            'url' => '#',
             'icon' => 'fa fa-percent',
+            'submenu' => [
+                [
+                    'text' => 'List tax rates',
+                    'url' => 'tax-rates',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+                [
+                    'text' => 'Add tax rate',
+                    'url' => 'add-tax-rate',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+            ],
         ],
         [
             'text' => 'Notifications',
@@ -419,8 +430,19 @@ return [
         ],
         [
             'text' => 'Users',
-            'url' => '#',
             'icon' => 'fa fa-users',
+            'submenu' => [
+                [
+                    'text' => 'List users',
+                    'url' => 'users',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+                [
+                    'text' => 'Add user',
+                    'url' => 'add-user',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+            ],
         ],
         [
             'text' => 'Settings',
