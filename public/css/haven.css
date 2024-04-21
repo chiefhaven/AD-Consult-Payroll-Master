@@ -47,4 +47,6 @@
     background-size: cover;
 }
 
-
+.nav-treeview .nav-link  {
+    padding-left: 50px;
+}

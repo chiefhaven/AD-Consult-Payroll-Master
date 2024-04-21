@@ -302,16 +302,17 @@ return [
         // Sidebar items:
         [
             'text' => 'Home',
-            'url' => '#',
+            'url' => '/',
             'icon' => 'fa fas fa-tachometer-alt',
         ],
         [
             'text' => 'Employees',
             'icon' => 'fa fa-fw fa-users',
+            'url' => 'employees',
             'submenu' => [
                 [
                     'text' => 'List employees',
-                    'url' => '/employees',
+                    'url' => 'employees',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
                 // [
@@ -340,7 +341,7 @@ return [
                 // ],
                 [
                     'text' => 'Add employee',
-                    'url' => '#',
+                    'url' => 'add-employee',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
             ],
@@ -351,7 +352,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'List client',
-                    'url' => '#',
+                    'url' => 'clients',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
                 // [
@@ -380,14 +381,14 @@ return [
                 // ],
                 [
                     'text' => 'Add client',
-                    'url' => '#',
+                    'url' => 'add-client',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
             ],
         ],
         [
             'text' => 'Payroll',
-            'url' => '#',
+            'url' => 'payroll',
             'icon' => 'fa fa-money-check',
         ],
         [
@@ -397,33 +398,55 @@ return [
         ],
         [
             'text' => 'Attendances',
-            'url' => '#',
+            'url' => 'attendances',
             'icon' => 'fa fa-fw fa-clock',
         ],
         [
             'text' => 'Tax Rates',
-            'url' => '#',
             'icon' => 'fa fa-percent',
+            'submenu' => [
+                [
+                    'text' => 'List tax rates',
+                    'url' => 'tax-rates',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+                [
+                    'text' => 'Add tax rate',
+                    'url' => 'add-tax-rate',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+            ],
         ],
         [
             'text' => 'Notifications',
-            'url' => '#',
+            'url' => 'notifications',
             'icon' => 'fa fa-bell',
         ],
         //['header' => 'account_settings'],
         [
             'text' => 'Reports',
-            'url' => '#',
+            'url' => 'reports',
             'icon' => 'fa fas fa-chart-bar',
         ],
         [
             'text' => 'Users',
-            'url' => '#',
             'icon' => 'fa fa-users',
+            'submenu' => [
+                [
+                    'text' => 'List users',
+                    'url' => 'users',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+                [
+                    'text' => 'Add user',
+                    'url' => 'add-user',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+            ],
         ],
         [
             'text' => 'Settings',
-            'url' => '#',
+            'url' => 'settings',
             'icon' => 'fa fa-fw fa-cog',
         ],
     ],
