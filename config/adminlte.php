@@ -311,7 +311,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'List employees',
-                    'url' => '#',
+                    'url' => '/employees',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
                 // [
