@@ -398,7 +398,7 @@ return [
         ],
         [
             'text' => 'Attendances',
-            'url' => '#',
+            'url' => 'attendances',
             'icon' => 'fa fa-fw fa-clock',
         ],
         [
@@ -419,13 +419,13 @@ return [
         ],
         [
             'text' => 'Notifications',
-            'url' => '#',
+            'url' => 'notifications',
             'icon' => 'fa fa-bell',
         ],
         //['header' => 'account_settings'],
         [
             'text' => 'Reports',
-            'url' => '#',
+            'url' => 'reports',
             'icon' => 'fa fas fa-chart-bar',
         ],
         [
@@ -446,7 +446,7 @@ return [
         ],
         [
             'text' => 'Settings',
-            'url' => '#',
+            'url' => 'settings',
             'icon' => 'fa fa-fw fa-cog',
         ],
     ],
