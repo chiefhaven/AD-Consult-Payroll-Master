@@ -348,7 +348,7 @@ return [
         ],
         [
             'text' => 'Clients',
-            'icon' => 'fa fa-address-book',
+            'icon' => 'fa fa-fw fa-address-book',
             'submenu' => [
                 [
                     'text' => 'List client',
