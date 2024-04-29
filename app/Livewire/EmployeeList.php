@@ -20,36 +20,29 @@ use RamonRietdijk\LivewireTables\Livewire\LivewireTable;
 
 class EmployeeList extends LivewireTable
 {
-    protected string $model = User::class;
+    protected string $model = Employee::class;
 
     protected function columns(): array
     {
         return [
-            ImageColumn::make(__('Thumbnail'), 'thumbnail'),
-
-            Column::make(__('Title'), 'title')
-                ->sortable()
-                ->searchable(),
-
-            SelectColumn::make(__('Category'), 'category.title')
-                ->options(
-                    // Category::query()->get()->pluck('title', 'title')->toArray()
-                )
-                ->sortable()
-                ->searchable(),
-
-            Column::make(__('Author'), 'author.name')
-                ->sortable()
-                ->searchable(),
-
-            Column::make(__('Company'), 'author.company.name')
-                ->sortable()
-                ->searchable(),
-
-            BooleanColumn::make(__('Published'), 'published')
+            Column::make(__('Firstname'), 'fname')
                 ->sortable(),
 
-            DateColumn::make(__('Created At'), 'created_at')
+            SelectColumn::make(__('Sirname'), 'sname')
+                ->sortable(),
+
+            Column::make(__('Company'), 'client_id')
+                ->sortable(),
+
+                Column::make(__('Phone'), 'phone')
+                    ->sortable(),
+
+            // BooleanColumn::make(__('Email address'), 'published')
+            //     ->sortable(),
+            Column::make(__('Email address'), 'user.email')
+                ->sortable(),
+
+            DateColumn::make(__('Hired on'), 'hiredate')
                 ->sortable()
                 ->format('F jS, Y'),
 
