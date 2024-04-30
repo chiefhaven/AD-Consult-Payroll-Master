@@ -41,6 +41,7 @@ class EmployeeFactory extends Factory
             'birthdate' => $this->faker->dateTime(),
             'salary' => $this->faker->randomNumber(6),
             'bonus' => $this->faker->randomNumber(6),
+            'status' => $this->faker->text(),
             'contact_id' => $this->faker->randomNumber(2),
             'client_id' => $this->faker->randomNumber(2),
             'com' => $this->faker->sentence(10),

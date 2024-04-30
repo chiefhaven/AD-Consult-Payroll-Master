@@ -34,6 +34,7 @@ return new class extends Migration
             $table->date('birthdate')->nullable();
             $table->decimal('salary')->nullable();
             $table->decimal('bonus')->nullable();
+            $table->char('status');
             $table->char('contact_id');
             $table->char('client_id');
             $table->char('com')->nullable();
