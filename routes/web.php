@@ -22,7 +22,7 @@ Auth::routes();
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware();
 
-Route::get('/employees', EmployeeList::class)->middleware();
+Route::get('/employees', [App\Http\Controllers\EmployeeController::class, 'index'])->middleware();
 Route::get('/add-employee', AddEmployee::class)->middleware();
 
 Route::get('/clients', ClientList::class)->middleware();
