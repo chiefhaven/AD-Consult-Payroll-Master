@@ -27,7 +27,15 @@
 {{-- Rename section content to content_body --}}
 
 @section('content')
-    <livewire:employeeList />
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card mb-3 p-4">
+            <div class="box-body">
+                </dive><livewire:employeeList />
+            </div>
+        </div>
+    </div>
+</div>
 @stop
 
 {{-- Create a common footer --}}
