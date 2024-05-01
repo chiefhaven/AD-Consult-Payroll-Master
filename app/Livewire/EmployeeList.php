@@ -33,6 +33,7 @@ class EmployeeList extends DataTableComponent
 
     public function configure(): void
     {
+        $this->setLoadingPlaceholderEnabled();
         $this->setPrimaryKey('id')
             ->setDebugDisabled()
             ->setAdditionalSelects(['id as id'])
@@ -90,7 +91,7 @@ class EmployeeList extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->html(),
-            Column::make('Maiden name', 'mname')
+            Column::make('Maidenname', 'mname')
                 ->sortable()
                 ->searchable()
                 ->html(),

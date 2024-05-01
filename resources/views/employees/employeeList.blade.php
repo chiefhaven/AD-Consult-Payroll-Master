@@ -28,6 +28,11 @@
 
 @section('content')
 <div class="row">
+    <div class="container">
+        <div class="card box-body col-lg-12">
+            <h2>Employees</h2>
+        </div>
+    </div>
     <div class="col-lg-12">
         <div class="card mb-3 p-4">
             <div class="box-body">
