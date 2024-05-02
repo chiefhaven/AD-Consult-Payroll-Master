@@ -26,6 +26,11 @@ class EmployeeList extends DataTableComponent
     public string $tableName = 'employee';
     public $employee = Employee::class;
 
+    public function customView(): string
+    {
+        return 'includes.custom';
+    }
+
     public $columnSearch = [
         'fname' => null,
         'sname' => null,
@@ -83,11 +88,7 @@ class EmployeeList extends DataTableComponent
             //             'class' => 'w-8 h-8 rounded-full',
             //         ];
             //     }),
-            Column::make('Order', 'phone')
-                ->sortable()
-                ->collapseOnMobile()
-                ->excludeFromColumnSelect(),
-            Column::make('Name', 'fname')
+            Column::make('Firstname', 'fname')
                 ->sortable()
                 ->searchable()
                 ->html(),
@@ -103,14 +104,6 @@ class EmployeeList extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Address', 'current_address')
-                ->sortable()
-                ->searchable()
-                ->collapseOnTablet(),
-            Column::make('Address Group', 'permanent_address')
-                ->sortable()
-                ->searchable()
-                ->collapseOnTablet(),
-            Column::make('Group City', 'current_address')
                 ->sortable()
                 ->searchable()
                 ->collapseOnTablet(),
