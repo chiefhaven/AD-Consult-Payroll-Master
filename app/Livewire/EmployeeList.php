@@ -16,6 +16,7 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\DateFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
 use App\Exports\UsersExport;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -45,8 +46,6 @@ class EmployeeList extends DataTableComponent
             ->setConfigurableAreas([
                 'toolbar-left-start' => ['includes.areas.toolbar-left-start', ['param1' => $this->myParam]]
             ])
-            ->setReorderEnabled()
-            ->setHideReorderColumnUnlessReorderingEnabled()
             ->setSecondaryHeaderTrAttributes(function($rows) {
                 return ['class' => 'bg-gray-100'];
             })
@@ -54,7 +53,6 @@ class EmployeeList extends DataTableComponent
                 if ($column->isField('id')) {
                     return ['class' => 'text-red-500'];
                 }
-
                 return ['default' => true];
             })
             ->setFooterTrAttributes(function($rows) {
@@ -69,7 +67,7 @@ class EmployeeList extends DataTableComponent
             })
             ->setHideBulkActionsWhenEmptyEnabled()
             ->setTableRowUrl(function($row) {
-                return 'https://google-'.$row->id.'.com';
+                return '/employee-details/'.$row->id;
             })
             ->setTableRowUrlTarget(function($row) {
                 return '_blank';
@@ -100,19 +98,18 @@ class EmployeeList extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->html(),
+            Column::make('Company', 'client_id')
+                ->sortable()
+                ->searchable(),
             Column::make('Phone', 'phone')
                 ->sortable()
                 ->searchable(),
-            Column::make('Address', 'current_address')
+            Column::make('Email Address', 'current_address')
                 ->sortable()
                 ->searchable()
                 ->collapseOnTablet(),
-            BooleanColumn::make('Status', 'status')
-                ->sortable()
-                ->collapseOnMobile(),
-            Column::make('Verified', 'mname')
-                ->sortable()
-                ->collapseOnTablet(),
+            Column::make('Status', 'status')
+                ->sortable(),
             // Column::make('Tags')
             //     ->label(fn($row) => $row->tags->pluck('name')->implode(', ')),
             // // Column::make('Actions')
@@ -160,10 +157,10 @@ class EmployeeList extends DataTableComponent
     public function filters(): array
     {
         return [
-            TextFilter::make('Firstname')
-                ->filter(function(Builder $builder, string $value) {
-                    $builder->where('employee.fname', 'like', '%'.$value.'%');
-                }),
+            // TextFilter::make('Firstname')
+            //     ->filter(function(Builder $builder, string $value) {
+            //         $builder->where('employee.fname', 'like', '%'.$value.'%');
+            //     }),
             // MultiSelectFilter::make('Tags')
             //     ->options(
             //         Tag::query()
@@ -178,49 +175,35 @@ class EmployeeList extends DataTableComponent
                 // ->setFilterPillValues([
                 //     '3' => 'Tag 1',
                 // ]),
-            SelectFilter::make('E-mail Verified', 'email_verified_at')
-                ->setFilterPillTitle('Verified')
+            SelectFilter::make('Status', 'status')
+                ->setFilterPillTitle('Active')
                 ->options([
                     ''    => 'Any',
-                    'yes' => 'Yes',
-                    'no'  => 'No',
+                    'active' => 'Active',
+                    'probation'  => 'Probation',
+                    'onLeave'  => 'On Leave',
+                    'suspended'  => 'Suspended',
                 ])
                 ->filter(function(Builder $builder, string $value) {
-                    if ($value === 'yes') {
-                        $builder->whereNotNull('email_verified_at');
-                    } elseif ($value === 'no') {
-                        $builder->whereNull('email_verified_at');
+                    if ($value === 'active') {
+                        $builder->whereNotNull('status');
+                    } elseif ($value === 'suspended') {
+                        $builder->whereNull('status');
                     }
                 }),
-            SelectFilter::make('Active')
-                ->setFilterPillTitle('Employee Status')
-                ->setFilterPillValues([
-                    '1' => 'Active',
-                    '0' => 'Inactive',
-                ])
-                ->options([
-                    '' => 'All',
-                    '1' => 'Yes',
-                    '0' => 'No',
-                ])
-                ->filter(function(Builder $builder, string $value) {
-                    if ($value === '1') {
-                        $builder->where('active', true);
-                    } elseif ($value === '0') {
-                        $builder->where('active', false);
-                    }
-                }),
-            DateFilter::make('Verified From')
+            DateFilter::make('Hired From')
                 ->config([
-                    'min' => '2020-01-01',
-                    'max' => '2021-12-31',
+                    'max' => Carbon::now()->toDateString(),
                 ])
                 ->filter(function(Builder $builder, string $value) {
-                    $builder->where('email_verified_at', '>=', $value);
+                    $builder->where('hiredate', '>=', $value);
                 }),
-            DateFilter::make('Verified To')
+            DateFilter::make('Hired To')
+                ->config([
+                    'max' => Carbon::now()->toDateString(),
+                ])
                 ->filter(function(Builder $builder, string $value) {
-                    $builder->where('email_verified_at', '<=', $value);
+                    $builder->where('hiredate', '<=', $value);
                 }),
         ];
     }
@@ -264,10 +247,10 @@ class EmployeeList extends DataTableComponent
         $this->clearSelected();
     }
 
-    public function reorder($items): void
-    {
-        foreach ($items as $item) {
-            Employee::find((int)$item['value'])->update(['sort' => (int)$item['order']]);
-        }
-    }
+    // public function reorder($items): void
+    // {
+    //     foreach ($items as $item) {
+    //         Employee::find((int)$item['value'])->update(['sort' => (int)$item['order']]);
+    //     }
+    // }
 }

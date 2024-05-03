@@ -14,9 +14,9 @@ return [
     |
     */
 
-    'title' => 'AD Consult Payroll HR',
+    'title' => 'AD Consult',
     'title_prefix' => '',
-    'title_postfix' => '',
+    'title_postfix' => 'EOR',
 
     /*
     |--------------------------------------------------------------------------

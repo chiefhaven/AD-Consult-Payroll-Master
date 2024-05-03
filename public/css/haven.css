@@ -66,3 +66,7 @@
        transform: rotate(1turn);
     }
  }
+
+ .laravel-livewire-tables-reorderingMinimised .form-check-input{
+    top:-23px;
+ }

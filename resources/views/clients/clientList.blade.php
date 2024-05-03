@@ -12,7 +12,7 @@
 @section('content_header')
     @hasSection('content_header_title')
         <h1 class="text-muted">
-            @yield('content_header_title', 'adminlte')
+            @yield('content_header_title')
 
             @hasSection('content_header_subtitle')
                 <small class="text-dark">
@@ -45,21 +45,6 @@
     </div>
 </div>
 @stop
-
-{{-- Create a common footer --}}
-
-@section('footer')
-    <div class="float-right">
-        Version: {{ config('app.version', '1.0.0') }}
-    </div>
-
-    <strong>
-        <a href="{{ config('app.company_url', '#') }}">
-            {{ config('app.company_name', 'AD CONSULT') }}
-        </a>
-    </strong>
-@stop
-
 {{-- Add common Javascript/Jquery code --}}
 
 @push('js')
