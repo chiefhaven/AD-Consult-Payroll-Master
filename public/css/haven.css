@@ -67,6 +67,53 @@
     }
  }
 
+ .lds-hourglass:after {
+    border-radius: 100%;
+    width: 50px !important;
+    height: 50px !important;
+    border: 2px solid !important;
+    border-color: #0a276a !important;
+    border-right-color: #c4c4c4 !important;
+    animation: 3s infinite lds-hourglass !important;
+}
+
  .laravel-livewire-tables-reorderingMinimised .form-check-input{
     top:-23px;
  }
+
+ .btn{
+    border-radius: 0px !important;
+
+ }
+
+ .dropdown-menu{
+    border-radius: 0px !important;
+ }
+
+ .page-item:last-child .page-link {
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+}
+.page-item:first-child .page-link {
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+}
+
+.nav-pills .nav-link {
+    border-radius: 0px !important;
+}
+
+.form-control{
+    border-radius: 0px !important;
+}
+
+.bg-info {
+    background-color: #007bff !important;
+}
+.badge {
+    border-radius: 0px !important;
+}
+
+.rounded-pill {
+    border-radius: 0px !important;
+}

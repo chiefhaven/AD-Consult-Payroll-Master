@@ -18,7 +18,6 @@ return new class extends Migration
             $table->integer('currency_id')->unsigned();
             $table->date('start_date')->nullable();
             $table->char('client_logo');
-            $table->char('email_address');
             $table->char('phone')->nullable();
             $table->char('phone2')->nullable();
             $table->char('address')->nullable();
@@ -27,12 +26,13 @@ return new class extends Migration
             $table->char('city')->nullable();
             $table->char('country')->nullable();
             $table->char('industry')->nullable();
-            $table->string('tax_number_1', 100);
-            $table->string('tax_label_1', 10);
-            $table->string('tax_number_2', 100)->nullable();
-            $table->string('tax_label_2', 10)->nullable();
+            $table->char('tax_number_1', 100);
+            $table->string('tax_label_1', 100);
+            $table->char('tax_number_2', 100)->nullable();
+            $table->string('tax_label_2', 100)->nullable();
             $table->string('time_zone')->default('Africa/Blantyre');
             $table->char('contact_id');
+            $table->char('status')->nullable();
             $table->timestamps();
         });
     }

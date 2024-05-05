@@ -17,15 +17,16 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\DateFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
 use App\Exports\UsersExport;
 use Carbon\Carbon;
+use JeroenNoten\LaravelAdminLte\View\Components\Form\Button;
 use Maatwebsite\Excel\Facades\Excel;
 
 
 class EmployeeList extends DataTableComponent
 {
-
     public $myParam = 'Default';
     public string $tableName = 'employee';
     public $employee = Employee::class;
+    public $email = '';
 
     public function customView(): string
     {
@@ -40,14 +41,17 @@ class EmployeeList extends DataTableComponent
     public function configure(): void
     {
         $this->setLoadingPlaceholderEnabled();
+        $this->setLoadingPlaceHolderIconAttributes([
+            'class' => 'lds-spinner',
+            'default' => false,
+        ]);
         $this->setPrimaryKey('id')
-            ->setDebugDisabled()
-            ->setAdditionalSelects(['id as id'])
+            ->setAdditionalSelects(['employees.id as id'])
             ->setConfigurableAreas([
-                'toolbar-left-start' => ['includes.areas.toolbar-left-start', ['param1' => $this->myParam]]
-            ])
+              'toolbar-left-middle' => ['includes.areas.toolbar-left-start', ['param1' => $this->myParam]]
+             ])
             ->setSecondaryHeaderTrAttributes(function($rows) {
-                return ['class' => 'bg-gray-100'];
+                return ['class' => 'bg-primary'];
             })
             ->setSecondaryHeaderTdAttributes(function(Column $column, $rows) {
                 if ($column->isField('id')) {
@@ -55,24 +59,15 @@ class EmployeeList extends DataTableComponent
                 }
                 return ['default' => true];
             })
-            ->setFooterTrAttributes(function($rows) {
-                return ['class' => 'bg-gray-100'];
-            })
-            ->setFooterTdAttributes(function(Column $column, $rows) {
-                if ($column->isField('fname')) {
-                    return ['class' => 'text-green-500'];
-                }
-
-                return ['default' => true];
-            })
             ->setHideBulkActionsWhenEmptyEnabled()
-            ->setTableRowUrl(function($row) {
-                return '/employee-details/'.$row->id;
-            })
-            ->setTableRowUrlTarget(function($row) {
-                return '_blank';
-            });
-    }
+            // ->setTableRowUrl(function($row) {
+            //     return '/employee-details/'.$row->id;
+            // })
+            // ->setTableRowUrlTarget(function($row) {
+            //     return '_blank';
+            // });
+            ;
+        }
 
     public function columns(): array
     {
@@ -104,7 +99,7 @@ class EmployeeList extends DataTableComponent
             Column::make('Phone', 'phone')
                 ->sortable()
                 ->searchable(),
-            Column::make('Email Address', 'current_address')
+            Column::make('Email Address', 'user.email')
                 ->sortable()
                 ->searchable()
                 ->collapseOnTablet(),
@@ -117,64 +112,20 @@ class EmployeeList extends DataTableComponent
             //         fn($row, Column $column) => view('tables.cells.actions')->withUser($row)
             //     )
             //     ->unclickable(),
-            ButtonGroupColumn::make('Actions')
-                ->unclickable()
-                ->attributes(function($row) {
-                    return [
-                        'class' => 'space-x-2',
-                    ];
-                })
-                ->buttons([
-                    LinkColumn::make('My Link 1')
-                        ->title(fn($row) => 'Link 1')
-                        ->location(fn($row) => 'https://'.$row->id.'google1.com')
-                        ->attributes(function($row) {
-                            return [
-                                'target' => '_blank',
-                                'class' => 'underline text-blue-500',
-                            ];
-                        }),
-                    LinkColumn::make('My Link 2')
-                        ->title(fn($row) => 'Link 2')
-                        ->location(fn($row) => 'https://'.$row->id.'google2.com')
-                        ->attributes(function($row) {
-                            return [
-                                'class' => 'underline text-blue-500',
-                            ];
-                        }),
-                    LinkColumn::make('My Link 3')
-                        ->title(fn($row) => 'Link 3')
-                        ->location(fn($row) => 'https://'.$row->id.'google3.com')
-                        ->attributes(function($row) {
-                            return [
-                                'class' => 'underline text-blue-500',
-                            ];
-                        })
-                ]),
+            Column::make('Action')
+                ->label(
+                    fn ($row, Column $column) => view('tables.action-column')->with(
+                        [
+                            'employee' => $row,
+                        ]
+                    )
+                )->html(),
         ];
     }
 
     public function filters(): array
     {
         return [
-            // TextFilter::make('Firstname')
-            //     ->filter(function(Builder $builder, string $value) {
-            //         $builder->where('employee.fname', 'like', '%'.$value.'%');
-            //     }),
-            // MultiSelectFilter::make('Tags')
-            //     ->options(
-            //         Tag::query()
-            //             ->orderBy('name')
-            //             ->get()
-            //             ->keyBy('id')
-            //             ->map(fn($tag) => $tag->name)
-            //             ->toArray()
-            //     )->filter(function(Builder $builder, array $values) {
-            //         $builder->whereHas('tags', fn($query) => $query->whereIn('tags.id', $values));
-            //      }),
-                // ->setFilterPillValues([
-                //     '3' => 'Tag 1',
-                // ]),
             SelectFilter::make('Status', 'status')
                 ->setFilterPillTitle('Active')
                 ->options([
@@ -235,14 +186,14 @@ class EmployeeList extends DataTableComponent
 
     public function activate()
     {
-        Employee::whereIn('id', $this->getSelected())->update(['active' => true]);
+        Employee::whereIn('id', $this->getSelected())->update(['status' => 'active']);
 
         $this->clearSelected();
     }
 
     public function deactivate()
     {
-        Employee::whereIn('id', $this->getSelected())->update(['active' => false]);
+        Employee::whereIn('id', $this->getSelected())->update(['status' => 'suspended']);
 
         $this->clearSelected();
     }

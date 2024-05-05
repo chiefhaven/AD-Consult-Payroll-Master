@@ -2,17 +2,14 @@
 
 {{-- Extend and customize the browser title --}}
 
-@section('title')
-    {{ config('adminlte.title') }}
-    @hasSection('subtitle') | @yield('subtitle') @endif
-@stop
+@section('title', 'Clients')
 
 {{-- Extend and customize the page content header --}}
 
 @section('content_header')
     @hasSection('content_header_title')
         <h1 class="text-muted">
-            @yield('content_header_title')
+            @yield('content_header_title', 'adminlte')
 
             @hasSection('content_header_subtitle')
                 <small class="text-dark">
@@ -31,20 +28,35 @@
     <div class="col-lg-12">
         <div class="mb-3 p-4">
             <div class="box-body">
-             <h2>Employees</h2>
+             <h2>Clients</h2>
             </div>
         </div>
     </div>
     <div class="col-lg-12">
         <div class="card mb-3 p-4">
             <div class="box-body">
-                <p>All employees</p>
-                </dive><livewire:employeeList />
+                <p>All clients</p>
+                </dive><livewire:clientList />
             </div>
         </div>
     </div>
 </div>
 @stop
+
+{{-- Create a common footer --}}
+
+@section('footer')
+    <div class="float-right">
+        Version: {{ config('app.version', '1.0.0') }}
+    </div>
+
+    <strong>
+        <a href="{{ config('app.company_url', '#') }}">
+            {{ config('app.company_name', 'AD CONSULT') }}
+        </a>
+    </strong>
+@stop
+
 {{-- Add common Javascript/Jquery code --}}
 
 @push('js')

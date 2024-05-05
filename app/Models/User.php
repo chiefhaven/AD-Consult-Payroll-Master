@@ -17,6 +17,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'username',
         'name',
         'email',
         'password',
@@ -31,6 +32,16 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function Employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
+
+    public function Client()
+    {
+        return $this->belongsTo(Client::class);
+    }
 
     public function adminlte_image()
     {
