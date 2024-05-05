@@ -117,3 +117,15 @@
 .rounded-pill {
     border-radius: 0px !important;
 }
+
+.custom-file-label {
+    border-radius: 0px !important;
+}
+
+.select2-container--bootstrap4 .select2-selection {
+    border-radius: 0px !important;
+}
+
+.content-wrapper>.content {
+    padding-bottom: 7rem;
+}
