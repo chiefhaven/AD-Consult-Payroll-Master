@@ -25,18 +25,12 @@
 
 @section('content')
 <div class="row">
-    <div class="col-lg-12">
-        <div class="mb-3 p-4">
-            <div class="box-body">
-             <h2>Employees</h2>
-            </div>
-        </div>
-    </div>
+    <livewire:common.page-header pageTitle="Employees" buttonName="Add Employee"/>
     <div class="col-lg-12">
         <div class="card mb-3 p-4">
             <div class="box-body">
                 <p>All employees</p>
-                </dive><livewire:employeeList />
+                <livewire:employeeList />
             </div>
         </div>
     </div>

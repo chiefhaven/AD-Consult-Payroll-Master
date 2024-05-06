@@ -25,13 +25,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-lg-12">
-        <div class="mb-3 p-4">
-            <div class="box-body">
-             <h2>Add Employee</h2>
-            </div>
-        </div>
-    </div>
+    <livewire:common.page-header pageTitle="Add employee" buttonName="Add Employee"/>
     <livewire:addEmployee />
 </div>
 @stop

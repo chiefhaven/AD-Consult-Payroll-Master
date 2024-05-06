@@ -53,7 +53,7 @@
 
                         <x-adminlte-select2 name="nationality" label="Nationality" data-placeholder="Select an option..."
                          fgroup-class="col-md-3">
-                            <option>Select ID</option>
+                            <option>Select nation</option>
                             <option>Malawian</option>
                             <option>Zambian</option>
                             <option>Other</option>
@@ -123,6 +123,31 @@
                         placeholder="Designated location other specific" fgroup-class="col-md-4"
                         disable-feedback id="designated_location_specific" wire:model="designated_location_specific" required/>
 
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3 p-4">
+            <div class="box-body">
+                <p>Payroll details</p>
+                <div class="row">
+                    <x-adminlte-input name="basic_pay" label="Basic pay:"
+                    placeholder="Basic pay" fgroup-class="col-md-4"
+                    disable-feedback id="basic_pay" wire:model="basic_pay" required/>
+
+                    <x-adminlte-select2 name="pay_period" label="Pay period" data-placeholder="Select an option..."
+                        fgroup-class="col-md-4">
+                            <option>Hourly</option>
+                            <option>Daily</option>
+                            <option>Weekly</option>
+                            <option>Fortnightly</option>
+                            <option>Monthly</option>
+                    </x-adminlte-select2>
+                    <x-adminlte-select2 name="tax" label="Tax" data-placeholder="Select an option..."
+                        fgroup-class="col-md-4">
+                            <option>None</option>
+                            <option>Payee</option>
+                    </x-adminlte-select2>
                 </div>
             </div>
         </div>
