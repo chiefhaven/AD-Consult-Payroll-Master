@@ -105,13 +105,6 @@ class EmployeeList extends DataTableComponent
                 ->collapseOnTablet(),
             Column::make('Status', 'status')
                 ->sortable(),
-            // Column::make('Tags')
-            //     ->label(fn($row) => $row->tags->pluck('name')->implode(', ')),
-            // // Column::make('Actions')
-            //     ->label(
-            //         fn($row, Column $column) => view('tables.cells.actions')->withUser($row)
-            //     )
-            //     ->unclickable(),
             Column::make('Action')
                 ->label(
                     fn ($row, Column $column) => view('tables.action-column')->with(
