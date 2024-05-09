@@ -25,24 +25,12 @@
 
 @section('content')
 <div class="row">
-    <livewire:common.page-header pageTitle="Add employee" buttonName="Add Employee"/>
+    <livewire:common.page-header pageTitle="Add employee"/>
     <livewire:addEmployee />
 </div>
 @stop
 
-{{-- Create a common footer --}}
-
-@section('footer')
-    <div class="float-right">
-        Version: {{ config('app.version', '1.0.0') }}
-    </div>
-
-    <strong>
-        <a href="{{ config('app.company_url', '#') }}">
-            {{ config('app.company_name', 'AD CONSULT') }}
-        </a>
-    </strong>
-@stop
+@include('/components/layouts/footer_bottom')
 
 {{-- Add common Javascript/Jquery code --}}
 

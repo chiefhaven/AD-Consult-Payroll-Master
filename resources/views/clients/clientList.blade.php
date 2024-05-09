@@ -25,18 +25,12 @@
 
 @section('content')
 <div class="row">
-    <div class="col-lg-12">
-        <div class="mb-3 p-4">
-            <div class="box-body">
-             <h2>Clients</h2>
-            </div>
-        </div>
-    </div>
+    <livewire:common.page-header pageTitle="Clients" buttonName="Add Client"/>
     <div class="col-lg-12">
         <div class="card mb-3 p-4">
             <div class="box-body">
-                <p>All clients</p>
-                </dive><livewire:clientList />
+                <p>All Clients</p>
+                <livewire:clientList />
             </div>
         </div>
     </div>
@@ -45,17 +39,7 @@
 
 {{-- Create a common footer --}}
 
-@section('footer')
-    <div class="float-right">
-        Version: {{ config('app.version', '1.0.0') }}
-    </div>
-
-    <strong>
-        <a href="{{ config('app.company_url', '#') }}">
-            {{ config('app.company_name', 'AD CONSULT') }}
-        </a>
-    </strong>
-@stop
+@include('/components/layouts/footer_bottom')
 
 {{-- Add common Javascript/Jquery code --}}
 

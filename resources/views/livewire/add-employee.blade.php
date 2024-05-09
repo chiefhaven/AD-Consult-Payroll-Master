@@ -17,10 +17,10 @@
                         <x-adminlte-input name="surname" label="Surname:" placeholder="Surname" fgroup-class="col-md-3"
                         disable-feedback id="surname" wire:model="surname" required/>
 
-                        <x-adminlte-input name="email" label="Email:*" placeholder="Email address" fgroup-class="col-md-4"
+                        <x-adminlte-input type="email" name="email" label="Email:*" placeholder="Email address" fgroup-class="col-md-4"
                         disable-feedback id="email" wire:model="email" required/>
 
-                        <x-adminlte-input name="phone" label="Phone:*" placeholder="Phone" fgroup-class="col-md-3"
+                        <x-adminlte-input type="tel" name="phone" label="Phone:*" placeholder="Phone" fgroup-class="col-md-3"
                         disable-feedback id="phone" wire:model="phone" required/>
                 </div>
             </div>
@@ -29,7 +29,7 @@
             <div class="box-body">
                 <p>More information</p>
                 <div class="row">
-                        <x-adminlte-input name="prefix" label="Date of birth" placeholder="Date of birth"
+                        <x-adminlte-input type="date" name="prefix" label="Date of birth" placeholder="Date of birth"
                         fgroup-class="col-md-3"
                         disable-feedback id="" wire:model="date_of_birth"/>
 
@@ -107,11 +107,46 @@
                             <option>World Bank</option>
                         </x-adminlte-select2>
 
+                        <x-adminlte-select2 name="project" label="Project" data-placeholder="Select an option..."
+                        fgroup-class="col-md-4">
+                            <option>UN Aids</option>
+                            <option>Cholera</option>
+                        </x-adminlte-select2>
+
                         <x-adminlte-select2 name="designation" label="Designation" data-placeholder="Select an option..."
                         fgroup-class="col-md-4">
                             <option>Accountant</option>
                             <option>Field Officer</option>
                         </x-adminlte-select2>
+
+                        <x-adminlte-select2 name="contract_type" label="Contract type" data-placeholder="Select an option..."
+                        fgroup-class="col-md-4">
+                            <option>Permanent</option>
+                            <option>Part time</option>
+                        </x-adminlte-select2>
+
+                        <x-adminlte-input name="probation_period" label="Probation period:"
+                        placeholder="Probation period" fgroup-class="col-md-4"
+                        disable-feedback id="probation_period" wire:model="probation_period" required/>
+
+                        <div class="col-md-4 input-group form-group input-group-lg">
+                            <x-adminlte-input name="termination_notice_period" label="Notice period:"
+                                placeholder="Termination notice period" disable-feedback id="termination_notice_period"  wire:model="termination_notice_period" required/>
+
+                            <x-adminlte-select name="termination_notice_period_type" label="" wire:model="termination_notice_period" data-placeholder="Select an option...">
+                                <option>Days</option>
+                                <option>Weeks</option>
+                                <option>Months</option>
+                            </x-adminlte-select>
+                        </div>
+
+                        <x-adminlte-input type="date" name="contract_start_date" label="Contract start date:"
+                        placeholder="Contract start date" fgroup-class="col-md-4"
+                        disable-feedback id="start_date_contract" wire:model="contract_start_date" required/>
+
+                        <x-adminlte-input type="date" name="contract_end_date" label="Contract end date:"
+                        placeholder="Contract end date" fgroup-class="col-md-4"
+                        disable-feedback id="contract_end_date" wire:model="contract_end_date" required/>
 
                         <x-adminlte-select2 name="designated_location" label="Designated Location" data-placeholder="Select an option..."
                         fgroup-class="col-md-4">
@@ -119,9 +154,9 @@
                             <option>Salima</option>
                         </x-adminlte-select2>
 
-                        <x-adminlte-input name="designated_location_specific" label="Designated location other specific:"
-                        placeholder="Designated location other specific" fgroup-class="col-md-4"
-                        disable-feedback id="designated_location_specific" wire:model="designated_location_specific" required/>
+                        <x-adminlte-input name="designated_location_specific" label="Designated location other specifics:"
+                        placeholder="Designated location other specifics" fgroup-class="col-md-4"
+                        disable-feedback id="designated_location_specific" wire:model="designated_location_specifics" required/>
 
                 </div>
             </div>

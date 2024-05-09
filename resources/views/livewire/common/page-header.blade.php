@@ -5,6 +5,12 @@
             @if(isset($pageTitle))
                     {{ $pageTitle }}
             @endif
+
+
+            @if(isset($buttonName))
+                <div :class="btn btn-primary">{{ $buttonName }}</div>
+            @endif
+
         </h2>
         </div>
     </div>

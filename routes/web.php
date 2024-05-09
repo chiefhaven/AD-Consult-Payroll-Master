@@ -28,7 +28,7 @@ Route::get('/employees', [EmployeeController::class, 'index'])->middleware(['aut
 Route::get('/add-employee', [EmployeeController::class, 'create'])->middleware(['auth']);
 
 Route::get('/clients', [ClientController::class, 'index'])->middleware(['auth']);
-Route::get('/add-client', AddClient::class)->middleware(['auth']);
+Route::get('/add-client', [ClientController::class, 'create'])->middleware(['auth']);
 
 Route::get('/payroll', Payroll::class)->middleware(['auth']);
 
