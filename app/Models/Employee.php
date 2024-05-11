@@ -14,6 +14,11 @@ class Employee extends Model
      *
      * @var array<int, string>
      */
+
+     protected $casts = [
+        'country' => \WW\Countries\Casts\Country::class,
+    ];
+
     protected $fillable = [
         'employee_no',
         'prefix',

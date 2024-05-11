@@ -26,6 +26,8 @@ return new class extends Migration
             $table->enum('education_level', ['PhD', 'MSC', 'BSC', 'MSCE/GSCE', 'JCE', 'Other'])->default('BSC');
             $table->char('workdept_id');
             $table->char('designation_id');
+            $table->integer('termination_notice_period')->default(0);
+            $table->enum('termination_notice_period_type',['Days', 'Weeks', 'Months']);
             $table->enum('id_type', ['Malawi National ID', 'Passport', 'Driving Licence', 'Other'])->default('Malawi National ID');
             $table->char('id_number');
             $table->char('id_proof_pic');
@@ -34,6 +36,7 @@ return new class extends Migration
             $table->date('birthdate');
             $table->decimal('salary');
             $table->decimal('bonus');
+            $table->enum('pay_period', ['Hourly', 'Daily', 'Weekly', 'Fortnightly', 'Monthly']);
             $table->enum('status', ['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended', 'On Probation'])->default('Pending');
             $table->char('contact_id');
             $table->char('client_id');

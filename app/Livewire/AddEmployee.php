@@ -3,12 +3,29 @@
 namespace App\Livewire;
 
 use App\Models\Employee;
+use App\Http\Controllers\Common\BusinessUtil;
 use Livewire\Component;
 use DB;
 use Livewire\Attributes\Validate;
+use \WW\Countries\Models\Country;
 
 class AddEmployee extends Component
 {
+    public $countries =[];
+    public $genderEnums =[];
+    public $maritalStatusEnums, $idTypes, $educationLevels, $terminationPeriodTypes, $payPeriods =[];
+
+    public function mount()
+    {
+        $this->countries = Country::all();
+        $this->maritalStatusEnums = BusinessUtil::get_enum_values('employees', 'marital_status');
+        $this->genderEnums = BusinessUtil::get_enum_values('employees', 'gender');
+        $this->idTypes = BusinessUtil::get_enum_values('employees', 'id_type');
+        $this->educationLevels = BusinessUtil::get_enum_values('employees', 'education_level');
+        $this->payPeriods = BusinessUtil::get_enum_values('employees', 'pay_period');
+        $this->terminationPeriodTypes = BusinessUtil::get_enum_values('employees', 'termination_notice_period_type');
+    }
+
     #[Validate('required')]
     public float $employee_no = 12.0;
 
@@ -182,5 +199,10 @@ class AddEmployee extends Component
 
 
         }
+    }
+
+    public function render()
+    {
+        return view('livewire.add-employee');
     }
 }

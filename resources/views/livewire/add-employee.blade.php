@@ -6,15 +6,15 @@
                 <p>Employee Details</p>
                 <div class="row">
                         <x-adminlte-input type="text" name="prefix" label="Prefix" placeholder="Mr. Ms. Mrs" fgroup-class="col-md-2"
-                        disable-feedback id="prefix" wire:model="prefix" required/>
+                        disable-feedback id="prefix" wire:model="prefix"/>
 
                         <x-adminlte-input type="text" name="firstname" label="First name:*" placeholder="Firstname" fgroup-class="col-md-4"
                         disable-feedback id="firstname" wire:model="firstname" required/>
 
                         <x-adminlte-input type="text" name="middlename" label="Middle name:" placeholder="Middlename" fgroup-class="col-md-3"
-                        disable-feedback id="middlename" wire:model="middlename" required/>
+                        disable-feedback id="middlename" wire:model="middlename"/>
 
-                        <x-adminlte-input type="text" name="surname" label="Surname:" placeholder="Surname" fgroup-class="col-md-3"
+                        <x-adminlte-input type="text" name="surname" label="Surname:*" placeholder="Surname" fgroup-class="col-md-3"
                         disable-feedback id="surname" wire:model="surname" required/>
 
                         <x-adminlte-input type="email" name="email" label="Email:*" placeholder="Email address" fgroup-class="col-md-4"
@@ -29,40 +29,39 @@
             <div class="box-body">
                 <p>More information</p>
                 <div class="row">
-                        <x-adminlte-input type="date" name="date_of_birth" label="Date of birth" placeholder="Date of birth" fgroup-class="col-md-3" disable-feedback id="date_of_birth" wire:model="date_of_birth"/>
+                        <x-adminlte-input type="date" name="date_of_birth" label="Date of birth" placeholder="Date of birth"
+                        fgroup-class="col-md-3" id="date_of_birth" wire:model="date_of_birth" required/>
 
-                        <x-adminlte-select2 type="text" name="gender" label="Gender" wire:model="gender" data-placeholder="Select an option..."
-                        fgroup-class="col-md-3">
-                            <option>Select gender</option>
-                            <option>Male</option>
-                            <option>Female</option>
+                        <x-adminlte-select2 type="text" name="gender" label="Gender:*" wire:model="gender" data-placeholder="Select an option..."
+                        fgroup-class="col-md-3" required>
+                            @foreach ($genderEnums as $genderEnum)
+                                <option value="{{$genderEnum}}" {{ $genderEnum == 'Male' ? 'selected' : '' }}>{{$genderEnum}}</option>
+                            @endforeach
                         </x-adminlte-select2>
 
-                        <x-adminlte-select2 type="text" name="marital_status" label="Marital status" wire:model="marital_status" data-placeholder="Select an option..."
-                        fgroup-class="col-md-2">
-                            <option>Select status</option>
-                            <option>Maried</option>
-                            <option>Single</option>
+                        <x-adminlte-select2 type="text" name="marital_status" label="Marital status:*" wire:model="marital_status"
+                        data-placeholder="Select an option..." fgroup-class="col-md-2" required>
+                            @foreach ($maritalStatusEnums as $maritalStatusEnum)
+                                <option value="{{$maritalStatusEnum}}" {{ $maritalStatusEnum == 'Single' ? 'selected' : '' }}>{{$maritalStatusEnum}}</option>
+                            @endforeach
                         </x-adminlte-select2>
 
                         <x-adminlte-input type="text" name="employee_alt_number" label="Alternate phone number:"
                         placeholder="Alternate phone number" fgroup-class="col-md-4"
-                        disable-feedback id="employee_alt_number" wire:model="employee_alt_number" required/>
+                        disable-feedback id="employee_alt_number" wire:model="employee_alt_number"/>
 
                         <x-adminlte-select2 type="text" name="nationality" label="Nationality" wire:model="nationality" data-placeholder="Select an option..."
                          fgroup-class="col-md-3">
-                            <option>Select nation</option>
-                            <option>Malawian</option>
-                            <option>Zambian</option>
-                            <option>Other</option>
+                            @foreach ($countries as $country)
+                                <option value="{{$country->name}}" {{ $country->name == 'Malawi' ? 'selected' : '' }}>{{$country->name}}</option>
+                            @endforeach
                         </x-adminlte-select2>
 
                         <x-adminlte-select2 name="id_type" wire:model="id_type" label="ID Type" data-placeholder="Select an option..."
                          fgroup-class="col-md-3">
-                            <option>Select ID</option>
-                            <option>NRB</option>
-                            <option>Passport</option>
-                            <option>Other</option>
+                            @foreach ($idTypes as $idType)
+                                <option value="{{$idType}}">{{$idType}}</option>
+                            @endforeach
                         </x-adminlte-select2>
 
                         <x-adminlte-input name="id_number" label="ID number:" placeholder="ID number"
@@ -111,8 +110,9 @@
 
                         <x-adminlte-select2 name="education_level" label="Education Level" data-placeholder="Select an option..."
                         fgroup-class="col-md-4" wire:model="education_level">
-                            <option>BSc</option>
-                            <option>MSCE</option>
+                            @foreach ($educationLevels as $educationLevel)
+                                <option value="{{$educationLevel}}" {{ $educationLevel == 'BSC' ? 'selected' : '' }}>{{$educationLevel}}</option>
+                            @endforeach
                         </x-adminlte-select2>
 
                         <x-adminlte-select2 name="project" label="Project" data-placeholder="Select an option..."
@@ -137,15 +137,17 @@
                         placeholder="Probation period" fgroup-class="col-md-4"
                         disable-feedback id="probation_period" wire:model="probation_period" wire:model="probation_period" required/>
 
-                        <div class="col-md-4 input-group form-group input-group-lg">
-                            <x-adminlte-input name="termination_notice_period" label="Notice period:"
-                                placeholder="Termination notice period" disable-feedback id="termination_notice_period"  wire:model="termination_notice_period" required/>
+                        <div class="col-md-4">
+                            <div class="row input-group form-group-lg">
+                                <x-adminlte-input name="termination_notice_period" label="Notice period:"
+                                placeholder="Termination notice period" fgroup-class="col-md-8" disable-feedback id="termination_notice_period"  wire:model="termination_notice_period" required/>
 
-                            <x-adminlte-select name="termination_notice_period_type" label="" wire:model="termination_notice_period" wire:model="termination_notice_period" data-placeholder="Select an option...">
-                                <option>Days</option>
-                                <option>Weeks</option>
-                                <option>Months</option>
-                            </x-adminlte-select>
+                            <x-adminlte-select2 name="termination_notice_period_type" label="" wire:model="termination_notice_period_type" fgroup-class="col-md-4" data-placeholder="Select an option...">
+                                @foreach ($terminationPeriodTypes as $terminationPeriodType)
+                                    <option value="{{$terminationPeriodType}}" {{ $terminationPeriodType == 'Days' ? 'selected' : '' }}>{{$terminationPeriodType}}</option>
+                                @endforeach
+                            </x-adminlte-select2>
+                            </div>
                         </div>
 
                         <x-adminlte-input type="date" name="contract_start_date" label="Contract start date:"
@@ -180,11 +182,9 @@
 
                     <x-adminlte-select2 name="pay_period" label="Pay period" data-placeholder="Select an option..."
                         fgroup-class="col-md-4" wire:model="pay_period">
-                            <option>Hourly</option>
-                            <option>Daily</option>
-                            <option>Weekly</option>
-                            <option>Fortnightly</option>
-                            <option>Monthly</option>
+                        @foreach ($payPeriods as $payPeriod)
+                            <option value="{{$payPeriod}}" {{ $payPeriod == 'Single' ? 'Monthly' : '' }}>{{$payPeriod}}</option>
+                        @endforeach
                     </x-adminlte-select2>
                     <x-adminlte-select2 name="tax" label="Tax" wire:model="tax" data-placeholder="Select an option..."
                         fgroup-class="col-md-4">
