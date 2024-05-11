@@ -17,4 +17,9 @@ class Client extends Model
     {
         return $this->hasOne(User::class);
     }
+
+    public function Employee()
+    {
+        return $this->hasMany(Employee::class);
+    }
 }

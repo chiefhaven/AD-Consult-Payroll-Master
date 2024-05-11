@@ -72,28 +72,16 @@ class EmployeeList extends DataTableComponent
     public function columns(): array
     {
         return [
-            // ImageColumn::make('Avatar')
-            //     ->location(function($row) {
-            //         return asset('img/logo-'.$row->id.'.png');
-            //     })
-            //     ->attributes(function($row) {
-            //         return [
-            //             'class' => 'w-8 h-8 rounded-full',
-            //         ];
-            //     }),
             Column::make('Firstname', 'fname')
                 ->sortable()
-                ->searchable()
-                ->html(),
+                ->searchable(),
             Column::make('Maidenname', 'mname')
                 ->sortable()
-                ->searchable()
-                ->html(),
+                ->searchable(),
             Column::make('Sirname', 'sname')
                 ->sortable()
-                ->searchable()
-                ->html(),
-            Column::make('Company', 'client_id')
+                ->searchable(),
+            Column::make('Company/Organization', 'client.client_name')
                 ->sortable()
                 ->searchable(),
             Column::make('Phone', 'phone')
