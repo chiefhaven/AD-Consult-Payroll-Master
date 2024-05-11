@@ -13,6 +13,18 @@ return new class extends Migration
     {
         Schema::create('billings', function (Blueprint $table) {
             $table->id();
+            $table->boolean('is_quotation');
+            $table->boolean('is_invoice');
+            $table->float('quotation_amount');
+            $table->float('invoice_amount');
+            $table->float('discount');
+            $table->float('paid_amount');
+            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
+            $table->float('balance');
+            $table->float('amount_before_tax');
+            $table->float('tax_amount');
+            $table->string('discount_type');
+            $table->string('transaction_terms');
             $table->timestamps();
         });
     }
