@@ -13,20 +13,20 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->decimal('employee_no');
-            $table->char('prefix');
+            $table->char('employee_no');
+            $table->char('prefix')->nullable();
             $table->string('fname');
-            $table->char('mname');
+            $table->char('mname')->nullable();
             $table->string('sname');
             $table->char('phone');
-            $table->char('phone2');
+            $table->char('phone2')->nullable();
             $table->char('current_address');
-            $table->char('permanent_address');
+            $table->char('permanent_address')->nullable();
             $table->date('hiredate');
-            $table->char('education_level');
+            $table->enum('education_level', ['PhD', 'MSC', 'BSC', 'MSCE/GSCE', 'JCE', 'Other'])->default('BSC');
             $table->char('workdept_id');
             $table->char('designation_id');
-            $table->char('id_type');
+            $table->enum('id_type', ['Malawi National ID', 'Passport', 'Driving Licence', 'Other'])->default('Malawi National ID');
             $table->char('id_number');
             $table->char('id_proof_pic');
             $table->enum('marital_status',['Single','Married','Divorced','Widowed','Separated', 'Unknown']);
@@ -34,10 +34,10 @@ return new class extends Migration
             $table->date('birthdate');
             $table->decimal('salary');
             $table->decimal('bonus');
-            $table->char('status');
+            $table->enum('status', ['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended', 'On Probation'])->default('Pending');
             $table->char('contact_id');
             $table->char('client_id');
-            $table->char('com')->nullable();
+            $table->char('tax1')->nullable();
             $table->timestamps();
         });
     }
