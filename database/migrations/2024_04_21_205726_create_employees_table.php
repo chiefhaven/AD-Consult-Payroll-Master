@@ -29,8 +29,8 @@ return new class extends Migration
             $table->char('id_type');
             $table->char('id_number');
             $table->char('id_proof_pic');
-            $table->char('marital_status');
-            $table->char('gender');
+            $table->enum('marital_status',['Single','Married','Divorced','Widowed','Separated', 'Unknown']);
+            $table->enun('gender',['Male','Female','Other']);
             $table->date('birthdate');
             $table->decimal('salary');
             $table->decimal('bonus');
