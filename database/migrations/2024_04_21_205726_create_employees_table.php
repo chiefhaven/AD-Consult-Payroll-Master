@@ -25,7 +25,7 @@ return new class extends Migration
             $table->date('hiredate');
             $table->enum('education_level', ['PhD', 'MSC', 'BSC', 'MSCE/GSCE', 'JCE', 'Other'])->default('BSC');
             $table->char('workdept_id');
-            $table->char('designation_id');
+            $table->char('designation_id'); 
             $table->integer('termination_notice_period')->default(0);
             $table->enum('termination_notice_period_type',['Days', 'Weeks', 'Months']);
             $table->enum('id_type', ['Malawi National ID', 'Passport', 'Driving Licence', 'Other'])->default('Malawi National ID');
