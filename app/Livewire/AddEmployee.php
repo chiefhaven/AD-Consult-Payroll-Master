@@ -28,16 +28,16 @@ class AddEmployee extends Component
     public float $employee_no = 12.0;
 
     #[Validate('required')]
-    public string $prefix;
+    public string $prefix = '';
 
     #[Validate('required')]
-    public $firstname;
+    public $firstname ='';
 
     #[Validate('required')]
     public $middlename = '';
 
     #[Validate('required')]
-    public $surname;
+    public $surname='';
 
     #[Validate('required')]
     public $employee_current_address = '';
@@ -49,7 +49,7 @@ class AddEmployee extends Component
     public $hiredate = '';
 
     #[Validate('required')]
-    public $education_level = '';
+    public $education_level = 'BSC';
 
     #[Validate('required')]
     public $workdept_id = '';
@@ -58,16 +58,15 @@ class AddEmployee extends Component
     public $designation_id = '';
 
     #[Validate('required')]
-    public $id_type;
+    public $id_type = 'Malawi National ID';
 
-    #[Validate('required')]
     public $id_proof = '';
 
     #[Validate('required')]
-    public $marital_status = '';
+    public $marital_status = 'Married';
 
     #[Validate('required')]
-    public $gender = '';
+    public $gender = 'Other';
 
     #[Validate('required')]
     public $salary = '';
@@ -120,6 +119,8 @@ class AddEmployee extends Component
     #[Validate('required')]
     public $termination_notice_period = '';
 
+    public $termination_notice_period_type = '';
+
     #[Validate('required')]
     public $designated_location = '';
 
@@ -149,7 +150,7 @@ class AddEmployee extends Component
 
     public function save()
     {
-        $this->validate();
+        //$this->validate();
 
         try{
             Employee::create([
@@ -160,7 +161,7 @@ class AddEmployee extends Component
                 'sname' => $this->surname,
                 'phone' => $this->phone,
                 'phone2' => $this->employee_alt_number,
-                'nationality' => $this->nationality,
+                'nationality_id' => $this->nationality,
                 'client_id' => $this->company,
                 'contract_type_id' => $this->contract_type,
                 'designation_id' => $this->designation,
@@ -172,13 +173,12 @@ class AddEmployee extends Component
                 'id_type' => $this->id_type,
                 'id_number' => $this->id_number,
                 'id_proof_pic' => $this->id_proof,
-                'marital_status' => 'Married',
+                'marital_status' => $this->marital_status,
                 'gender' => $this->gender,
                 'birthdate' => $this->date_of_birth,
                 'salary' => 500000.00,
                 'bonus' => 00,
                 'status' => 'Active',
-                'contact_id' => 1,
                 'client_id' => 1,
                 'pay_period' => $this->pay_period,
                 'tax1' => $this->tax,
@@ -192,8 +192,10 @@ class AddEmployee extends Component
         }
         catch (\Illuminate\Database\QueryException $exception){
 
+
             DB::rollback();
             $errorInfo = $exception->errorInfo;
+            dd($errorInfo);
 
 
         }
