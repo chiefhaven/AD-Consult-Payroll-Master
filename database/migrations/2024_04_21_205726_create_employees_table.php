@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('lname');
             $table->char('phone');
             $table->char('phone2')->nullable();
+            $table->char('nationality_id')->nullable();
             $table->char('current_address');
             $table->char('country_of_residence');
             $table->char('permanent_address')->nullable();
@@ -32,12 +33,12 @@ return new class extends Migration
             $table->enum('termination_notice_period_type',['Days', 'Weeks', 'Months']);
             $table->enum('id_type', ['Malawi National ID', 'Passport', 'Driving Licence', 'Other'])->default('Malawi National ID');
             $table->char('id_number');
-            $table->char('id_proof_pic');
+            $table->char('id_proof_pic')->nullable();
             $table->enum('marital_status',['Married', 'Single', 'Widow', 'Divorced', 'Other']);
             $table->enum('gender',['Male', 'Female', 'Other', 'Them']);
-            $table->date('birthdate');
-            $table->decimal('salary');
-            $table->decimal('bonus');
+            $table->date('birthdate')->nullable();
+            $table->decimal('salary')->nullable();
+            $table->decimal('bonus')->nullable();
             $table->enum('pay_period', ['Hourly', 'Daily', 'Weekly', 'Fortnightly', 'Monthly']);
             $table->enum('status', ['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended', 'On Probation'])->default('Pending');
             $table->char('client_id');

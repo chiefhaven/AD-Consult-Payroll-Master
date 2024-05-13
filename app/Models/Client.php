@@ -11,6 +11,22 @@ class Client extends Model
 
     protected $fillable = [
         'client_name',
+        'contract_start_date',
+        'client_logo',
+        'phone',
+        'phone2',
+        'address',
+        'zip_postal_code',
+        'state',
+        'city',
+        'country_id',
+        'industry_id',
+        'tax_number_1',
+        'tax_lable_1',
+        'tax_number_2',
+        'tax_label_2',
+        'time_zone',
+        'status',
     ];
 
     public function User()

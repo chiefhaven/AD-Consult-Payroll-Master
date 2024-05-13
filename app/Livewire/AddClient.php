@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Http\Controllers\Common\BusinessUtil;
 use Livewire\Component;
+use App\Models\Client;
 use DB;
 use Livewire\Attributes\Validate;
 use \WW\Countries\Models\Country;
@@ -11,7 +12,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class AddClient extends Component
 {
-    public $world, $currencies, $countries, $genderEnums, $maritalStatusEnums, $idTypes, $educationLevels, $terminationPeriodTypes, $payPeriods =[];
+    public $countries =[];
 
     public function mount()
     {
@@ -24,66 +25,67 @@ class AddClient extends Component
     #[Validate('required')]
     public string $name;
 
+    #[Validate('required')]
     public $currency;
 
-    #[Validate('required')]
     public $client_logo;
 
     #[Validate('required')]
-    public $industry = '';
+    public $industry;
 
     #[Validate('required')]
-    public $street_address = '';
+    public $street_address;
 
     #[Validate('required')]
-    public $street_address_2 = '';
+    public $street_address_2;
 
     #[Validate('required')]
-    public $postal_code = '';
+    public $postal_code;
 
     #[Validate('required')]
-    public $city = '';
+    public $city;
 
     #[Validate('required')]
-    public $state = '';
+    public $state;
 
     #[Validate('required')]
-    public $password = '';
+    public $password;
 
     #[Validate('required')]
-    public $website = '';
+    public $website;
 
     #[Validate('required')]
-    public $username = '';
+    public $username;
 
     #[Validate('required')]
-    public $confirm_password = '';
-
-    public $country = '';
+    public $confirm_password;
 
     #[Validate('required')]
-    public $email = '';
+    public $country;
 
     #[Validate('required')]
-    public $phone = '';
+    public $email;
 
     #[Validate('required')]
-    public $phone2 = '';
+    public $phone;
 
     #[Validate('required')]
-    public $contractstartdate = '';
+    public $phone2;
 
     #[Validate('required')]
-    public $contractenddate = '';
+    public $contractstartdate;
 
     #[Validate('required')]
-    public $tax_number = '';
+    public $contractenddate;
 
     #[Validate('required')]
-    public $tax_label = '';
+    public $tax_number;
 
     #[Validate('required')]
-    public $tax_number_2 = '';
+    public $tax_label;
+
+    #[Validate('required')]
+    public $tax_number_2;
 
     #[Validate('required')]
     public $tax_label_2 = '';
@@ -94,29 +96,25 @@ class AddClient extends Component
 
         try{
             Client::create([
-                'client_no' => $this->client_no,
                 'client_name' => $this->name,
-                'currency_id' => $this->firstname,
-                'start_date' => $this->middlename,
-                'client_logo' => $this->surname,
+                'contract_start_date' => $this->contractstartdate,
+                'client_logo' => $this->client_logo,
                 'phone' => $this->phone,
-                'phone2' => $this->employee_alt_number,
-                'address' => $this->nationality,
-                'zip_postal_code' => $this->company,
-                'state' => $this->contract_type,
-                'city' => $this->designation,
-                'country_id' => $this->project,
-                'industry_id' => $this->hiredate,
-                'tax_number_1' => $this->education_level,
-                'tax_lable_1' => '',
-                'tax_number_2' => $this->designation,
-                'tax_label_2' => $this->id_type,
-                'time_zone' => $this->id_number,
+                'phone2' => $this->phone2,
+                'address' => $this->street_address,
+                'zip_postal_code' => $this->postal_code,
+                'state' => $this->state,
+                'city' => $this->city,
+                'country_id' => $this->country,
+                'industry_id' => $this->industry,
+                'tax_number_1' => 65676,
+                'tax_label_1' => 'TPIN',
+                'tax_number_2' => $this->tax_number_2,
+                'tax_label_2' => $this->tax_number_2,
+                'time_zone' => '12/02/2024',
                 'status' => 'Active',
                 ]
             );
-
-            Alert::toast('Client successifully added', 'success');
             return $this->redirect('/clients');
         }
         catch (\Illuminate\Database\QueryException $exception){
