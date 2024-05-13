@@ -35,7 +35,6 @@ class ClientFactory extends Factory
             'tax_number_2' => $this->faker->randomNumber(5),
             'tax_label_2' => $this->faker->word(5),
             'time_zone' => $this->faker->timezone(),
-            'contact_id' => $this->faker->dateTime(),
         ];
     }
 }

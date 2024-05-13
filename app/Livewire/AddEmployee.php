@@ -11,9 +11,7 @@ use \WW\Countries\Models\Country;
 
 class AddEmployee extends Component
 {
-    public $countries =[];
-    public $genderEnums =[];
-    public $maritalStatusEnums, $idTypes, $educationLevels, $terminationPeriodTypes, $payPeriods =[];
+    public $countries, $genderEnums, $maritalStatusEnums, $idTypes, $educationLevels, $terminationPeriodTypes, $payPeriods =[];
 
     public function mount()
     {

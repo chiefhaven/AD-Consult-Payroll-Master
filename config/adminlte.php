@@ -604,17 +604,6 @@ return [
                 ],
             ],
         ],
-
-        'Moment' => [
-            'active' => true,
-            'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'node_modules\moment\dist\moment.js',
-                ],
-            ],
-        ],
     ],
 
     /*

@@ -33,14 +33,13 @@ return new class extends Migration
             $table->enum('id_type', ['Malawi National ID', 'Passport', 'Driving Licence', 'Other'])->default('Malawi National ID');
             $table->char('id_number');
             $table->char('id_proof_pic');
-            $table->enum('marital_status',['Single','Married','Divorced','Widowed','Separated', 'Unknown']);
-            $table->enun('gender',['Male','Female','Other']);
+            $table->enum('marital_status',['Married', 'Single', 'Widow', 'Divorced', 'Other']);
+            $table->enum('gender',['Male', 'Female', 'Other', 'Them']);
             $table->date('birthdate');
             $table->decimal('salary');
             $table->decimal('bonus');
             $table->enum('pay_period', ['Hourly', 'Daily', 'Weekly', 'Fortnightly', 'Monthly']);
             $table->enum('status', ['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended', 'On Probation'])->default('Pending');
-            $table->char('contact_id');
             $table->char('client_id');
             $table->char('tax1')->nullable();
             $table->timestamps();
