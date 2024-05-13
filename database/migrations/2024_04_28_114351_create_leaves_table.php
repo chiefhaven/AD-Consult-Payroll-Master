@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->date('start_date');
             $table->date('end_date');
-            $table->enum('type',['']);
+            $table->char('type');
+            $table->string('comments')->nullable();
             $table->timestamps();
         });
     }
