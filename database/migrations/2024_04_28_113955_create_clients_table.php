@@ -31,7 +31,6 @@ return new class extends Migration
             $table->char('tax_number_2', 100)->nullable();
             $table->string('tax_label_2', 100)->nullable();
             $table->string('time_zone')->default('Africa/Blantyre');
-            $table->char('contact_id');
             $table->char('status')->nullable();
             $table->timestamps();
         });
