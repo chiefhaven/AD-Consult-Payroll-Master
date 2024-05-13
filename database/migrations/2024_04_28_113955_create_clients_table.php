@@ -13,21 +13,19 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->decimal('client_no');
             $table->string('client_name');
-            $table->integer('currency_id')->unsigned();
-            $table->date('start_date')->nullable();
-            $table->char('client_logo');
+            $table->date('contract_start_date')->nullable();
+            $table->char('client_logo')->nullable();
             $table->char('phone')->nullable();
             $table->char('phone2')->nullable();
             $table->char('address')->nullable();
             $table->char('zip_postal_code')->nullable();
             $table->char('state')->nullable();
             $table->char('city')->nullable();
-            $table->char('country')->nullable();
-            $table->char('industry')->nullable();
-            $table->char('tax_number_1', 100);
-            $table->string('tax_label_1', 100);
+            $table->char('country_id')->nullable();
+            $table->char('industry_id')->nullable();
+            $table->char('tax_number_1')->nullable();
+            $table->string('tax_label_1', 100)->nullable();
             $table->char('tax_number_2', 100)->nullable();
             $table->string('tax_label_2', 100)->nullable();
             $table->string('time_zone')->default('Africa/Blantyre');
