@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
+            $table->time('clock_in_time');
+            $table->time('clock_out_time');
+            $table->char('ip_address');
+            $table->char('clock_in_note');
+            $table->char('clock_out_note');
+            $table->char('clock_in_location');
+            $table->char('clock_out_location');
             $table->timestamps();
         });
     }
