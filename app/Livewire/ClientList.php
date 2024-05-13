@@ -93,7 +93,7 @@ class ClientList extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->html(),
-            Column::make('Industry', 'industry')
+            Column::make('Industry', 'industry_id')
                 ->sortable()
                 ->searchable(),
             Column::make('Address','address')
@@ -102,7 +102,7 @@ class ClientList extends DataTableComponent
             Column::make('City', 'city')
                 ->sortable()
                 ->searchable(),
-            Column::make('Country', 'country')
+            Column::make('Country', 'country_id')
                 ->sortable()
                 ->searchable(),
             Column::make('Status', 'status')
