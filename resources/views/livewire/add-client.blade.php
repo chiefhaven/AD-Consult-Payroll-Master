@@ -42,52 +42,42 @@
 
                     <x-adminlte-input type="text" name="street_address_2" label="Street Adress 2:"
                     placeholder="Street address 2" fgroup-class="col-md-3"
-                    disable-feedback id="street_address_2" wire:model="street_address_2"/>
+                    id="street_address_2" wire:model="street_address_2"/>
 
                     <x-adminlte-input type="text" name="postal_code" label="Postal/Zip code:"
                     placeholder="Postal/Zip code" fgroup-class="col-md-3"
-                    disable-feedback id="postal_code" wire:model="postal_code"/>
+                    id="postal_code" wire:model="postal_code"/>
 
                     <x-adminlte-input type="text" name="city" label="City:*"
                     placeholder="City" fgroup-class="col-md-3"
-                    disable-feedback id="city" wire:model="city" required/>
+                    id="city" wire:model="city" required/>
 
                     <x-adminlte-input type="text" name="state" label="State/Region/Province:"
                     placeholder="State/Region/Province" fgroup-class="col-md-4"
-                    disable-feedback id="state" wire:model="state" required/>
+                     id="state" wire:model="state" required/>
 
                     <x-adminlte-select2 type="text" name="country" label="Country" wire:model="country" data-placeholder="Select an option..."
                         fgroup-class="col-md-4">
                         @foreach ($countries as $country)
-                            <option value="{{$country->name}}" {{ $country->name == 'Malawi' ? 'selected' : '' }}>{{$country->name}}</option>
+                            <option {{ $country->name == 'Malawi' ? 'selected' : '' }}>{{$country->name}}</option>
                         @endforeach
                     </x-adminlte-select2>
 
                     <x-adminlte-input type="website" name="website" label="Website:"
                     placeholder="Website" fgroup-class="col-md-4"
-                    disable-feedback id="website" wire:model="website"/>
+                     id="website" wire:model="website"/>
 
-                    <x-adminlte-select2 type="text" name="currency" label="Currency" wire:model="currency" data-placeholder="Select an option..."
-                        fgroup-class="col-md-2">
-                            <option>Select an option...</option>
-                            <option value="ZM">Zimbabwe Kwacha</option>
-                    </x-adminlte-select2>
-
-                    <x-adminlte-input type="text" name="tax_number" label="Tax number 1:"
-                    placeholder="Tax number 1" fgroup-class="col-md-3"
-                    disable-feedback id="tax_number" wire:model="tax_number"/>
+                    <x-adminlte-input type="text" name="tax_number" label="Tax number:"
+                    placeholder="Tax number" fgroup-class="col-md-3" id="tax_number" wire:model="tax_number"/>
 
                     <x-adminlte-input type="text" name="tax_label" label="Tax label:"
-                    placeholder="Tax label" fgroup-class="col-md-2"
-                    disable-feedback id="tax_label" wire:model="tax_label"/>
+                    placeholder="Tax label" fgroup-class="col-md-3" id="tax_label" wire:model="tax_label"/>
 
                     <x-adminlte-input type="text" name="tax_number_2" label="Tax number 2:"
-                    placeholder="Tax number 2" fgroup-class="col-md-3"
-                    disable-feedback id="tax_number_2" wire:model="tax_number_2"/>
+                    placeholder="Tax number 2" fgroup-class="col-md-3" id="tax_number_2" wire:model="tax_number_2"/>
 
                     <x-adminlte-input type="text" name="tax_number_label_2" label="Tax label 2:"
-                    placeholder="Tax label 2" fgroup-class="col-md-2"
-                    disable-feedback id="tax_label_2" wire:model="tax_label_2"/>
+                    placeholder="Tax label 2" fgroup-class="col-md-3" id="tax_label_2" wire:model="tax_label_2"/>
                 </div>
             </div>
         </div>
