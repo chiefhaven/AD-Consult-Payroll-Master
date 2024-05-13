@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('payrolls', function (Blueprint $table) {
             $table->id();
+            $table->char('employee_id');
+            $table->date('payment_date');
+            $table->enum('pay_period',['Weekly','Bi weekly','Monthly']);
+            $table->decimal('gross_pay');
+            $table->decimal('net_pay');
+            $table->decimal('deductions');
+            $table->enum('compansation',['salary','wage','commision','bonus']);
+            $table->enum('payment_method',['Direct Deposit','Check']);
+            $table->enum('payment_status',['completed ','pending','']);
             $table->timestamps();
         });
     }

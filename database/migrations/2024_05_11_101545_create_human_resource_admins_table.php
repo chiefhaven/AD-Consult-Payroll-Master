@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('finance_admins', function (Blueprint $table) {
+        Schema::create('human_resource_admins', function (Blueprint $table) {
             $table->id();
             $table->enum('prefix',['Mr.','Mrs.','Miss','Ms.']);
             $table->string('fname');
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('finance_admins');
+        Schema::dropIfExists('h_r_admins');
     }
 };

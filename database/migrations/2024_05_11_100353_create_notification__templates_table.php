@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('notification__templates', function (Blueprint $table) {
             $table->id();
+            $table->enum('type',['email','SMS','Push Notificatio']);
+            $table->string('subject');
+            $table->string('content');
+            $table->char('recipient');
+            $table->char('cc');
+            $table->char('sender');
+
             $table->timestamps();
         });
     }

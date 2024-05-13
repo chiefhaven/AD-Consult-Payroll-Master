@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('h_r_admins', function (Blueprint $table) {
+        Schema::create('contracts', function (Blueprint $table) {
             $table->id();
+            $table->enum('type',['Fixed Term','Permanent','Independent Contractor','Not Handled By AD']);
+            $table->date('start_date');
+            $table->char('end_date');
+            $table->boolean('probation_period');
+            $table->char('termination_notice_period');
             $table->timestamps();
         });
     }
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('h_r_admins');
+        Schema::dropIfExists('contracts');
     }
 };
