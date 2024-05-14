@@ -48,16 +48,13 @@ class AddClient extends Component
     #[Validate('required')]
     public $state;
 
-    #[Validate('required')]
     public $password;
 
     #[Validate('required')]
     public $website;
 
-    #[Validate('required')]
     public $username;
 
-    #[Validate('required')]
     public $confirm_password;
 
     #[Validate('required')]

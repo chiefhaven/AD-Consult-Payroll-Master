@@ -6,16 +6,16 @@
                 <p>Client Details</p>
                 <div class="row">
                         <x-adminlte-input type="text" name="name" label="Name:*" placeholder="Name" fgroup-class="col-md-3"
-                        disable-feedback id="name" wire:model="name" required/>
+                        id="name" wire:model="name" required/>
 
                         <x-adminlte-input-file name="client_logo" label="Client logo" placeholder="Choose a file..."
-                        fgroup-class="col-md-3" disable-feedback/>
+                        fgroup-class="col-md-3"/>
 
                         <x-adminlte-input type="email" name="email" label="Email:*" placeholder="Email address" fgroup-class="col-md-3"
-                        disable-feedback id="email" wire:model="email" required/>
+                        id="email" wire:model="email" required/>
 
                         <x-adminlte-input type="tel" name="phone" label="Phone:*" placeholder="Phone" fgroup-class="col-md-3"
-                        disable-feedback id="phone" wire:model="phone" required/>
+                        id="phone" wire:model="phone" required/>
 
                         <x-adminlte-select2 type="option" name="project" label="Project:" placeholder="Select an option..."
                         fgroup-class="col-md-4">
@@ -24,10 +24,10 @@
                         </x-adminlte-select2>
 
                         <x-adminlte-input type="date" name="contractstartdate" label="Contract start date:" placeholder="Contract start date:"
-                        fgroup-class="col-md-4" disable-feedback id="contractstartdate" wire:model="contractstartdate"/>
+                        fgroup-class="col-md-4" id="contractstartdate" wire:model="contractstartdate"/>
 
                         <x-adminlte-input type="date" name="contractenddate" label="Contract end date:" placeholder="Contract end date"
-                        fgroup-class="col-md-4" disable-feedback id="contractenddate" wire:model="contractenddate"/>
+                        fgroup-class="col-md-4" id="contractenddate" wire:model="contractenddate"/>
 
                 </div>
             </div>
@@ -38,7 +38,7 @@
                 <div class="row">
                     <x-adminlte-input type="text" name="street_address" label="Street Adress:*"
                     placeholder="Street address" fgroup-class="col-md-3"
-                    disable-feedback id="street_address" wire:model="street_address" required/>
+                    id="street_address" wire:model="street_address" required/>
 
                     <x-adminlte-input type="text" name="street_address_2" label="Street Adress 2:"
                     placeholder="Street address 2" fgroup-class="col-md-3"
@@ -88,18 +88,23 @@
                   </figcaption></p>
                 <div class="row">
                         <x-adminlte-input type="text" name="confirm_password" label="Username" placeholder="Username"
-                        fgroup-class="col-md-4" disable-feedback id="username" wire:model="username"/>
+                        fgroup-class="col-md-4" id="username" wire:model="username"/>
 
                         <x-adminlte-input type="password" name="confirm_password" label="Password" placeholder="Password"
-                        fgroup-class="col-md-4" disable-feedback id="password" wire:model="password"/>
+                        fgroup-class="col-md-4" id="password" wire:model="password"/>
 
                         <x-adminlte-input type="password" name="confirm_password" label="Confirm Password" placeholder="Password"
-                        fgroup-class="col-md-4" disable-feedback id="confirm_password" wire:model="confirm_password"/>
+                        fgroup-class="col-md-4" id="confirm_password" wire:model="confirm_password"/>
 
                 </div>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">
+            Save
+            <div wire:loading>
+                @include('livewire/common/spinner')
+            </div>
+        </button>
     </form>
 </div>
