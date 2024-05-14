@@ -4,11 +4,11 @@
     </button>
     <div class="dropdown-menu p-2" aria-labelledby="dropdownMenuButton">
         @isset ( $employee )
-            <a class="dropdown-item bnt" href="#"><i class="fa fa-solid fa-eye me-2"></i> View</a>
+            <a class="dropdown-item bnt" href="{{ route('view-employee', $employee) }}"><i class="fa fa-solid fa-eye me-2"></i> View</a>
         @endif
 
         @isset ( $employee )
-            <a class="dropdown-item btn" href="{{ route('home') }}">
+            <a class="dropdown-item btn" href="#">
                 <div>
                     <i class="fa fa-solid fa-pen me-2"></i> Edit
                 </div>
@@ -16,8 +16,8 @@
         @endif
 
         @isset ( $employee )
-            <form
-                action="{{ route('home') }}"
+            {{--  <form
+                action="#"
                 class="d-inline dropdown-item "
                 method="POST"
                 x-data
@@ -25,6 +25,12 @@
             >
                 @method('DELETE')
                 @csrf
+                <button type="submit" class="btn bg-danger">
+                    <i class="fa fa-solid fa-trash"></i> Delete
+                </button>
+            </form>  --}}
+
+            <form wire:submit="deleteItem" value="{{ $employee }}">
                 <button type="submit" class="btn bg-danger">
                     <i class="fa fa-solid fa-trash"></i> Delete
                 </button>
