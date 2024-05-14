@@ -24,8 +24,9 @@ Auth::routes();
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['auth']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['auth']);
 
-Route::get('/employees', [EmployeeController::class, 'index'])->middleware(['auth']);
-Route::get('/add-employee', [EmployeeController::class, 'create'])->middleware(['auth']);
+Route::get('/employees', [EmployeeController::class, 'index'])->name('employees')->middleware(['auth']);
+Route::get('/add-employee', [EmployeeController::class, 'create'])->name('add-employees')->middleware(['auth']);
+Route::get('/view-employee/{id}', [EmployeeController::class, 'show'])->name('view-employee')->middleware(['auth']);
 
 Route::get('/clients', [ClientController::class, 'index'])->middleware(['auth']);
 Route::get('/add-client', [ClientController::class, 'create'])->middleware(['auth']);
