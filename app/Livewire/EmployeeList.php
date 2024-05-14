@@ -40,6 +40,8 @@ class EmployeeList extends DataTableComponent
 
     public function configure(): void
     {
+        $this->setDefaultSort('created_at', 'desc');
+        $this->setBulkActionsStatus(false);
         $this->setLoadingPlaceholderEnabled();
         $this->setLoadingPlaceHolderIconAttributes([
             'class' => 'lds-spinner',
@@ -93,6 +95,8 @@ class EmployeeList extends DataTableComponent
                 ->collapseOnTablet(),
             Column::make('Status', 'status')
                 ->sortable(),
+            Column::make('Created at', 'created_at')
+            ->sortable(),
             Column::make('Action')
                 ->label(
                     fn ($row, Column $column) => view('tables.action-column')->with(
@@ -177,6 +181,11 @@ class EmployeeList extends DataTableComponent
         Employee::whereIn('id', $this->getSelected())->update(['status' => 'suspended']);
 
         $this->clearSelected();
+    }
+
+    public function deleteItem()
+    {
+        Employee::where('id', 56)->delete();
     }
 
     // public function reorder($items): void
