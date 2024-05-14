@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('deductions');
             $table->enum('compansation',['salary','wage','commision','bonus']);
             $table->enum('payment_method',['Direct Deposit','Check']);
-            $table->enum('payment_status',['completed ','pending','']);
+            $table->enum('payment_status',['paid ','pending','processing','failed','cancelled']);
             $table->timestamps();
         });
     }
