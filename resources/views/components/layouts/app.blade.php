@@ -22,7 +22,6 @@
             @endif
         </h1>
     @endif
-    @error() <span class="error">{{ $message }}</span> @enderror
 @stop
 
 {{-- Rename section content to content_body --}}
