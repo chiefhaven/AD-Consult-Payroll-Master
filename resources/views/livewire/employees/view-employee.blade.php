@@ -1,3 +1,3 @@
 <div>
-    {{-- Nothing in the world is as soft and yielding as water. --}}
+    <x-adminlte-profile-widget name="User Name"/>
 </div>
