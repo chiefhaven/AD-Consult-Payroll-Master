@@ -36,7 +36,7 @@
                         <x-adminlte-select2 type="text" name="gender" label="Gender:*" wire:model="form.gender" data-placeholder="Select an option..."
                         fgroup-class="col-md-3" required>
                             @foreach ($genderEnums as $genderEnum)
-                                <option value="{{$genderEnum}}" {{ $genderEnum == 'Male' ? 'selected' : '' }}>{{$genderEnum}}</option>
+                                <option {{ $genderEnum == 'Male' ? 'selected' : '' }}>{{$genderEnum}}</option>
                             @endforeach
                         </x-adminlte-select2>
 
