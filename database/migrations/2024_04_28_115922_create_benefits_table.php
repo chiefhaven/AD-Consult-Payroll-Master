@@ -17,7 +17,6 @@ return new class extends Migration
             $table->enum('type',['Health','Life','Retirement','Other']);
             $table->date('start_date');
             $table->date('end_date');
-            $table->date('end_date');
             $table->enum('coverage_level',['Individual','Family']);
             $table->char('provider');
             $table->char('provider_phone_number');
