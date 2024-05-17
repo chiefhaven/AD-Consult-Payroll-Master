@@ -13,10 +13,6 @@ return new class extends Migration
     {
         Schema::create('leaves', function (Blueprint $table) {
             $table->id();
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->char('type');
-            $table->string('comments')->nullable();
             $table->timestamps();
         });
     }

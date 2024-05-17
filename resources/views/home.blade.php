@@ -1,23 +1,58 @@
-@extends('layouts.app')
+@extends('adminlte::page')
+
+@section('title', 'Dashboard')
+
+@section('content_header')
+    <h1>&nbsp;</h1>
+@stop
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card bg-primary mb-3 p-4">
+                        <div class="box-body">
+                            <h3>Good Morning</h3>
+                            Welcome to AD; Believe it possible, its all in your mind! Have a fresh day!.
                         </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3>08:00AM</h3>
+                            03/02/2024
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h4>Notifications</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <p>Upcoming events</p>
+                    Welcome to AD; Believe it possible, its all in your mind! Have a fresh day!.
                 </div>
             </div>
         </div>
     </div>
-</div>
-@endsection
+@stop
+
+@section('css')
+    {{-- Add here extra stylesheets --}}
+    <link rel="stylesheet" href="/css/app.css">
+@stop
+
+@section('js')
+    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+@stop

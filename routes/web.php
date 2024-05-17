@@ -48,7 +48,3 @@ Route::get('/users', UserList::class)->middleware(['auth']);
 Route::get('/add-user', AddUser::class)->middleware(['auth']);
 
 Route::get('/settings', Settings::class)->middleware(['auth']);
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

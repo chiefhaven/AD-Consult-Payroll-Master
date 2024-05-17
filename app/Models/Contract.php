@@ -8,13 +8,4 @@ use Illuminate\Database\Eloquent\Model;
 class Contract extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'type',
-        'start_date',
-        'end_date',
-        'probation_period',
-        'termination_notice_period'
-    ];
-    
 }
