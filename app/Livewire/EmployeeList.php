@@ -36,6 +36,7 @@ class EmployeeList extends DataTableComponent
     public $columnSearch = [
         'fname' => null,
         'sname' => null,
+        'user.email' => null,
     ];
 
     public function configure(): void
