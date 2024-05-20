@@ -24,16 +24,7 @@
 {{-- Rename section content to content_body --}}
 
 @section('content')
-<div class="row">
-    <livewire:common.page-header pageTitle="John Doe" buttonName="Add Employee"/>
-    <div class="col-lg-12">
-        <div class="card mb-3 p-4">
-            <div class="box-body">
                 <livewire:employees.ViewEmployee />
-            </div>
-        </div>
-    </div>
-</div>
 @stop
 
 {{-- Create a common footer --}}
