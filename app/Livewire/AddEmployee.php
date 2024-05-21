@@ -28,7 +28,7 @@ class AddEmployee extends Component
     {
         $this->form->store();
 
-        session()->flash('message', 'Employee successfully addeded.');
+        session()->flash('status', 'Post successfully updated.');
         return $this->redirect('/employees');
     }
 
