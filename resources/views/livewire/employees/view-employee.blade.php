@@ -7,34 +7,16 @@
             <div class="col-md-1"><p>&nbsp;</p></div>
             <div class="col-md-8">
                 <h2 class="text-white fw-bold">Haven Chikumba</h2>
-                <div class="text-bold">Designation</div>
-                <p class="text-white">
-                    <h3 class="text-white fw-bold">Company name</h3>
-                    <div class="text-white">Address:</div>
-                    <div class="text-white">Phone:</div>
-                    <div class="text-white">Email:</div>
+                <p class="">
+                    Lorem ipsum: <br>
+                    Dolor sit: <br>
                 </p>
             </div>
         </div>
     </div>
     <div class="row m-4">
         <div class="col-md-8 card p-5">
-            <div>Employee number: </div>
-            <div>Contract period:</div>
-            <div>Employee on:</div>
-            <div>Age:</div>
-            <div>Gender:</div>
-            <P>
-                <div class="text-bold">Salary structure</div>
-                <div>Gross: </div>
-                <div>Earnings:</div>
-                <div>Deductions:</div>
-                <div>Insurance:</div>
-                <div>Pension:</div>
-                <div>Benefits: </div>
-                <div>Taxes:</div>
-                <div>Net:</div>
-            </P>
+            Other information
         </div>
         <div class="col-md-1">
             &nbsp;
