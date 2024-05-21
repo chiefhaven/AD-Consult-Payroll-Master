@@ -30,7 +30,7 @@
         <div class="card mb-3 p-4">
             <div class="box-body">
                 <p>All employees</p>
-                <livewire:employeeList />
+                <livewire:employees.employeeList />
             </div>
         </div>
     </div>
