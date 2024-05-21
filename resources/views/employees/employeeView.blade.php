@@ -24,7 +24,7 @@
 {{-- Rename section content to content_body --}}
 
 @section('content')
-                <livewire:employees.ViewEmployee />
+    <livewire:employees.ViewEmployee />
 @stop
 
 {{-- Create a common footer --}}
