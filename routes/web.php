@@ -30,6 +30,7 @@ Route::get('/view-employee/{id}', [EmployeeController::class, 'show'])->name('vi
 
 Route::get('/clients', [ClientController::class, 'index'])->middleware(['auth']);
 Route::get('/add-client', [ClientController::class, 'create'])->middleware(['auth']);
+Route::get('/view-client/{id}', [ClientController::class, 'show'])->name('view-client')->middleware(['auth']);
 
 Route::get('/payroll', Payroll::class)->middleware(['auth']);
 
