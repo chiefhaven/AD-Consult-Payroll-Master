@@ -6310,22 +6310,31 @@
         },
         {
             "name": "woodsandwalker/laravel-countries",
-            "version": "1.0.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/woodsandwalker/laravel-countries.git",
-                "reference": "3f84db3c4477743e60f10497058b39c502a98cae"
+                "reference": "6f0562ec0aa693966bb3b5e9347a8bb5c69dc1b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/woodsandwalker/laravel-countries/zipball/3f84db3c4477743e60f10497058b39c502a98cae",
-                "reference": "3f84db3c4477743e60f10497058b39c502a98cae",
+                "url": "https://api.github.com/repos/woodsandwalker/laravel-countries/zipball/6f0562ec0aa693966bb3b5e9347a8bb5c69dc1b9",
+                "reference": "6f0562ec0aa693966bb3b5e9347a8bb5c69dc1b9",
                 "shasum": ""
             },
             "require": {
-                "calebporzio/sushi": "^2.4"
+                "calebporzio/sushi": "^2.5",
+                "illuminate/database": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+                "php": "^8.0|^8.1|^8.2|^8.3"
             },
             "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "WW\\Countries\\LaravelCountriesServiceProvider"
+                    ]
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "WW\\Countries\\": "src/"
@@ -6350,9 +6359,9 @@
             ],
             "support": {
                 "issues": "https://github.com/woodsandwalker/laravel-countries/issues",
-                "source": "https://github.com/woodsandwalker/laravel-countries/tree/1.0.0"
+                "source": "https://github.com/woodsandwalker/laravel-countries/tree/1.4.0"
             },
-            "time": "2022-10-18T10:33:47+00:00"
+            "time": "2024-05-20T08:36:52+00:00"
         }
     ],
     "packages-dev": [
@@ -6824,16 +6833,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.6.11",
+            "version": "1.6.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "81a161d0b135df89951abd52296adf97deb0723d"
+                "reference": "1f4efdd7d3beafe9807b08156dfcb176d18f1699"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/81a161d0b135df89951abd52296adf97deb0723d",
-                "reference": "81a161d0b135df89951abd52296adf97deb0723d",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/1f4efdd7d3beafe9807b08156dfcb176d18f1699",
+                "reference": "1f4efdd7d3beafe9807b08156dfcb176d18f1699",
                 "shasum": ""
             },
             "require": {
@@ -6903,7 +6912,7 @@
                 "security": "https://github.com/mockery/mockery/security/advisories",
                 "source": "https://github.com/mockery/mockery"
             },
-            "time": "2024-03-21T18:34:15+00:00"
+            "time": "2024-05-16T03:13:13+00:00"
         },
         {
             "name": "myclabs/deep-copy",
