@@ -6,10 +6,10 @@
             </div>
             <div class="col-md-1"><p>&nbsp;</p></div>
             <div class="col-md-8">
-                <h2 class="text-white fw-bold">Azena and Co.</h2>
+                <h2 class="text-white fw-bold">{{ $client->client_name }}</h2>
                 <div class="text-bold">Sologan</div>
                 <p class="text-white">
-                    <div class="text-white">Address:</div>
+                    <div class="text-white">Address: </div>
                     <div class="text-white">Phone:</div>
                     <div class="text-white">Email:</div>
                 </p>
@@ -31,7 +31,7 @@
         </div>
     </div>
     <div class="row m-4">
-        <div class="col-md-5 card p-5">
+        <div class="col-md-8 card p-5">
             <livewire:employees.employeeList />
         </div>
         <div class="col-md-1">
