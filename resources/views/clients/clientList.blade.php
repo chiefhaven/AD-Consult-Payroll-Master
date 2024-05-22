@@ -30,10 +30,13 @@
         <div class="card mb-3 p-4">
             <div class="box-body">
                 <p>All Clients</p>
-                <livewire:clientList />
+                <livewire:clients.clientList />
             </div>
         </div>
     </div>
+    @livewireScripts
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <x-livewire-alert::scripts />
 </div>
 @stop
 
