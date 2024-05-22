@@ -102,7 +102,7 @@ class EmployeeList extends DataTableComponent
                 ->label(
                     fn ($row, Column $column) => view('tables.action-column')->with(
                         [
-                            'employee' => $row,
+                            'resource' => $row,
                         ]
                     )
                 )->html(),
