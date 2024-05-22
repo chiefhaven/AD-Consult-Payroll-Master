@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\clients;
+namespace App\Livewire\Clients;
 
 use App\Models\Client;
 use Livewire\Component;
@@ -8,11 +8,7 @@ use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Columns\ImageColumn;
-use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
-use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\DateFilter;
@@ -21,9 +17,11 @@ use App\Exports\UsersExport;
 use Carbon\Carbon;
 use JeroenNoten\LaravelAdminLte\View\Components\Form\Button;
 use Maatwebsite\Excel\Facades\Excel;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ClientList extends DataTableComponent
 {
+    use LivewireAlert;
     public $myParam = 'Default';
     public string $tableName = 'client';
     public $client = Client::class;
@@ -59,28 +57,12 @@ class ClientList extends DataTableComponent
                 }
                 return ['default' => true];
             })
-            ->setHideBulkActionsWhenEmptyEnabled()
-            // ->setTableRowUrl(function($row) {
-            //     return '/employee-details/'.$row->id;
-            // })
-            // ->setTableRowUrlTarget(function($row) {
-            //     return '_blank';
-            // });
-            ;
+            ->setHideBulkActionsWhenEmptyEnabled();
         }
 
     public function columns(): array
     {
         return [
-            // ImageColumn::make('Avatar')
-            //     ->location(function($row) {
-            //         return asset('img/logo-'.$row->id.'.png');
-            //     })
-            //     ->attributes(function($row) {
-            //         return [
-            //             'class' => 'w-8 h-8 rounded-full',
-            //         ];
-            //     }),
             Column::make('Name', 'client_name')
                 ->sortable()
                 ->searchable()
@@ -107,18 +89,11 @@ class ClientList extends DataTableComponent
                 ->searchable(),
             Column::make('Status', 'status')
                 ->sortable(),
-            // Column::make('Tags')
-            //     ->label(fn($row) => $row->tags->pluck('name')->implode(', ')),
-            // // Column::make('Actions')
-            //     ->label(
-            //         fn($row, Column $column) => view('tables.cells.actions')->withUser($row)
-            //     )
-            //     ->unclickable(),
             Column::make('Action')
                 ->label(
                     fn ($row, Column $column) => view('tables.action-column')->with(
                         [
-                            'client' => $row,
+                            'resource' => $row,
                         ]
                     )
                 )->html(),
@@ -176,31 +151,44 @@ class ClientList extends DataTableComponent
 
     public function export()
     {
-        $employees = $this->getSelected();
+        $clients = $this->getSelected();
 
         $this->clearSelected();
 
-        return Excel::download(new UsersExport($employees), 'employees.xlsx');
+        return Excel::download(new ClientsExport($clients), 'clients.xlsx');
     }
 
     public function activate()
     {
-        Employee::whereIn('id', $this->getSelected())->update(['status' => 'active']);
+        Client::whereIn('id', $this->getSelected())->update(['status' => 'active']);
 
         $this->clearSelected();
     }
 
     public function deactivate()
     {
-        Employee::whereIn('id', $this->getSelected())->update(['status' => 'suspended']);
-
+        Client::whereIn('id', $this->getSelected())->update(['status' => 'suspended']);
         $this->clearSelected();
     }
 
-    // public function reorder($items): void
-    // {
-    //     foreach ($items as $item) {
-    //         Employee::find((int)$item['value'])->update(['sort' => (int)$item['order']]);
-    //     }
-    // }
+    public function deleteItem($id)
+    {
+        Client::where('id', $id)->delete();
+        $this->alert('success', 'Client successifuly deleted',[
+            'timer' => 3000,
+            'toast' => true,
+            'timerProgressBar' => true,
+            'width' => '600',
+           ]);
+    }
+
+    public function viewItem()
+    {
+        return redirect()->to('/view-client/54');
+    }
+
+    public function editItem()
+    {
+        Client::where('id', 56)->delete();
+    }
 }
