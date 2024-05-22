@@ -25,7 +25,7 @@
 
 @section('content')
 <div class="row">
-    <livewire:clients.viewClient />
+    <livewire:clients.viewClient :client="$client"/>
 </div>
 @stop
 
