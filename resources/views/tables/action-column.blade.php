@@ -4,11 +4,9 @@
     </button>
     <div class="dropdown-menu p-2" aria-labelledby="dropdownMenuButton">
         @isset ( $resource )
-            <form wire:submit="viewItem" value="{{ $resource->id }}">
-                <button type="submit" class="dropdown-item mb-1">
+                <a href="{{ route('view-client', $resource->id) }}" class="dropdown-item mb-1">
                     <i class="fa fa-solid fa-eye me-2"></i> View
-                </button>
-            </form>
+                </a>
         @endif
 
         @isset ( $resource )

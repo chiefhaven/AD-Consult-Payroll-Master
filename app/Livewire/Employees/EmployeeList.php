@@ -19,14 +19,21 @@ use App\Exports\UsersExport;
 use Carbon\Carbon;
 use JeroenNoten\LaravelAdminLte\View\Components\Form\Button;
 use Maatwebsite\Excel\Facades\Excel;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 
 class EmployeeList extends DataTableComponent
 {
+    use LivewireAlert;
     public $myParam = 'Default';
+    public int $client_id;
     public string $tableName = 'employee';
-    public $employee = Employee::class;
+    public $employee;
     public $email = '';
+
+    public function mount(){
+        $this->employee = Employee::where('client_id', 1)->get();
+    }
 
     public function customView(): string
     {
@@ -53,6 +60,8 @@ class EmployeeList extends DataTableComponent
             ->setConfigurableAreas([
               'toolbar-left-middle' => ['includes.areas.toolbar-left-start', ['param1' => $this->myParam]]
              ])
+             ->setReorderEnabled()
+             ->setHideReorderColumnUnlessReorderingEnabled()
             ->setSecondaryHeaderTrAttributes(function($rows) {
                 return ['class' => 'bg-primary'];
             })
@@ -62,14 +71,7 @@ class EmployeeList extends DataTableComponent
                 }
                 return ['default' => true];
             })
-            ->setHideBulkActionsWhenEmptyEnabled()
-            // ->setTableRowUrl(function($row) {
-            //     return '/employee-details/'.$row->id;
-            // })
-            // ->setTableRowUrlTarget(function($row) {
-            //     return '_blank';
-            // });
-            ;
+            ->setHideBulkActionsWhenEmptyEnabled();
         }
 
     public function columns(): array
@@ -78,10 +80,10 @@ class EmployeeList extends DataTableComponent
             Column::make('Firstname', 'fname')
                 ->sortable()
                 ->searchable(),
-            Column::make('Maidenname', 'mname')
+            Column::make('Othernames', 'mname')
                 ->sortable()
                 ->searchable(),
-            Column::make('Sirname', 'sname')
+            Column::make('Lastname', 'sname')
                 ->sortable()
                 ->searchable(),
             Column::make('Company/Organization', 'client.client_name')
@@ -116,7 +118,7 @@ class EmployeeList extends DataTableComponent
                 ->setFilterPillTitle('Active')
                 ->options([
                     ''    => 'Any',
-                    'active' => 'Active',
+                    'Active' => 'Active',
                     'probation'  => 'Probation',
                     'onLeave'  => 'On Leave',
                     'suspended'  => 'Suspended',
@@ -184,15 +186,14 @@ class EmployeeList extends DataTableComponent
         $this->clearSelected();
     }
 
-    public function deleteItem()
+    public function deleteItem($id)
     {
-        Employee::where('id', 56)->delete();
+        Employee::where('id', $id)->delete();
+        $this->alert('success', 'Employee successifuly deleted',[
+            'timer' => 3000,
+            'toast' => true,
+            'timerProgressBar' => true,
+            'width' => '600',
+           ]);
     }
-
-    // public function reorder($items): void
-    // {
-    //     foreach ($items as $item) {
-    //         Employee::find((int)$item['value'])->update(['sort' => (int)$item['order']]);
-    //     }
-    // }
 }

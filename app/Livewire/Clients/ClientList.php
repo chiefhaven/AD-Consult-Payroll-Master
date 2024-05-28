@@ -27,17 +27,14 @@ class ClientList extends DataTableComponent
     public $client = Client::class;
     public $email = '';
 
-    public function customView(): string
-    {
-        return 'includes.custom';
-    }
-
     public $columnSearch = [
         'client_name' => null,
+        'user.email' => null,
     ];
 
     public function configure(): void
     {
+        $this->setBulkActionsStatus(false);
         $this->setLoadingPlaceholderEnabled();
         $this->setLoadingPlaceHolderIconAttributes([
             'class' => 'lds-spinner',
@@ -45,9 +42,9 @@ class ClientList extends DataTableComponent
         ]);
         $this->setPrimaryKey('id')
             ->setAdditionalSelects(['clients.id as id'])
-            // ->setConfigurableAreas([
-            //     'toolbar-left-start' => ['includes.areas.toolbar-left-start', ['param1' => $this->myParam]]
-            // ])
+            ->setConfigurableAreas([
+                'toolbar-left-middle' => ['includes.areas.toolbar-left-start', ['param1' => $this->myParam]]
+               ])
             ->setSecondaryHeaderTrAttributes(function($rows) {
                 return ['class' => 'bg-primary'];
             })
@@ -75,7 +72,7 @@ class ClientList extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->html(),
-            Column::make('Industry', 'industry_id')
+            Column::make('Industry', 'industry.name')
                 ->sortable()
                 ->searchable(),
             Column::make('Address','address')
@@ -137,7 +134,7 @@ class ClientList extends DataTableComponent
     public function builder(): Builder
     {
         return Client::query()
-            ->when($this->columnSearch['client_name'] ?? null, fn ($query, $fname) => $query->where('client.client_name', 'like', '%' . $fname . '%'));
+            ->when($this->columnSearch['client_name'] ?? null, fn ($query, $client_name) => $query->where('client.client_name', 'like', '%' . $client_name . '%'));
     }
 
     public function bulkActions(): array

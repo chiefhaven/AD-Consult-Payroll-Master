@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Common;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Industry;
 
 class BusinessUtil extends Controller
 {
@@ -28,5 +29,17 @@ class BusinessUtil extends Controller
 
         // $enumOptions now contains the enum values
         return $enumOptions;
+    }
+
+    static function get_industry()
+    {
+        $industries = Industry::all();
+        return $industries;
+    }
+
+    static function get_industry_id($industry_name)
+    {
+        $industry_id = Industry::where('name', $industry_name)->firstOrFail()->id;
+        return $industry_id;
     }
 }

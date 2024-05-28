@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Employee;
 use App\Models\Client;
+use App\Models\Industry;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -24,12 +25,18 @@ class DatabaseSeeder extends Seeder
             'status' => 'Active',
             ]);
 
+        User::factory()->count(50)->create();
+
         User::factory()->create([
             'username' => 'Test',
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
 
-        User::factory()->count(50)->create();
+        Industry::factory()->create([
+            'name' => 'Health',
+        ]);
+
+        Industry::factory()->count(4)->create();
     }
 }

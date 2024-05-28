@@ -27,6 +27,9 @@
 <div class="row">
     <livewire:common.page-header pageTitle="Add Client"/>
     <livewire:clients.addClient />
+    @livewireScripts
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <x-livewire-alert::scripts />
 </div>
 @stop
 

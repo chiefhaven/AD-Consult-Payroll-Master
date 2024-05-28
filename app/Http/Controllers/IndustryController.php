@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
-use Illuminate\Http\Request;
-use App\Http\Requests\StoreClientRequest;
-use App\Http\Requests\UpdateClientRequest;
+use App\Models\Industry;
+use App\Http\Requests\StoreIndustryRequest;
+use App\Http\Requests\UpdateIndustryRequest;
 
-class ClientController extends Controller
+class IndustryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('clients.clientList');
+        //
     }
 
     /**
@@ -22,13 +21,13 @@ class ClientController extends Controller
      */
     public function create()
     {
-        return view('clients.clientAdd');
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreClientRequest $request)
+    public function store(StoreIndustryRequest $request)
     {
         //
     }
@@ -36,16 +35,15 @@ class ClientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(String $id)
+    public function show(Industry $industry)
     {
-        $client = Client::with('User')->find($id);
-        return view('clients.clientView', [ 'client' => $client ], compact('client'));
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Client $client)
+    public function edit(Industry $industry)
     {
         //
     }
@@ -53,7 +51,7 @@ class ClientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateClientRequest $request, Client $client)
+    public function update(UpdateIndustryRequest $request, Industry $industry)
     {
         //
     }
@@ -61,7 +59,7 @@ class ClientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Client $client)
+    public function destroy(Industry $industry)
     {
         //
     }

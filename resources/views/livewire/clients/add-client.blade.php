@@ -23,10 +23,9 @@
 
                         <x-adminlte-select2 type="option" name="industry" label="Industry:" wire:model="form.industry" placeholder="Select an option..."
                         fgroup-class="col-md-3">
-                            <option>Health</option>
-                            <option>IT</option>
-                            <option>Telecomunication</option>
-                            <option>Education</option>
+                            @foreach ($industries as $industries)
+                                <option {{ $industries->name }}>{{$industries->name}}</option>
+                            @endforeach
                         </x-adminlte-select2>
 
                         <x-adminlte-input type="date" name="contractstartdate" label="Contract start date:" placeholder="Contract start date:"

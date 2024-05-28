@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Forms\Client;
 
+use App\Http\Controllers\Common\BusinessUtil;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 use App\Models\Client;
+use App\Models\Industry;
 use DB;
 
 class ClientForm extends Form
@@ -16,7 +18,7 @@ class ClientForm extends Form
 
     public $client_logo = '';
 
-    public $industry = '';
+    public $industry = 'Health';
 
     public $street_address = '';
 
@@ -63,9 +65,12 @@ class ClientForm extends Form
 
     public string $project = '';
 
+    public $industry_id = 'Health';
+
     public function store()
     {
         $this->validate();
+        $this->industry_id = BusinessUtil::get_industry_id($this->industry);
 
         try{
             Client::create([
@@ -79,12 +84,12 @@ class ClientForm extends Form
                 'state' => $this->state,
                 'city' => $this->city,
                 'country_id' => $this->country,
-                'industry_id' => $this->industry,
+                'industry_id' => $this->industry_id,
                 'tax_number_1' => $this->tax_number,
                 'tax_label_1' => $this->tax_label,
                 'tax_number_2' => $this->tax_number_2,
                 'tax_label_2' => $this->tax_number_2,
-                'time_zone' => '12/02/2024',
+                'time_zone' => 'Africa/Blantyre',
                 'status' => 'Active',
                 ]
             );
@@ -97,5 +102,7 @@ class ClientForm extends Form
 
 
         }
+
+        $this->reset();
     }
 }
