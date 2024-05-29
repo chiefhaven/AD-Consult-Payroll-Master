@@ -588,22 +588,6 @@ return [
                 ],
             ],
         ],
-
-        'tempusdominusBootstrap4' => [
-            'active' => true,
-            'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.38.0/js/tempusdominus-bootstrap-4.min.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => true,
-                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.38.0/css/tempusdominus-bootstrap-4.min.css',
-                ],
-            ],
-        ],
     ],
 
     /*
