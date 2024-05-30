@@ -9,6 +9,8 @@ use DB;
 
 class EmployeeForm extends Form
 {
+    public ?Employee $employee;
+
     #[Validate('required')]
     public float $employee_no = 12.0;
 
@@ -119,6 +121,47 @@ class EmployeeForm extends Form
     #[Validate('required')]
     public $tax = '';
 
+    public function setEmployee(Employee $employee)
+    {
+        $this->employee = $employee;
+        $this->prefix = $employee->prefix;
+        $this->firstname ='';
+        $this->middlename = '';
+        $this->surname = '';
+        $this->employee_current_address = '';
+        $this->employee_permanent_address ='';
+        $this->hiredate = '';
+        $this->education_level = 'BSC';
+        $this->id_type = 'Malawi National ID';
+        $this->id_proof = '';
+        $this->id_number = 'VBM801QJ';
+        $this->marital_status = 'Married';
+        $this->gender = 'Other';
+        $this->bonus = '';
+        $this->nationality = '';
+        $this->email = '';
+        $this->phone = '';
+        $this->employee_alt_number = '';
+        $this->date_of_birth = '';
+        $this->company = '';
+        $this->project = '';
+        $this->family_contact_number = '';
+        $this->family_contact_name = '';
+        $this->family_contact_alt_number = '+265';
+        $this->probation_period = '3';
+        $this->termination_notice_period = '30';
+        $this->termination_notice_period_type = 'Days';
+        $this->designated_location = 'Lilongwe';
+        $this->designation = 'Accountant';
+        $this->contract_end_date = '05/22/2025';
+        $this->designated_location_specifics = '';
+        $this->basic_pay = '500,000';
+        $this->contract_type = 'Part time';
+        $this->pay_period = 'Monthly';
+        $this->tax = 'Payee';
+
+    }
+
     public function store()
     {
 
@@ -165,5 +208,12 @@ class EmployeeForm extends Form
 
 
         }
+    }
+
+    public function update()
+    {
+        $this->employee->update(
+            $this->all()
+        );
     }
 }
