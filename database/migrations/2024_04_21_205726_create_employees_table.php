@@ -24,8 +24,12 @@ return new class extends Migration
             $table->char('phone');
             $table->char('employee_alt_number')->nullable();
             $table->char('nationality_id')->nullable();
-            $table->char('current_address');
-            $table->char('permanent_address')->nullable();
+            $table->char('current_state');
+            $table->char('current_city');
+            $table->char('current_street');
+            $table->char('permanent_state');
+            $table->char('permanent_city');
+            $table->char('permanent_street');
             $table->date('hiredate');
             $table->enum('education_level', ['PhD', 'MSC', 'BSC', 'MSCE/GSCE', 'JCE', 'Other'])->default('BSC');
             $table->enum('designated_location', ['Lilongwe', 'Salima']);
@@ -50,6 +54,7 @@ return new class extends Migration
             $table->enum('pay_period', ['Hourly', 'Daily', 'Weekly', 'Bi Weekly', 'Monthly']);
             $table->enum('status', ['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended', 'On Probation'])->default('Pending');
             $table->char('client_id');
+            $table->char('contact_id');
             $table->char('tax1')->nullable();
             $table->char('company');
             $table->char('project');
