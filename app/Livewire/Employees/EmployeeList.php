@@ -196,4 +196,9 @@ class EmployeeList extends DataTableComponent
             'width' => '600',
            ]);
     }
+
+    public function editItem($id)
+    {
+        return redirect()->to('/update-employee/'.$id);
+    }
 }

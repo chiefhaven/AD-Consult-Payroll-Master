@@ -26,7 +26,7 @@
 @section('content')
 <div class="row">
     <livewire:common.page-header pageTitle="Update employee"/>
-    <livewire:employees.updateEmployee/>
+    <livewire:employees.updateEmployee :employee="$employee"/>
 </div>
 @stop
 
