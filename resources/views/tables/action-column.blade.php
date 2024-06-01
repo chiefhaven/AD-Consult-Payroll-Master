@@ -10,7 +10,7 @@
         @endif
 
         @isset ( $resource )
-            <form wire:submit="editItem" value="{{ $resource->id }}">
+            <form wire:submit="editItem({{ $resource->id }})">
                 <button type="submit" class="dropdown-item mb-1">
                         <i class="fa fa-solid fa-pen me-2"></i> Edit
                 </button>

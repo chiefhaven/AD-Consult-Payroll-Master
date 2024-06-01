@@ -123,42 +123,43 @@ class EmployeeForm extends Form
 
     public function setEmployee(Employee $employee)
     {
-        $this->employee = $employee;
-        $this->prefix = $employee->prefix;
-        $this->firstname ='';
-        $this->middlename = '';
-        $this->surname = '';
-        $this->employee_current_address = '';
-        $this->employee_permanent_address ='';
+        $this->employee = Employee::find($employee->id);
+        dd($employee->id);
+        $this->prefix = $this->employee->prefix;
+        $this->firstname =$this->employee->fname;
+        $this->middlename = $this->employee->mname;
+        $this->surname = $this->employee->sname;
+        $this->employee_current_address = $this->employee->employee_current_address;
+        $this->employee_permanent_address =$this->employee->employee_permanent_address;
         $this->hiredate = '';
-        $this->education_level = 'BSC';
-        $this->id_type = 'Malawi National ID';
-        $this->id_proof = '';
-        $this->id_number = 'VBM801QJ';
-        $this->marital_status = 'Married';
-        $this->gender = 'Other';
-        $this->bonus = '';
-        $this->nationality = '';
-        $this->email = '';
-        $this->phone = '';
-        $this->employee_alt_number = '';
-        $this->date_of_birth = '';
-        $this->company = '';
-        $this->project = '';
-        $this->family_contact_number = '';
-        $this->family_contact_name = '';
-        $this->family_contact_alt_number = '+265';
-        $this->probation_period = '3';
-        $this->termination_notice_period = '30';
-        $this->termination_notice_period_type = 'Days';
-        $this->designated_location = 'Lilongwe';
-        $this->designation = 'Accountant';
-        $this->contract_end_date = '05/22/2025';
-        $this->designated_location_specifics = '';
-        $this->basic_pay = '500,000';
-        $this->contract_type = 'Part time';
-        $this->pay_period = 'Monthly';
-        $this->tax = 'Payee';
+        $this->education_level = $this->employee->education_level;
+        $this->id_type = $this->employee->id_type;
+        $this->id_proof = $this->employee->id_proof;
+        $this->id_number = $this->employee->id_number;
+        $this->marital_status = $this->employee->marital_status;
+        $this->gender = $this->employee->gender;
+        $this->bonus = $this->employee->bonus;
+        $this->nationality = $this->employee->nationality;
+        $this->email = $this->employee->user->email;
+        $this->phone = $this->employee->phone;
+        $this->employee_alt_number = $this->employee->employee_alt_number;
+        $this->date_of_birth = $this->employee->date_of_birth ;
+        $this->company = $this->employee->company;
+        $this->project = $this->employee->project;
+        $this->family_contact_number = $this->employee->family_contact_number;
+        $this->family_contact_name = $this->employee->family_contact_name;
+        $this->family_contact_alt_number = $this->employee->family_contact_alt_number;
+        $this->probation_period = $this->employee->probation_period;
+        $this->termination_notice_period = $this->employee->termination_notice_period;
+        $this->termination_notice_period_type = $this->employee->termination_notice_period_type;
+        $this->designated_location = $this->employee->designated_location;
+        $this->designation = $this->employee->designation;
+        $this->contract_end_date = $this->employee->contract_end_date;
+        $this->designated_location_specifics = $this->employee->designated_location_specifics;
+        $this->basic_pay = $this->employee->basic_pay;
+        $this->contract_type = $this->employee->contract_type;
+        $this->pay_period = $this->employee->pay_period;
+        $this->tax = $this->employee->tax;
 
     }
 

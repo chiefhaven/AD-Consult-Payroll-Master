@@ -179,9 +179,9 @@ class ClientList extends DataTableComponent
            ]);
     }
 
-    public function viewItem()
+    public function viewItem($id)
     {
-        return redirect()->to('/view-client/54');
+        return redirect()->to('/view-client'.$id);
     }
 
     public function editItem()
