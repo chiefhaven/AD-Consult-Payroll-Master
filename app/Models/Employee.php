@@ -26,13 +26,15 @@ class Employee extends Model
         'mname',
         'sname',
         'phone',
-        'phone2',
+        'employee_alt_number',
         'current_address',
         'permanent_address',
         'hiredate',
         'education_level',
         'workdept_id',
         'designation_id',
+        'designated_location',
+        'designated_location_specifics',
         'id_type',
         'id_number',
         'id_proof',
@@ -45,6 +47,22 @@ class Employee extends Model
         'contact_id',
         'client_id',
         'com',
+        'nationality_id',
+        'family_contact_name',
+        'family_contact_number',
+        'family_contact_alt_number',
+        'company',
+        'project',
+        'contract_type',
+        'contract_start_date',
+        'contract_end_date',
+        'probation_period',
+        'termination_notice_period',
+        'termination_notice_period_type',
+        'basic_pay',
+        'pay_period',
+        'tax',
+
     ];
 
     public function User()
@@ -55,5 +73,10 @@ class Employee extends Model
     public function Client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function Contact()
+    {
+        return $this->belongsTo(Contact::class);
     }
 }

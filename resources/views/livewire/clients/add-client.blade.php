@@ -4,7 +4,7 @@
     <form wire:submit="save">
         <div class="card mb-3 p-4">
             <div class="box-body">
-                <p>Client Details</p>
+                <p>Client Details</p> 
                 <div class="row">
                         <x-adminlte-input type="text" name="name" label="Name:*" placeholder="Name" fgroup-class="col-md-3"
                         id="name" wire:model="form.name" required/>

@@ -28,7 +28,7 @@
 
                         <x-adminlte-input type="tel" name="phone" label="Phone:*" placeholder="Phone" fgroup-class="col-md-3"
                         id="phone" wire:model="form.phone" required/>
-                </div>
+                </div> 
             </div>
         </div>
         <div class="card mb-3 p-4">
