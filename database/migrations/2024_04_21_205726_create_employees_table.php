@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('fname');
             $table->char('mname')->nullable();
             $table->string('sname');
-            $table->string('email');
             $table->string('family_contact_name');
             $table->char('family_contact_number');
             $table->char('family_contact_alt_number')->nullable();
