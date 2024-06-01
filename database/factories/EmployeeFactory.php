@@ -31,7 +31,10 @@ class EmployeeFactory extends Factory
             'current_city' => $this->faker->state(45),
             'current_country' => $this->faker->state(45),
             'current_street' => $this->faker->state(45),
-            'permanent_address' => $this->faker->address(45),
+            'permanent_state' => $this->faker->state(45),
+            'permanent_city' => $this->faker->state(45),
+            'permanent_country' => $this->faker->state(45),
+            'permanent_street' => $this->faker->state(45),
             'hiredate' => $this->faker->dateTime(),
             'education_level' => $this->faker->randomElement(['PhD', 'MSC', 'BSC', 'MSCE/GSCE', 'JCE', 'Other']),
             'workdept_id' => $this->faker->randomNumber(2),
@@ -45,11 +48,12 @@ class EmployeeFactory extends Factory
             'gender' => $this->faker->randomElement(['Male', 'Female', 'Other', 'Them']),
             'birthdate' => $this->faker->dateTime(),
             'salary' => $this->faker->randomNumber(6),
-            'pay_period' => $this->faker->randomElement(['Daily', 'Weekly', 'Fortnightly', 'Monthly']),
+            'pay_period' => $this->faker->randomElement(['Daily', 'Weekly', 'Bi Weekly', 'Monthly']),
             'bonus' => $this->faker->randomNumber(6),
             'status' => $this->faker->randomElement(['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended', 'On Probation']),
             'client_id' => $this->faker->randomNumber(2),
             'tax1' => $this->faker->sentence(10),
+            'project'=>$this->faker->randomNumber(2),
         ];
     }
 }
