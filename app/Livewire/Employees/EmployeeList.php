@@ -60,8 +60,6 @@ class EmployeeList extends DataTableComponent
             ->setConfigurableAreas([
               'toolbar-left-middle' => ['includes.areas.toolbar-left-start', ['param1' => $this->myParam]]
              ])
-             ->setReorderEnabled()
-             ->setHideReorderColumnUnlessReorderingEnabled()
             ->setSecondaryHeaderTrAttributes(function($rows) {
                 return ['class' => 'bg-primary'];
             })
