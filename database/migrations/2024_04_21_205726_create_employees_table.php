@@ -24,10 +24,10 @@ return new class extends Migration
             $table->char('phone');
             $table->char('employee_alt_number')->nullable();
             $table->char('nationality_id')->nullable();
-            $table->char('current_state');
-            $table->char('current_city');
-            $table->char('current_country');
-            $table->char('current_street');
+            $table->char('resident_state');
+            $table->char('resident_city');
+            $table->char('resident_country');
+            $table->char('resident_street');
             $table->char('permanent_state');
             $table->char('permanent_city');
             $table->char('permanent_country');
