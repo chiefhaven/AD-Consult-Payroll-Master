@@ -58,7 +58,7 @@ return new class extends Migration
             $table->char('client_id');
             $table->char('tax1')->nullable();
             $table->char('company')->default(0);
-            $table->char('project')->default(0);
+            $table->string('project_id')->default(0)->nullable();
             $table->char('probation_period')->nullable();
             $table->timestamps();
         });
