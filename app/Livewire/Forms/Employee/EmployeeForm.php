@@ -15,111 +15,107 @@ class EmployeeForm extends Form
     public float $employee_no = 12.0;
 
     #[Validate('required')]
-    public string $prefix = '';
+    public string $prefix;
 
     #[Validate('required')]
-    public $firstname ='';
+    public $firstname;
+
+    public $middlename;
 
     #[Validate('required')]
-    public $middlename = '';
+    public $lastname;
 
     #[Validate('required')]
-    public $surname = '';
+    public $resident_street, $resident_city, $resident_state, $resident_country;
+
+    public $permanent_street, $permanent_city, $permanent_state, $permanent_country;
 
     #[Validate('required')]
-    public $employee_current_address = '';
+    public $hiredate;
 
     #[Validate('required')]
-    public $employee_permanent_address ='';
+    public $education_level;
 
     #[Validate('required')]
-    public $hiredate = '';
+    public $id_type;
+
+    public $id_proof;
 
     #[Validate('required')]
-    public $education_level = 'BSC';
+    public $marital_status;
 
     #[Validate('required')]
-    public $id_type = 'Malawi National ID';
+    public $gender;
 
-    public $id_proof = '';
-
-    #[Validate('required')]
-    public $marital_status = 'Married';
+    public $bonus, $client_id;
 
     #[Validate('required')]
-    public $gender = 'Other';
-
-    public $bonus = '';
-
-    public $client_id = '';
+    public $nationality;
 
     #[Validate('required')]
-    public $nationality = '';
+    public $email;
 
     #[Validate('required')]
-    public $email = '';
+    public $phone;
 
     #[Validate('required')]
-    public $phone = '';
+    public $date_of_birth;
 
     #[Validate('required')]
-    public $date_of_birth = '';
+    public $employee_alt_number;
 
     #[Validate('required')]
-    public $employee_alt_number = '';
+    public $id_number;
 
     #[Validate('required')]
-    public $id_number = '';
+    public $company;
 
     #[Validate('required')]
-    public $company = '';
+    public $project = null;
 
     #[Validate('required')]
-    public $project = '';
+    public $family_contact_number;
 
     #[Validate('required')]
-    public $family_contact_number = '';
+    public $family_contact_name;
 
     #[Validate('required')]
-    public $family_contact_name = '';
+    public $family_contact_alt_number;
 
     #[Validate('required')]
-    public $family_contact_alt_number = '';
+    public $probation_period;
 
     #[Validate('required')]
-    public $probation_period = '';
+    public $termination_notice_period;
+
+    public $termination_notice_period_type;
 
     #[Validate('required')]
-    public $termination_notice_period = '';
-
-    public $termination_notice_period_type = '';
+    public $designated_location;
 
     #[Validate('required')]
-    public $designated_location = '';
+    public $designation;
 
     #[Validate('required')]
-    public $designation = '';
+    public $contract_start_date;
 
     #[Validate('required')]
-    public $contract_start_date = '';
+    public $contract_end_date;
 
     #[Validate('required')]
-    public $contract_end_date = '';
+    public $designated_location_specifics;
 
     #[Validate('required')]
-    public $designated_location_specifics = '';
+    public $basic_pay;
 
     #[Validate('required')]
-    public $basic_pay = '';
+    public $contract_type;
 
     #[Validate('required')]
-    public $contract_type = '';
+    public $pay_period;
 
     #[Validate('required')]
-    public $pay_period = '';
-
-    #[Validate('required')]
-    public $tax = '';
+    public $tax;
 
     public function setEmployee(Employee $employee)
     {
@@ -127,9 +123,15 @@ class EmployeeForm extends Form
         $this->prefix = $this->employee->prefix;
         $this->firstname =$this->employee->fname;
         $this->middlename = $this->employee->mname;
-        $this->surname = $this->employee->sname;
-        $this->employee_current_address = $this->employee->employee_current_address;
-        $this->employee_permanent_address =$this->employee->employee_permanent_address;
+        $this->lastname = $this->employee->sname;
+        $this->resident_street = $this->employee->resident_street;
+        $this->resident_city = $this->employee->resident_city;
+        $this->resident_state = $this->employee->resident_state;
+        $this->resident_country = $this->employee->resident_country;
+        $this->permanent_street = $this->employee->permanent_street;
+        $this->permanent_city = $this->employee->permanent_city;
+        $this->permanent_state = $this->employee->permanent_state;
+        $this->permanent_country = $this->employee->permanent_country;
         $this->hiredate = '';
         $this->education_level = $this->employee->education_level;
         $this->id_type = $this->employee->id_type;
@@ -164,6 +166,7 @@ class EmployeeForm extends Form
 
     public function store()
     {
+        $this->validate();
 
         try{
             Employee::create([
@@ -171,7 +174,7 @@ class EmployeeForm extends Form
                 'prefix' => $this->prefix,
                 'fname' => $this->firstname,
                 'mname' => $this->middlename,
-                'sname' => $this->surname,
+                'sname' => $this->lastname,
                 'phone' => $this->phone,
                 'employee_alt_number' => $this->employee_alt_number,
                 'nationality_id' => $this->nationality,
@@ -193,16 +196,16 @@ class EmployeeForm extends Form
                 'bonus' => 00,
                 'status' => 'Active',
                 'client_id' => 1,
-                'pay_period' => 'Hourly',
+                'pay_period' => $this->pay_period,
                 'tax1' => $this->tax,
-                'permanent_city' => $this->employee_permanent_address,
-                'permanent_street' => $this->employee_permanent_address,
-                'permanent_state' => $this->employee_permanent_address,
-                'permanent_country' => $this->employee_permanent_address,
-                'current_city' => $this->employee_current_address,
-                'current_street' => $this->employee_current_address,
-                'current_state' => $this->employee_current_address,
-                'current_country' => $this->employee_current_address,
+                'permanent_city' => $this->permanent_city,
+                'permanent_street' => $this->permanent_street,
+                'permanent_state' => $this->permanent_street,
+                'permanent_country' => $this->permanent_country,
+                'current_city' => $this->resident_city,
+                'current_street' => $this->resident_street,
+                'current_state' => $this->resident_state,
+                'current_country' => $this->resident_country,
             ]);
         }
         catch (\Illuminate\Database\QueryException $exception){
