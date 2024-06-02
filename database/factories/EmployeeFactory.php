@@ -53,7 +53,7 @@ class EmployeeFactory extends Factory
             'status' => $this->faker->randomElement(['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended', 'On Probation']),
             'client_id' => $this->faker->randomNumber(2),
             'tax1' => $this->faker->sentence(10),
-            'project'=>$this->faker->randomNumber(2),
+            'project'=> $this->faker->randomNumber(2)
         ];
     }
 }
