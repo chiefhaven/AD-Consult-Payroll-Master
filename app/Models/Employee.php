@@ -63,9 +63,10 @@ class Employee extends Model
         'basic_pay',
         'pay_period',
         'tax',
-        'current_state',
-        'current_city',
-        'current_street',
+        'resident_state',
+        'resident_city',
+        'resident_street',
+        'resident_country',
 
     ];
 
