@@ -124,7 +124,6 @@ class EmployeeForm extends Form
     public function setEmployee(Employee $employee)
     {
         $this->employee = Employee::find($employee->id);
-        dd($employee->id);
         $this->prefix = $this->employee->prefix;
         $this->firstname =$this->employee->fname;
         $this->middlename = $this->employee->mname;
@@ -174,12 +173,12 @@ class EmployeeForm extends Form
                 'mname' => $this->middlename,
                 'sname' => $this->surname,
                 'phone' => $this->phone,
-                'phone2' => $this->employee_alt_number,
+                'employee_alt_number' => $this->employee_alt_number,
                 'nationality_id' => $this->nationality,
                 'client_id' => $this->company,
-                'contract_type_id' => $this->contract_type,
+                'contract_type' => 1,
                 'designation_id' => $this->designation,
-                'project_id' => $this->project,
+                'project' => $this->project,
                 'hiredate' => $this->hiredate,
                 'education_level' => $this->education_level,
                 'workdept_id' => '',
@@ -194,10 +193,16 @@ class EmployeeForm extends Form
                 'bonus' => 00,
                 'status' => 'Active',
                 'client_id' => 1,
-                'pay_period' => $this->pay_period,
+                'pay_period' => 'Hourly',
                 'tax1' => $this->tax,
-                'permanent_address' => $this->employee_permanent_address,
-                'current_address' => $this->employee_current_address,
+                'permanent_city' => $this->employee_permanent_address,
+                'permanent_street' => $this->employee_permanent_address,
+                'permanent_state' => $this->employee_permanent_address,
+                'permanent_country' => $this->employee_permanent_address,
+                'current_city' => $this->employee_current_address,
+                'current_street' => $this->employee_current_address,
+                'current_state' => $this->employee_current_address,
+                'current_country' => $this->employee_current_address,
             ]);
         }
         catch (\Illuminate\Database\QueryException $exception){
