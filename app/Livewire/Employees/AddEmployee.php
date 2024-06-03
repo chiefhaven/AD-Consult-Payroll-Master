@@ -5,11 +5,14 @@ namespace App\Livewire\Employees;
 use App\Http\Controllers\Common\BusinessUtil;
 use Livewire\Component;
 use App\Livewire\Forms\Employee\EmployeeForm;
+use App\Models\Client;
 use \WW\Countries\Models\Country;
 
 class AddEmployee extends Component
 {
-    public $countries, $genderEnums, $maritalStatusEnums, $idTypes, $educationLevels, $terminationPeriodTypes, $payPeriods =[];
+    public $countries, $clients, $genderEnums, $maritalStatusEnums, $idTypes, $educationLevels, $terminationPeriodTypes, $payPeriods =[];
+
+    public $client = 'P';
 
     public function mount()
     {
@@ -30,6 +33,15 @@ class AddEmployee extends Component
 
         session()->flash('message', 'Employee successfully addeded.');
         return $this->redirect('/employees');
+    }
+
+    public function autocompleteclientSearch()
+    {
+        if ($this->client != '') {
+            $this->clients = Client::where('client_name', 'LIKE', '%' . $this->client . '%')->orderBy('client_name', 'asc')->get();
+        } else {
+            $this->clients = [];
+        }
     }
 
 }

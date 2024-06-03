@@ -27,9 +27,14 @@ class Employee extends Model
         'sname',
         'phone',
         'employee_alt_number',
+        'resident_state',
+        'resident_city',
+        'resident_street',
+        'resident_country',
         'permanent_city',
         'permanent_state',
         'permanent_street',
+        'permanent_country',
         'hiredate',
         'education_level',
         'workdept_id',
@@ -63,9 +68,6 @@ class Employee extends Model
         'basic_pay',
         'pay_period',
         'tax',
-        'current_state',
-        'current_city',
-        'current_street',
 
     ];
 

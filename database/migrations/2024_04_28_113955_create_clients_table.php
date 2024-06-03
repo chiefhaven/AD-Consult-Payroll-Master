@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
             $table->string('client_name');
-            $table->date('contract_start_date')->nullable(); 
-            $table->date('contract_end_date')->nullable(); 
+            $table->date('contract_start_date')->nullable();
+            $table->date('contract_end_date')->nullable();
             $table->char('client_logo')->nullable();
             $table->char('phone')->nullable();
             $table->char('phone2')->nullable();
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('tax_label_2', 100)->nullable();
             $table->string('time_zone')->default('Africa/Blantyre');
             $table->char('status')->nullable();
-            $table->char('project');
+            $table->char('project')->default(0);
             $table->timestamps();
         });
     }
