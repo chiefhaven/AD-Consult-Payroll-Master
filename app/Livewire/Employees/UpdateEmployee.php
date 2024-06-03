@@ -6,11 +6,12 @@ use Livewire\Component;
 use App\Livewire\Forms\Employee\EmployeeForm;
 use App\Models\Employee;
 use \WW\Countries\Models\Country;
+use \HavenPlus\Districts\Models\District;
 use App\Http\Controllers\Common\BusinessUtil;
 
 class UpdateEmployee extends Component
 {
-    public $countries, $genderEnums, $maritalStatusEnums, $idTypes, $educationLevels, $terminationPeriodTypes, $payPeriods =[];
+    public $countries, $districts, $genderEnums, $maritalStatusEnums, $idTypes, $educationLevels, $terminationPeriodTypes, $payPeriods =[];
 
     public EmployeeForm $form;
 
@@ -18,6 +19,7 @@ class UpdateEmployee extends Component
     {
         $this->form->setEmployee($employee);
         $this->countries = Country::all();
+        $this->districts = District::all();
         $this->maritalStatusEnums = BusinessUtil::get_enum_values('employees', 'marital_status');
         $this->genderEnums = BusinessUtil::get_enum_values('employees', 'gender');
         $this->idTypes = BusinessUtil::get_enum_values('employees', 'id_type');
