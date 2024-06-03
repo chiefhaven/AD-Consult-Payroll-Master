@@ -208,8 +208,9 @@
                         <x-adminlte-select name="designated_location" label="Designated Location" wire:model="form.designated_location" data-placeholder="Select an option..."
                         fgroup-class="col-md-4">
                             <option value="null" selected disabled>Please select an option...</option>
-                            <option>Lilongwe</option>
-                            <option>Salima</option>
+                            @foreach ($districts as $district)
+                                <option wire:key="{{ $district->name }}">{{$district->name}}</option>
+                            @endforeach
                         </x-adminlte-select>
 
                         <x-adminlte-input name="designated_location_specifics" label="Designated location other specifics:"
