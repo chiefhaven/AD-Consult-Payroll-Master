@@ -5,11 +5,14 @@ namespace App\Livewire\Forms\Employee;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 use App\Models\Employee;
+use App\Models\Client;
 use DB;
 
 class EmployeeForm extends Form
 {
     public ?Employee $employee;
+
+    public $companies = [];
 
     #[Validate('required')]
     public float $employee_no = 12.0;
@@ -68,7 +71,7 @@ class EmployeeForm extends Form
     public $id_number;
 
     #[Validate('required')]
-    public $company;
+    public $client;
 
     #[Validate('required')]
     public $project = null;
@@ -145,7 +148,7 @@ class EmployeeForm extends Form
         $this->phone = $this->employee->phone;
         $this->employee_alt_number = $this->employee->employee_alt_number;
         $this->date_of_birth = $this->employee->date_of_birth ;
-        $this->company = $this->employee->company;
+        $this->client = $this->employee->client;
         $this->project = $this->employee->project;
         $this->family_contact_number = $this->employee->family_contact_number;
         $this->family_contact_name = $this->employee->family_contact_name;
@@ -178,10 +181,10 @@ class EmployeeForm extends Form
                 'phone' => $this->phone,
                 'employee_alt_number' => $this->employee_alt_number,
                 'nationality_id' => $this->nationality,
-                'client_id' => $this->company,
+                'client_id' => $this->client,
                 'contract_type' => 1,
                 'designation_id' => $this->designation,
-                'project' => $this->project,
+                'project_id' => $this->project,
                 'hiredate' => $this->hiredate,
                 'education_level' => $this->education_level,
                 'workdept_id' => '',
@@ -192,7 +195,7 @@ class EmployeeForm extends Form
                 'marital_status' => $this->marital_status,
                 'gender' => $this->gender,
                 'birthdate' => $this->date_of_birth,
-                'salary' => 500000.00,
+                'salary' => $this->basic_pay,
                 'bonus' => 00,
                 'status' => 'Active',
                 'client_id' => 1,
@@ -202,10 +205,10 @@ class EmployeeForm extends Form
                 'permanent_street' => $this->permanent_street,
                 'permanent_state' => $this->permanent_street,
                 'permanent_country' => $this->permanent_country,
-                'current_city' => $this->resident_city,
-                'current_street' => $this->resident_street,
-                'current_state' => $this->resident_state,
-                'current_country' => $this->resident_country,
+                'resident_city' => $this->resident_city,
+                'resident_street' => $this->resident_street,
+                'resident_state' => $this->resident_state,
+                'resident_country' => $this->resident_country,
             ]);
         }
         catch (\Illuminate\Database\QueryException $exception){

@@ -27,10 +27,10 @@ class EmployeeFactory extends Factory
             'sname' => $this->faker->lastName(),
             'phone' => $this->faker->phoneNumber(5),
             'employee_alt_number' => $this->faker->phoneNumber(5),
-            'current_state' => $this->faker->state(45),
-            'current_city' => $this->faker->state(45),
-            'current_country' => $this->faker->state(45),
-            'current_street' => $this->faker->state(45),
+            'resident_state' => $this->faker->state(45),
+            'resident_city' => $this->faker->state(45),
+            'resident_country' => $this->faker->state(45),
+            'resident_street' => $this->faker->state(45),
             'permanent_state' => $this->faker->state(45),
             'permanent_city' => $this->faker->state(45),
             'permanent_country' => $this->faker->state(45),
@@ -53,7 +53,7 @@ class EmployeeFactory extends Factory
             'status' => $this->faker->randomElement(['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended', 'On Probation']),
             'client_id' => $this->faker->randomNumber(2),
             'tax1' => $this->faker->sentence(10),
-            'project'=> $this->faker->randomNumber(2)
+            'project_id'=> $this->faker->randomNumber(2)
         ];
     }
 }

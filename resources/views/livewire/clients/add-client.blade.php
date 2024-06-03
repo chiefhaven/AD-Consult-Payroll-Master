@@ -4,7 +4,7 @@
     <form wire:submit="save">
         <div class="card mb-3 p-4">
             <div class="box-body">
-                <p>Client Details</p> 
+                <p>Client Details</p>
                 <div class="row">
                         <x-adminlte-input type="text" name="name" label="Name:*" placeholder="Name" fgroup-class="col-md-3"
                         id="name" wire:model="form.name" required/>
@@ -21,12 +21,12 @@
                         <x-adminlte-input type="text" name="project" label="Project:" placeholder="Project" fgroup-class="col-md-3"
                         id="project" wire:model="form.project"/>
 
-                        <x-adminlte-select2 type="option" name="industry" label="Industry:" wire:model="form.industry" placeholder="Select an option..."
+                        <x-adminlte-select type="option" name="industry" label="Industry:" wire:model="form.industry" placeholder="Select an option..."
                         fgroup-class="col-md-3">
                             @foreach ($industries as $industries)
                                 <option {{ $industries->name }}>{{$industries->name}}</option>
                             @endforeach
-                        </x-adminlte-select2>
+                        </x-adminlte-select>
 
                         <x-adminlte-input type="date" name="contractstartdate" label="Contract start date:" placeholder="Contract start date:"
                         fgroup-class="col-md-3" id="contractstartdate" wire:model="form.contractstartdate" required/>
@@ -64,12 +64,12 @@
                     placeholder="State/Region/Province" fgroup-class="col-md-4"
                      id="state" wire:model="form.state"/>
 
-                    <x-adminlte-select2 type="text" name="country" label="Country" wire:model="form.country" data-placeholder="Select an option..."
+                    <x-adminlte-select type="text" name="country" label="Country" wire:model="form.country" data-placeholder="Select an option..."
                         fgroup-class="col-md-4">
                         @foreach ($countries as $country)
                             <option {{ $country->name == 'Malawi' ? 'selected' : '' }}>{{$country->name}}</option>
                         @endforeach
-                    </x-adminlte-select2>
+                    </x-adminlte-select>
 
                     <x-adminlte-input type="website" name="website" label="Website:"
                     placeholder="Website" fgroup-class="col-md-4"

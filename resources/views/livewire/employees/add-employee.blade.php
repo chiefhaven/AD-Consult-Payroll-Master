@@ -28,6 +28,9 @@
 
                         <x-adminlte-input type="tel" name="phone" label="Phone:*" placeholder="Phone" fgroup-class="col-md-3"
                         id="phone" wire:model="form.phone" required/>
+
+                        <x-adminlte-input type="checkbox" name="allow_login" label="Allow Login:*"
+                        id="phone" wire:model="form.allow_login" checked required/>
                 </div>
             </div>
         </div>
@@ -38,41 +41,41 @@
                         <x-adminlte-input type="date" name="date_of_birth" label="Date of birth:*" placeholder="Date of birth"
                         fgroup-class="col-md-3" id="date_of_birth" wire:model="form.date_of_birth" required/>
 
-                        <x-adminlte-select2 type="text" name="gender" label="Gender:*" wire:model="form.gender" data-placeholder="Select an option..."
+                        <x-adminlte-select type="text" name="gender" label="Gender:*" wire:model="form.gender" data-placeholder="Select an option..."
                         fgroup-class="col-md-3" required>
                             <option value="null" selected disabled>Please select an option...</option>
                             @foreach ($genderEnums as $genderEnum)
                                 <option>{{$genderEnum}}</option>
                             @endforeach
-                        </x-adminlte-select2>
+                        </x-adminlte-select>
 
-                        <x-adminlte-select2 type="text" name="marital_status" label="Marital status:*" wire:model="form.marital_status"
+                        <x-adminlte-select type="text" name="marital_status" label="Marital status:*" wire:model="form.marital_status"
                         data-placeholder="Select an option..." fgroup-class="col-md-2" required>
                             <option value="null" selected disabled>Please select an option...</option>
                             @foreach ($maritalStatusEnums as $maritalStatusEnum)
                                 <option>{{$maritalStatusEnum}}</option>
                             @endforeach
-                        </x-adminlte-select2>
+                        </x-adminlte-select>
 
                         <x-adminlte-input type="text" name="employee_alt_number" label="Alternate phone number:"
                         placeholder="Alternate phone number" fgroup-class="col-md-4"
                         id="employee_alt_number" wire:model="form.employee_alt_number"/>
 
-                        <x-adminlte-select2 type="text" name="nationality" label="Nationality:*" wire:model="form.nationality" data-placeholder="Select an option..."
+                        <x-adminlte-select type="text" name="nationality" label="Nationality:*" wire:model="form.nationality" data-placeholder="Select an option..."
                          fgroup-class="col-md-3" required>
                             <option value="null" selected disabled>Please select an option...</option>
                             @foreach ($countries as $country)
                                 <option wire:key="{{ $country->name }}">{{$country->name}}</option>
                             @endforeach
-                        </x-adminlte-select2>
+                        </x-adminlte-select>
 
-                        <x-adminlte-select2 type="text" name="id_type" wire:model="form.id_type" label="ID Type:*" data-placeholder="Select an option..."
+                        <x-adminlte-select type="text" name="id_type" wire:model="form.id_type" label="ID Type:*" data-placeholder="Select an option..."
                          fgroup-class="col-md-3" required>
                             <option value="null" selected disabled>Please select an option...</option>
                             @foreach ($idTypes as $idType)
                                 <option>{{$idType}}</option>
                             @endforeach
-                        </x-adminlte-select2>
+                        </x-adminlte-select>
 
                         <x-adminlte-input name="id_number" label="ID number:*" placeholder="ID number"
                         fgroup-class="col-md-3" id="id_number" wire:model="form.id_number" required/>
@@ -89,13 +92,13 @@
                         <x-adminlte-input name="resident_state" label="Resident state:*" placeholder="Resident state"
                         fgroup-class="col-md-3" id="resident_state" wire:model="form.resident_state" required/>
 
-                        <x-adminlte-select2 type="text" name="resident_country" label="Resident country:*" wire:model="form.resident_country" data-placeholder="Select an option..."
+                        <x-adminlte-select type="text" name="resident_country" label="Resident country:*" wire:model="form.resident_country" data-placeholder="Select an option..."
                          fgroup-class="col-md-3" required>
                             <option value="null" selected disabled>Please select an option...</option>
                             @foreach ($countries as $country)
                                 <option>{{$country->name}}</option>
                             @endforeach
-                        </x-adminlte-select2>
+                        </x-adminlte-select>
 
                         <x-adminlte-input name="permanent_city" label="Permanent street:" placeholder="Permanent street"
                         fgroup-class="col-md-3" id="permanent_street" wire:model="form.permanent_street" />
@@ -106,13 +109,13 @@
                         <x-adminlte-input name="permanent_state" label="Permanent state:" placeholder="Permanent state"
                         fgroup-class="col-md-3" id="resident_state" wire:model="form.permanent_state" />
 
-                        <x-adminlte-select2 type="text" name="permanent_counrty" label="Permanent country:" wire:model="form.permanent_country" data-placeholder="Select an option..."
+                        <x-adminlte-select type="text" name="permanent_counrty" label="Permanent country:" wire:model="form.permanent_country" data-placeholder="Select an option..."
                          fgroup-class="col-md-3">
                             <option value="null" selected disabled>Please select an option...</option>
                             @foreach ($countries as $country)
                                 <option>{{$country->name}}</option>
                             @endforeach
-                        </x-adminlte-select2>
+                        </x-adminlte-select>
 
                         <x-adminlte-input name="family_contact_name" label="Family contact name:"
                         placeholder="Family contact name" fgroup-class="col-md-4"
@@ -138,41 +141,44 @@
                         fgroup-class="col-md-4" id="hiredate" wire:model="form.hiredate"/>
 
 
-                        <x-adminlte-select2 name="company" label="Company/Organization:" data-placeholder="Select an option..."
-                        fgroup-class="col-md-4" wire:model="form.company">
-                            <option value="null" selected disabled>Please select an option...</option>
-                            <option value="United Nation">United Nations</option>
-                            <option value="World Bank">World Bank</option>
-                        </x-adminlte-select2>
+                        <x-adminlte-input type="text" name="client" label="Company/Organization:" list="clientOptions"
+                        fgroup-class="col-md-4" wire:model="form.client" wire:keydown="autocompleteclientSearch($event)" />
+                            <datalist id="clientOptions">
+                                @if(isset($clients))
+                                    @foreach ($clients as $client)
+                                        <option>{{$client->client_name}}</option>
+                                    @endforeach
+                                @endif
+                            </datalist>
 
-                        <x-adminlte-select2 name="education_level" label="Education Level:" data-placeholder="Select an option..."
+                        <x-adminlte-select name="education_level" label="Education Level:" data-placeholder="Select an option..."
                         fgroup-class="col-md-4" wire:model="form.education_level">
                             <option value="null" selected disabled>Please select an option...</option>
                             @foreach ($educationLevels as $educationLevel)
                                 <option>{{$educationLevel}}</option>
                             @endforeach
-                        </x-adminlte-select2>
+                        </x-adminlte-select>
 
-                        <x-adminlte-select2 name="project" label="Project:" data-placeholder="Select an option..."
+                        <x-adminlte-select name="project" label="Project:" data-placeholder="Select an option..."
                         fgroup-class="col-md-4" wire:model="form.project">
                             <option value="null" selected disabled>Please select an option...</option>
                             <option>UN Aids</option>
                             <option>Cholera</option>
-                        </x-adminlte-select2>
+                        </x-adminlte-select>
 
-                        <x-adminlte-select2 name="designation" label="Designation:" data-placeholder="Select an option..."
+                        <x-adminlte-select name="designation" label="Designation:" data-placeholder="Select an option..."
                         fgroup-class="col-md-4" wire:model="form.designation">
                             <option value="null" selected disabled>Please select an option...</option>
                             <option>Accountant</option>
                             <option>Field Officer</option>
-                        </x-adminlte-select2>
+                        </x-adminlte-select>
 
-                        <x-adminlte-select2 name="contract_type" label="Contract type:" data-placeholder="Select an option..."
+                        <x-adminlte-select name="contract_type" label="Contract type:" data-placeholder="Select an option..."
                         fgroup-class="col-md-4" wire:model="form.contract_type">
                             <option value="null" selected disabled>Please select an option...</option>
                             <option>Permanent</option>
                             <option>Part time</option>
-                        </x-adminlte-select2>
+                        </x-adminlte-select>
 
                         <x-adminlte-input name="probation_period" label="Probation period:"
                         placeholder="Probation period" fgroup-class="col-md-4"
@@ -183,11 +189,11 @@
                                 <x-adminlte-input name="termination_notice_period" label="Notice period:"
                                 placeholder="Termination notice period" fgroup-class="col-md-8" id="termination_notice_period"  wire:model="form.termination_notice_period" required/>
 
-                            <x-adminlte-select2 name="termination_notice_period_type" label="" wire:model="form.termination_notice_period_type" fgroup-class="col-md-4" data-placeholder="Select an option...">
+                            <x-adminlte-select name="termination_notice_period_type" label="" wire:model="form.termination_notice_period_type" fgroup-class="col-md-4" data-placeholder="Select an option...">
                                 @foreach ($terminationPeriodTypes as $terminationPeriodType)
                                     <option>{{$terminationPeriodType}}</option>
                                 @endforeach
-                            </x-adminlte-select2>
+                            </x-adminlte-select>
                             </div>
                         </div>
 
@@ -199,12 +205,12 @@
                         placeholder="Contract end date" fgroup-class="col-md-4"
                         id="contract_end_date" wire:model="form.contract_end_date" required/>
 
-                        <x-adminlte-select2 name="designated_location" label="Designated Location" wire:model="form.designated_location" data-placeholder="Select an option..."
+                        <x-adminlte-select name="designated_location" label="Designated Location" wire:model="form.designated_location" data-placeholder="Select an option..."
                         fgroup-class="col-md-4">
                             <option value="null" selected disabled>Please select an option...</option>
                             <option>Lilongwe</option>
                             <option>Salima</option>
-                        </x-adminlte-select2>
+                        </x-adminlte-select>
 
                         <x-adminlte-input name="designated_location_specifics" label="Designated location other specifics:"
                         placeholder="Designated location other specifics" fgroup-class="col-md-4"
@@ -221,18 +227,18 @@
                     <x-adminlte-input name="basic_pay" label="Basic pay:"
                     placeholder="Basic pay" fgroup-class="col-md-4" id="basic_pay" wire:model="form.basic_pay" required/>
 
-                    <x-adminlte-select2 name="pay_period" label="Pay period"
+                    <x-adminlte-select name="pay_period" label="Pay period"
                         fgroup-class="col-md-4" wire:model="form.pay_period">
                         <option value="null" selected disabled>Please select an option...</option>
                         @foreach ($payPeriods as $payPeriod)
                             <option>{{$payPeriod}}</option>
                         @endforeach
-                    </x-adminlte-select2>
-                    <x-adminlte-select2 name="tax" label="Applicable Tax" wire:model="form.tax" fgroup-class="col-md-4">
+                    </x-adminlte-select>
+                    <x-adminlte-select name="tax" label="Applicable Tax" wire:model="form.tax" fgroup-class="col-md-4">
                             <option selected >Please select an option...</option>
                             <option>None</option>
                             <option>Payee</option>
-                    </x-adminlte-select2>
+                    </x-adminlte-select>
                 </div>
             </div>
         </div>
