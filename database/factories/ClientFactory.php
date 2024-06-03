@@ -19,12 +19,13 @@ class ClientFactory extends Factory
         return [
             'client_name' => $this->faker->sentence(3),
             'contract_start_date' => $this->faker->date(),
+            'contract_end_date' => $this->faker->date(),
             'client_logo' => $this->faker->imageUrl(),
             'phone' => $this->faker->phoneNumber(5),
-            'phone2' => $this->faker->phoneNumber(5),
+            'client_alt_number' => $this->faker->phoneNumber(5),
             'address' => $this->faker->address(45),
             'zip_postal_code' => $this->faker->postcode(5),
-            'state' => $this->faker->word(5),
+            'state' => $this->faker->word(5), 
             'city' => $this->faker->city(),
             'country_id' => $this->faker->country(),
             'industry_id' => $this->faker->randomNumber(1),
@@ -32,6 +33,8 @@ class ClientFactory extends Factory
             'tax_label_1' => $this->faker->word(5),
             'tax_number_2' => $this->faker->randomNumber(5),
             'tax_label_2' => $this->faker->word(5),
+            'project' => $this->faker->word(5),
+            'status' => $this->faker->randomElement(['new','suspended','active','pending','terminated']),
             'time_zone' => $this->faker->timezone(),
         ];
     }

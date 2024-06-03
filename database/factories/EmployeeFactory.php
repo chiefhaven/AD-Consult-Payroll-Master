@@ -39,7 +39,7 @@ class EmployeeFactory extends Factory
             'education_level' => $this->faker->randomElement(['PhD', 'MSC', 'BSC', 'MSCE/GSCE', 'JCE', 'Other']),
             'workdept_id' => $this->faker->randomNumber(2),
             'designation_id' => $this->faker->randomNumber(1),
-            'designated_location_specifics' => $this->faker->randomNumber(5),
+            'designated_location_specifics' => $this->faker->randomElement(5),
             'designation_location' => $this->faker->randomNumber(['Lilongwe','Salima']),
             'id_type' => $this->faker->randomElement(['Malawi National ID', 'Passport', 'Driving Licence', 'Other']),
             'termination_notice_period' => $this->faker->randomNumber(3),
