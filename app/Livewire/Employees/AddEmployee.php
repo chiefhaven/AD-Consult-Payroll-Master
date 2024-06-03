@@ -7,16 +7,18 @@ use Livewire\Component;
 use App\Livewire\Forms\Employee\EmployeeForm;
 use App\Models\Client;
 use \WW\Countries\Models\Country;
+use \HavenPlus\Districts\Models\District;
 
 class AddEmployee extends Component
 {
-    public $countries, $clients, $genderEnums, $maritalStatusEnums, $idTypes, $educationLevels, $terminationPeriodTypes, $payPeriods =[];
+    public $countries, $districts, $clients, $genderEnums, $maritalStatusEnums, $idTypes, $educationLevels, $terminationPeriodTypes, $payPeriods =[];
 
     public $client = 'P';
 
     public function mount()
     {
         $this->countries = Country::all();
+        $this->districts = District::all();
         $this->maritalStatusEnums = BusinessUtil::get_enum_values('employees', 'marital_status');
         $this->genderEnums = BusinessUtil::get_enum_values('employees', 'gender');
         $this->idTypes = BusinessUtil::get_enum_values('employees', 'id_type');

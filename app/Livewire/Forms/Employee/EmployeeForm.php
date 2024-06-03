@@ -5,14 +5,20 @@ namespace App\Livewire\Forms\Employee;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 use App\Models\Employee;
+use App\Models\TaxRate;
 use App\Models\Client;
 use DB;
+use \WW\Countries\Models\Country;
+use \HavenPlus\Districts\Models\District;
+use Carbon\Carbon;
 
 class EmployeeForm extends Form
 {
     public ?Employee $employee;
 
     public $companies = [];
+
+    public $country;
 
     #[Validate('required')]
     public float $employee_no = 12.0;
@@ -122,7 +128,10 @@ class EmployeeForm extends Form
 
     public function setEmployee(Employee $employee)
     {
-        $this->employee = Employee::find($employee->id);
+
+        $this->employee = Employee::find(53);
+        $this->country = Country::find($this->employee->nationality_id)->name;
+
         $this->prefix = $this->employee->prefix;
         $this->firstname =$this->employee->fname;
         $this->middlename = $this->employee->mname;
@@ -135,7 +144,7 @@ class EmployeeForm extends Form
         $this->permanent_city = $this->employee->permanent_city;
         $this->permanent_state = $this->employee->permanent_state;
         $this->permanent_country = $this->employee->permanent_country;
-        $this->hiredate = '';
+        $this->hiredate = Carbon::parse($this->employee->hiredate)->format('Y-m-d');;
         $this->education_level = $this->employee->education_level;
         $this->id_type = $this->employee->id_type;
         $this->id_proof = $this->employee->id_proof;
@@ -143,12 +152,12 @@ class EmployeeForm extends Form
         $this->marital_status = $this->employee->marital_status;
         $this->gender = $this->employee->gender;
         $this->bonus = $this->employee->bonus;
-        $this->nationality = $this->employee->nationality;
+        $this->nationality = $this->country;
         $this->email = $this->employee->user->email;
         $this->phone = $this->employee->phone;
         $this->employee_alt_number = $this->employee->employee_alt_number;
-        $this->date_of_birth = $this->employee->date_of_birth ;
-        $this->client = $this->employee->client;
+        $this->date_of_birth = Carbon::parse($this->employee->date_of_birth)->format('Y-m-d');
+        $this->client = Client::find($this->employee->client)->firstOrFail()->client_name;
         $this->project = $this->employee->project;
         $this->family_contact_number = $this->employee->family_contact_number;
         $this->family_contact_name = $this->employee->family_contact_name;
@@ -158,18 +167,21 @@ class EmployeeForm extends Form
         $this->termination_notice_period_type = $this->employee->termination_notice_period_type;
         $this->designated_location = $this->employee->designated_location;
         $this->designation = $this->employee->designation;
-        $this->contract_end_date = $this->employee->contract_end_date;
+        $this->contract_start_date = Carbon::parse($this->employee->contract_start_date)->format('Y-m-d');
+        $this->contract_end_date = Carbon::parse($this->employee->contract_end_date)->format('Y-m-d');
         $this->designated_location_specifics = $this->employee->designated_location_specifics;
         $this->basic_pay = $this->employee->basic_pay;
         $this->contract_type = $this->employee->contract_type;
         $this->pay_period = $this->employee->pay_period;
-        $this->tax = $this->employee->tax;
+        $this->tax = TaxRate::where('id', $this->employee->tax1)->firstOrFail()->name;
 
     }
 
     public function store()
     {
         $this->validate();
+
+        $this->country = Country::where('name',$this->nationality)->id;
 
         try{
             Employee::create([
