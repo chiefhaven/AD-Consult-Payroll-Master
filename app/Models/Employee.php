@@ -66,7 +66,7 @@ class Employee extends Model
         'termination_notice_period_type',
         'basic_pay',
         'pay_period',
-        'tax',
+        'paye',
 
     ];
 
