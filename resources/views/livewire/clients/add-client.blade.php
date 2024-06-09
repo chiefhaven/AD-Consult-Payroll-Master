@@ -1,3 +1,5 @@
+<div>
+<livewire:common.page-header pageTitle="{{ $pageTitle }}"/>
 <div class="col-lg-12">
     @include('includes/error')
     @section('plugins.Select2', true)
@@ -6,16 +8,13 @@
             <div class="box-body">
                 <p>Client Details</p>
                 <div class="row">
-                        <x-adminlte-input type="text" name="name" label="Name:*" placeholder="Name" fgroup-class="col-md-3"
+                        <x-adminlte-input type="text" name="name" label="Name:*" placeholder="Name" fgroup-class="col-md-4"
                         id="name" wire:model="form.name" required/>
 
-                        <x-adminlte-input-file name="client_logo" label="Client logo" placeholder="Choose a file..."
-                        fgroup-class="col-md-3"/>
-
-                        <x-adminlte-input type="email" name="email" label="Email:*" placeholder="Email address" fgroup-class="col-md-3"
+                        <x-adminlte-input type="email" name="email" label="Email:*" placeholder="Email address" fgroup-class="col-md-4"
                         id="email" wire:model="form.email" required/>
 
-                        <x-adminlte-input type="tel" name="phone" label="Phone:*" placeholder="Phone" fgroup-class="col-md-3"
+                        <x-adminlte-input type="tel" name="phone" label="Phone:*" placeholder="Phone" fgroup-class="col-md-4"
                         id="phone" wire:model="form.phone" required/>
 
                         <x-adminlte-input type="text" name="project" label="Project:" placeholder="Project" fgroup-class="col-md-3"
@@ -71,10 +70,6 @@
                         @endforeach
                     </x-adminlte-select>
 
-                    <x-adminlte-input type="website" name="website" label="Website:"
-                    placeholder="Website" fgroup-class="col-md-4"
-                     id="website" wire:model="form.website"/>
-
                     <x-adminlte-input type="text" name="tax_number" label="Tax number:"
                     placeholder="Tax number" fgroup-class="col-md-3" id="tax_number" wire:model="form.tax_number"/>
 
@@ -86,6 +81,10 @@
 
                     <x-adminlte-input type="text" name="tax_number_label_2" label="Tax label 2:"
                     placeholder="Tax label 2" fgroup-class="col-md-3" id="tax_label_2" wire:model="form.tax_label_2"/>
+
+                    <x-adminlte-input type="website" name="website" label="Website:"
+                    placeholder="Website" fgroup-class="col-md-4"
+                     id="website" wire:model="form.website"/>
                 </div>
             </div>
         </div>
@@ -115,4 +114,5 @@
             </div>
         </button>
     </form>
+</div>
 </div>
