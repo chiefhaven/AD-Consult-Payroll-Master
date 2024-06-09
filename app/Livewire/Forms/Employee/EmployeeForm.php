@@ -7,6 +7,7 @@ use Livewire\Form;
 use App\Models\Employee;
 use App\Models\TaxRate;
 use App\Models\Client;
+use App\Models\Designation;
 use DB;
 use \WW\Countries\Models\Country;
 use \HavenPlus\Districts\Models\District;
@@ -14,6 +15,7 @@ use Carbon\Carbon;
 
 class EmployeeForm extends Form
 {
+
     public ?Employee $employee;
 
     public $companies = [];
@@ -48,7 +50,8 @@ class EmployeeForm extends Form
     #[Validate('required')]
     public $id_type;
 
-    public $id_proof;
+    // #[Validate('required','image|max:4096')]
+    // public $id_proof_pic;
 
     #[Validate('required')]
     public $marital_status;
@@ -129,7 +132,7 @@ class EmployeeForm extends Form
     public function setEmployee(Employee $employee)
     {
 
-        $this->employee = Employee::find(53);
+        $this->employee = Employee::find(56);
         $this->country = Country::find($this->employee->nationality_id)->name;
 
         $this->prefix = $this->employee->prefix;
@@ -147,7 +150,7 @@ class EmployeeForm extends Form
         $this->hiredate = Carbon::parse($this->employee->hiredate)->format('Y-m-d');;
         $this->education_level = $this->employee->education_level;
         $this->id_type = $this->employee->id_type;
-        $this->id_proof = $this->employee->id_proof;
+        //$this->id_proof_pic = $this->employee->id_proof;
         $this->id_number = $this->employee->id_number;
         $this->marital_status = $this->employee->marital_status;
         $this->gender = $this->employee->gender;
@@ -166,22 +169,21 @@ class EmployeeForm extends Form
         $this->termination_notice_period = $this->employee->termination_notice_period;
         $this->termination_notice_period_type = $this->employee->termination_notice_period_type;
         $this->designated_location = $this->employee->designated_location;
-        $this->designation = $this->employee->designation;
+        $this->designation = Designation::find($this->employee->designation_id)->name;
         $this->contract_start_date = Carbon::parse($this->employee->contract_start_date)->format('Y-m-d');
         $this->contract_end_date = Carbon::parse($this->employee->contract_end_date)->format('Y-m-d');
         $this->designated_location_specifics = $this->employee->designated_location_specifics;
-        $this->basic_pay = $this->employee->basic_pay;
+        $this->basic_pay = $this->employee->salary;
         $this->contract_type = $this->employee->contract_type;
         $this->pay_period = $this->employee->pay_period;
-        $this->tax = TaxRate::where('id', $this->employee->tax1)->firstOrFail()->name;
-
+        $this->tax = TaxRate::find($this->employee->tax)->name;
     }
 
     public function store()
     {
         $this->validate();
 
-        $this->country = Country::where('name',$this->nationality)->id;
+        $this->country = Country::where('name',$this->nationality)->firstOrFail()->id;
 
         try{
             Employee::create([
@@ -192,10 +194,10 @@ class EmployeeForm extends Form
                 'sname' => $this->lastname,
                 'phone' => $this->phone,
                 'employee_alt_number' => $this->employee_alt_number,
-                'nationality_id' => $this->nationality,
+                'nationality_id' => $this->country,
                 'client_id' => $this->client,
                 'contract_type' => 1,
-                'designation_id' => $this->designation,
+                'designation_id' => Designation::Where('name', $this->designation)->firstOrFail()->name,
                 'project_id' => $this->project,
                 'hiredate' => $this->hiredate,
                 'education_level' => $this->education_level,
@@ -203,7 +205,7 @@ class EmployeeForm extends Form
                 'designation_id' => $this->designation,
                 'id_type' => $this->id_type,
                 'id_number' => $this->id_number,
-                'id_proof_pic' => $this->id_proof,
+                //'id_proof_pic' => $this->id_proof_pic,
                 'marital_status' => $this->marital_status,
                 'gender' => $this->gender,
                 'birthdate' => $this->date_of_birth,
@@ -211,6 +213,7 @@ class EmployeeForm extends Form
                 'bonus' => 00,
                 'status' => 'Active',
                 'client_id' => 1,
+                'probation_period' => $this->probation_period,
                 'pay_period' => $this->pay_period,
                 'tax1' => $this->tax,
                 'permanent_city' => $this->permanent_city,
@@ -221,6 +224,9 @@ class EmployeeForm extends Form
                 'resident_street' => $this->resident_street,
                 'resident_state' => $this->resident_state,
                 'resident_country' => $this->resident_country,
+                'family_contact_name'=>$this->family_contact_name,
+                'family_contact_number'=>$this->family_contact_number,
+                'family_contact_alt_number'=>$this->family_contact_alt_number,
             ]);
         }
         catch (\Illuminate\Database\QueryException $exception){
@@ -236,8 +242,60 @@ class EmployeeForm extends Form
 
     public function update()
     {
-        $this->employee->update(
-            $this->all()
-        );
+        $this->country = Country::where('name',$this->nationality)->firstOrFail()->id;
+
+        try{
+            $this->employee->update(
+            [
+                'employee_no' => $this->employee_no,
+                'prefix' => $this->prefix,
+                'fname' => $this->firstname,
+                'mname' => $this->middlename,
+                'sname' => $this->lastname,
+                'phone' => $this->phone,
+                'employee_alt_number' => $this->employee_alt_number,
+                'nationality_id' => $this->country,
+                'client_id' => $this->client,
+                'contract_type' => 1,
+                'designation_id' => Designation::Where('name', $this->designation)->firstOrFail()->id,
+                'project_id' => $this->project,
+                'hiredate' => $this->hiredate,
+                'education_level' => $this->education_level,
+                'workdept_id' => '',
+                'id_type' => $this->id_type,
+                'id_number' => $this->id_number,
+                //'id_proof_pic' => $this->id_proof_pic,
+                'marital_status' => $this->marital_status,
+                'gender' => $this->gender,
+                'birthdate' => $this->date_of_birth,
+                'salary' => $this->basic_pay,
+                'bonus' => 00,
+                'status' => 'Active',
+                'client_id' => 1,
+                'probation_period' => $this->probation_period,
+                'pay_period' => $this->pay_period,
+                'tax1' => $this->tax,
+                'permanent_city' => $this->permanent_city,
+                'permanent_street' => $this->permanent_street,
+                'permanent_state' => $this->permanent_street,
+                'permanent_country' => $this->permanent_country,
+                'resident_city' => $this->resident_city,
+                'resident_street' => $this->resident_street,
+                'resident_state' => $this->resident_state,
+                'resident_country' => $this->resident_country,
+                'family_contact_name'=>$this->family_contact_name,
+                'family_contact_number'=>$this->family_contact_number,
+                'family_contact_alt_number'=>$this->family_contact_alt_number,
+            ]);
+        }
+        catch (\Illuminate\Database\QueryException $exception){
+
+
+            DB::rollback();
+            $errorInfo = $exception->errorInfo;
+            dd($errorInfo);
+
+
+        }
     }
 }

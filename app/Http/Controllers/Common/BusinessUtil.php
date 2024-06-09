@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Industry;
@@ -41,5 +42,18 @@ class BusinessUtil extends Controller
     {
         $industry_id = Industry::where('name', $industry_name)->firstOrFail()->id;
         return $industry_id;
+    }
+
+    public $clients = [];
+
+    public function autocompleteclientSearch($client)
+    {
+        if ($client != '') {
+            $this->clients = Client::where('client_name', 'LIKE', '%' . $client . '%')->orderBy('client_name', 'asc')->get();
+        } else {
+            $this->clients = [];
+        }
+
+        return $this->clients;
     }
 }

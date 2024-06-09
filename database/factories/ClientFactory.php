@@ -19,20 +19,26 @@ class ClientFactory extends Factory
         return [
             'client_name' => $this->faker->sentence(3),
             'contract_start_date' => $this->faker->date(),
-            'client_logo' => $this->faker->imageUrl(),
+            'contract_end_date' => $this->faker->date(),
             'phone' => $this->faker->phoneNumber(5),
             'phone2' => $this->faker->phoneNumber(5),
-            'address' => $this->faker->address(45),
+            'street_address' => $this->faker->address(45),
+            'street_address_2' => $this->faker->address(45),
             'zip_postal_code' => $this->faker->postcode(5),
             'state' => $this->faker->word(5),
             'city' => $this->faker->city(),
-            'country_id' => $this->faker->country(),
+            'country_id' => $this->faker->randomNumber(1),
             'industry_id' => $this->faker->randomNumber(1),
+            'website' => $this->faker->domainName(),
             'tax_number_1' => $this->faker->randomNumber(2),
             'tax_label_1' => $this->faker->word(5),
             'tax_number_2' => $this->faker->randomNumber(5),
             'tax_label_2' => $this->faker->word(5),
+            'project' => $this->faker->sentence(3),
             'time_zone' => $this->faker->timezone(),
+            'status' => $this->faker->randomElement(['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended']),
+
+
         ];
     }
 }

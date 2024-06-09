@@ -3,21 +3,15 @@
 namespace App\Livewire\Clients;
 
 use App\Models\Client;
-use Livewire\Component;
-use App\Models\Employee;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
-use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\DateFilter;
-use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
-use App\Exports\UsersExport;
 use Carbon\Carbon;
-use JeroenNoten\LaravelAdminLte\View\Components\Form\Button;
 use Maatwebsite\Excel\Facades\Excel;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use \WW\Countries\Models\Country;
 
 class ClientList extends DataTableComponent
 {
@@ -26,6 +20,11 @@ class ClientList extends DataTableComponent
     public string $tableName = 'client';
     public $client = Client::class;
     public $email = '';
+
+    public function customView(): string
+    {
+        return 'includes.custom';
+    }
 
     public $columnSearch = [
         'client_name' => null,
@@ -62,26 +61,24 @@ class ClientList extends DataTableComponent
         return [
             Column::make('Name', 'client_name')
                 ->sortable()
-                ->searchable()
-                ->html(),
+                ->searchable(),
             Column::make('Phone', 'phone')
                 ->sortable()
-                ->searchable()
-                ->html(),
+                ->searchable(),
             Column::make('Email', 'user.email')
                 ->sortable()
-                ->searchable()
-                ->html(),
+                ->searchable(),
+            Column::make('Contract started', 'contract_start_date')
+                ->sortable(),
+            Column::make('Contract end', 'contract_end_date')
+                ->sortable(),
             Column::make('Industry', 'industry.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Address','address')
+            Column::make('Street Address','street_address')
                 ->sortable()
                 ->searchable(),
             Column::make('City', 'city')
-                ->sortable()
-                ->searchable(),
-            Column::make('Country', 'country_id')
                 ->sortable()
                 ->searchable(),
             Column::make('Status', 'status')
@@ -184,8 +181,8 @@ class ClientList extends DataTableComponent
         return redirect()->to('/view-client'.$id);
     }
 
-    public function editItem()
+    public function editItem($id)
     {
-        Client::where('id', 56)->delete();
+        return redirect()->to('/update-client/'.$id);
     }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fc73f9936c41617c331c73154cdabc90",
+    "content-hash": "d349b1fef07831f3145c7296eb0a6a9c",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -1438,6 +1438,62 @@
                 }
             ],
             "time": "2023-12-03T19:50:20+00:00"
+        },
+        {
+            "name": "havenplus/malawi-disctricts",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chiefhaven/malawi-districts.git",
+                "reference": "66f7df3b35ef8c16c8516fdb6a795ebe05531938"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chiefhaven/malawi-districts/zipball/66f7df3b35ef8c16c8516fdb6a795ebe05531938",
+                "reference": "66f7df3b35ef8c16c8516fdb6a795ebe05531938",
+                "shasum": ""
+            },
+            "require": {
+                "calebporzio/sushi": "^2.5",
+                "illuminate/database": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+                "php": "^8.0|^8.1|^8.2|^8.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "HavenPlus\\Districts\\MalawiDistrictsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "HavenPlus\\Districts\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Haven Happy",
+                    "homepage": "https://havenplustechnologies.co.mw",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel Malawi Disctricts is a bundle for Laravel providing ISO 3166_2 codes for Malawi's Districts, cast and validation rule.",
+            "homepage": "https://github.com/chiefhaven/malawi-districts",
+            "keywords": [
+                "districts",
+                "laravel",
+                "malawi"
+            ],
+            "support": {
+                "issues": "https://github.com/chiefhaven/malawi-districts/issues",
+                "source": "https://github.com/chiefhaven/malawi-districts/tree/v1.0.0"
+            },
+            "time": "2024-06-03T14:00:47+00:00"
         },
         {
             "name": "jantinnerezo/livewire-alert",

@@ -16,13 +16,12 @@ return new class extends Migration
             $table->string('client_name');
             $table->date('contract_start_date')->nullable();
             $table->date('contract_end_date')->nullable();
-            $table->char('client_logo')->nullable();
+            //$table->char('client_logo')->nullable();
             $table->char('phone')->nullable();
             $table->char('phone2')->nullable();
-            $table->char('address')->nullable();
             $table->char('street_address')->nullable();
+            $table->char('street_address_2')->nullable();
             $table->char('zip_postal_code')->nullable();
-            $table->char('postal_code')->nullable();
             $table->char('state')->nullable();
             $table->char('city')->nullable();
             $table->char('country_id')->nullable();
@@ -33,7 +32,7 @@ return new class extends Migration
             $table->char('tax_number_2', 100)->nullable();
             $table->string('tax_label_2', 100)->nullable();
             $table->string('time_zone')->default('Africa/Blantyre');
-            $table->char('status')->nullable();
+            $table->enum('status', ['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended'])->default('Pending');
             $table->char('project')->default(0);
             $table->timestamps();
         });

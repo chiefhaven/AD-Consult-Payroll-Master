@@ -8,12 +8,19 @@ use App\Livewire\Forms\Employee\EmployeeForm;
 use App\Models\Client;
 use \WW\Countries\Models\Country;
 use \HavenPlus\Districts\Models\District;
+use Livewire\WithFileUploads;
+use Livewire\Attributes\Validate;
 
 class AddEmployee extends Component
 {
+    use WithFileUploads;
+
     public $countries, $districts, $clients, $genderEnums, $maritalStatusEnums, $idTypes, $educationLevels, $terminationPeriodTypes, $payPeriods =[];
 
     public $client = 'P';
+
+    #[Validate('required','image|max:4096')]
+    public $id_proof_pic;
 
     public function mount()
     {
@@ -39,11 +46,9 @@ class AddEmployee extends Component
 
     public function autocompleteclientSearch()
     {
-        if ($this->client != '') {
-            $this->clients = Client::where('client_name', 'LIKE', '%' . $this->client . '%')->orderBy('client_name', 'asc')->get();
-        } else {
-            $this->clients = [];
-        }
+        $this->client = $this->form->client;
+        $var = new BusinessUtil;
+        return $this->clients = $var->autocompleteclientSearch($this->client);
     }
 
 }

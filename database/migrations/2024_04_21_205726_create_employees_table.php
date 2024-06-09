@@ -56,7 +56,7 @@ return new class extends Migration
             $table->enum('pay_period', ['Hourly', 'Daily', 'Weekly', 'Bi Weekly', 'Monthly']);
             $table->enum('status', ['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended', 'On Probation'])->default('Pending');
             $table->char('client_id');
-            $table->char('tax1')->nullable();
+            $table->boolean('paye');
             $table->char('company')->default(0);
             $table->string('project_id')->default(0)->nullable();
             $table->char('probation_period')->nullable();

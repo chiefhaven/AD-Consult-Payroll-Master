@@ -381,7 +381,7 @@ return [
                 // ],
                 [
                     'text' => 'Add client',
-                    'url' => 'add-client',
+                    'url' => 'addclient',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
             ],

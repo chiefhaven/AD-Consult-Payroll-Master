@@ -40,7 +40,6 @@ class EmployeeFactory extends Factory
             'workdept_id' => $this->faker->randomNumber(2),
             'designation_id' => $this->faker->randomNumber(1),
             'designated_location_specifics' => $this->faker->randomNumber(5),
-            'designation_location' => $this->faker->randomNumber(['Lilongwe','Salima']),
             'id_type' => $this->faker->randomElement(['Malawi National ID', 'Passport', 'Driving Licence', 'Other']),
             'termination_notice_period' => $this->faker->randomNumber(3),
             'termination_notice_period_type' => $this->faker->randomElement(['Days', 'Weeks', 'Months']),
@@ -55,7 +54,7 @@ class EmployeeFactory extends Factory
             'bonus' => $this->faker->randomNumber(6),
             'status' => $this->faker->randomElement(['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended', 'On Probation']),
             'client_id' => $this->faker->randomNumber(2),
-            'tax1' => $this->faker->sentence(10),
+            'paye' => $this->faker->boolean(),
             'project_id'=> $this->faker->randomNumber(2)
         ];
     }

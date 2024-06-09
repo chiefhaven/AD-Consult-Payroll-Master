@@ -11,7 +11,7 @@ use App\Http\Controllers\Common\BusinessUtil;
 
 class UpdateEmployee extends Component
 {
-    public $countries, $districts, $genderEnums, $maritalStatusEnums, $idTypes, $educationLevels, $terminationPeriodTypes, $payPeriods =[];
+    public $countries, $client, $districts, $genderEnums, $maritalStatusEnums, $idTypes, $educationLevels, $terminationPeriodTypes, $payPeriods =[];
 
     public EmployeeForm $form;
 
@@ -19,7 +19,7 @@ class UpdateEmployee extends Component
     {
         $this->form->setEmployee($employee);
         $this->countries = Country::all();
-        $this->districts = District::all();
+        $this->districts = District::orderBy('name', 'ASC')->get();
         $this->maritalStatusEnums = BusinessUtil::get_enum_values('employees', 'marital_status');
         $this->genderEnums = BusinessUtil::get_enum_values('employees', 'gender');
         $this->idTypes = BusinessUtil::get_enum_values('employees', 'id_type');
@@ -33,6 +33,15 @@ class UpdateEmployee extends Component
         $this->form->update();
 
         return $this->redirect('/employees');
+    }
+
+    public $clients = [];
+
+    public function autocompleteclientSearch()
+    {
+        $this->client = $this->form->client;
+        $var = new BusinessUtil;
+        return $this->clients = $var->autocompleteclientSearch($this->client);
     }
 
     public function render()

@@ -24,7 +24,7 @@ class Client extends Model
         'city',
         'country_id',
         'industry_id',
-        'tax_number_1', 
+        'tax_number_1',
         'tax_lable_1',
         'tax_number_2',
         'tax_label_2',

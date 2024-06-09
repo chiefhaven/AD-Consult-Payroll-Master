@@ -1,16 +1,25 @@
 <?php
 
 namespace App\Livewire\Forms\Client;
-
 use App\Http\Controllers\Common\BusinessUtil;
 use Livewire\Attributes\Validate;
+use Illuminate\Validation\Rule;
 use Livewire\Form;
 use App\Models\Client;
 use App\Models\Industry;
+use App\Models\User;
 use DB;
+use \WW\Countries\Models\Country;
+use RealRashid\SweetAlert\Facades\Alert;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ClientForm extends Form
 {
+
+    use LivewireAlert;
+
+    public ?Client $client;
+
     public float $client_no = 12.0;
 
     #[Validate('required')]
@@ -42,7 +51,6 @@ class ClientForm extends Form
     #[Validate('required')]
     public $country = '';
 
-    #[Validate('required')]
     public $email = '';
 
     #[Validate('required')]
@@ -67,6 +75,61 @@ class ClientForm extends Form
 
     public $industry_id = 'Health';
 
+    public $time_zone;
+
+    public $status;
+
+    public function rules()
+    {
+        return [
+            'email' => [
+                'required',
+            ],
+        ];
+    }
+
+    public function setClient($id)
+    {
+        $this->client = Client::find($id);
+
+        if(isset($this->client->user->email)){
+            $email = $this->client->user->email;
+        }
+        else{
+            $email = null;
+        }
+
+        if(isset($this->client->user->username)){
+            $username = $this->client->user->username;
+        }
+        else{
+            $username = null;
+        }
+
+        $this->name = $this->client->client_name;
+        $this->contractstartdate = $this->client->contract_start_date;
+        $this->contractenddate = $this->client->contract_end_date;
+        $this->email = $email;
+        $this->phone = $this->client->phone;
+        $this->phone2 = $this->client->phone2;
+        $this->street_address = $this->client->street_address;
+        $this->street_address_2 = $this->client->street_address_2;
+        $this->postal_code = $this->client->postal_code;
+        $this->website = $this->client->website;
+        $this->state = $this->client->state;
+        $this->city = $this->client->city;
+        $this->country = Country::find($this->client->country_id)->name;
+        $this->industry = Industry::find($this->client->industry_id)->name;
+        $this->tax_number = $this->client->tax_number_1;
+        $this->tax_label = $this->client->tax_label_1;
+        $this->tax_number_2 = $this->client->tax_number_2;
+        $this->tax_number_2 = $this->client->tax_label_2;
+        $this->time_zone = $this->client->time_zone;
+        $this->status = $this->client->status;
+        $this->username = $username;
+
+    }
+
     public function store()
     {
         $this->validate();
@@ -76,14 +139,13 @@ class ClientForm extends Form
             Client::create([
                 'client_name' => $this->name,
                 'contract_start_date' => $this->contractstartdate,
-                'client_logo' => $this->client_logo,
                 'phone' => $this->phone,
                 'phone2' => $this->phone2,
-                'address' => $this->street_address,
+                'address_address' => $this->street_address,
                 'zip_postal_code' => $this->postal_code,
                 'state' => $this->state,
                 'city' => $this->city,
-                'country_id' => $this->country,
+                'country_id' => Country::where('name',$this->country)->firstOrFail()->id,
                 'industry_id' => $this->industry_id,
                 'tax_number_1' => $this->tax_number,
                 'tax_label_1' => $this->tax_label,
@@ -93,6 +155,14 @@ class ClientForm extends Form
                 'status' => 'Active',
                 ]
             );
+
+            $registerUser = new User();
+                $registerUser->create([
+                    'username' => $this->username,
+                    'email' => $this->email,
+                    'password' => $this->password,
+                    'client_id' => Client::orderBy('created_at','DESC')->first()->id,
+                ]);
         }
         catch (\Illuminate\Database\QueryException $exception){
 
@@ -104,5 +174,81 @@ class ClientForm extends Form
         }
 
         $this->reset();
+    }
+
+    public function update()
+    {
+        $this->validate([
+            'email' => [
+                Rule::unique('users')->ignore($this->client->user),
+            ],
+        ]);
+
+        $this->country = Country::where('name',$this->country)->firstOrFail()->id;
+
+        try{
+            $this->client->update(
+            [
+                'client_name' => $this->name,
+                'contract_start_date' => $this->contractstartdate,
+                'contract_end_date' => $this->contractenddate,
+                'phone' => $this->phone,
+                'phone2' => $this->phone2,
+                'street_address' => $this->street_address,
+                'zip_postal_code' => $this->postal_code,
+                'state' => $this->state,
+                'city' => $this->city,
+                'country_id' => $this->country,
+                'industry_id' => BusinessUtil::get_industry_id($this->industry),
+                'tax_number_1' => $this->tax_number,
+                'tax_label_1' => $this->tax_label,
+                'tax_number_2' => $this->tax_number_2,
+                'tax_label_2' => $this->tax_number_2,
+                'time_zone' => 'Africa/Blantyre',
+                'status' => 'Active',
+            ]);
+
+            if(isset($this->client->user->email)){
+                try {
+                    $this->registerUser(
+                        $this->username,
+                        $this->email,
+                        $this->password,
+                        'client_id',
+                        'updated_at'
+                    );
+                }
+                catch(\Illuminate\Database\QueryException $exception){
+                    $errorInfo = $exception;
+                    DB::rollback();
+                }
+            }
+            else{
+                $this->registerUser(
+                    $this->username,
+                    $this->email,
+                    $this->password,
+                    'client_id',
+                    'updated_at'
+                );
+            }
+        }
+        catch (\Illuminate\Database\QueryException $exception){
+
+            $errorInfo = $exception;
+            DB::rollback();
+
+
+        }
+    }
+
+    public function registerUser($username, $email, $password, $relationshipColumn, $recentActivity){
+        $registerUser = new User();
+                $registerUser->create([
+                    'username' => $username,
+                    'email' => $email,
+                    'password' => $password,
+                    $relationshipColumn => Client::orderBy($recentActivity,'DESC')->first()->id,
+                ]);
     }
 }
