@@ -126,6 +126,12 @@ class EmployeeForm extends Form
 
     public $paye = true;
 
+    public $username;
+
+    public $password;
+
+    public $confirm_password;
+
     public function setEmployee($id)
     {
         $this->employee = Employee::find($id);
@@ -179,7 +185,9 @@ class EmployeeForm extends Form
         $this->basic_pay = $this->employee->salary;
         $this->contract_type = $this->employee->contract_type;
         $this->pay_period = $this->employee->pay_period;
-        $this->paye = $this->employee->paye;
+        $this->paye = ($this->employee->paye == 1) ? true : false;
+        $this->username = $this->employee->user->username;
+        $this->allow_login = ($this->allow_login == 1) ? true : false;
     }
 
     public function store()
@@ -191,6 +199,7 @@ class EmployeeForm extends Form
         ]);
 
         $this->country = Country::where('name',$this->nationality)->firstOrFail()->id;
+
 
         try{
             Employee::create([
@@ -222,7 +231,7 @@ class EmployeeForm extends Form
                 'client_id' => 1,
                 'probation_period' => $this->probation_period,
                 'pay_period' => $this->pay_period,
-                'paye' => 1,
+                'paye' => ($this->paye == true) ? 1 : 0,
                 'permanent_city' => $this->permanent_city,
                 'permanent_street' => $this->permanent_street,
                 'permanent_state' => $this->permanent_street,
@@ -296,7 +305,7 @@ class EmployeeForm extends Form
                 'client_id' => 1,
                 'probation_period' => $this->probation_period,
                 'pay_period' => $this->pay_period,
-                'paye' => 1,
+                'paye' => ($this->paye == true) ? 1 : 0,
                 'permanent_city' => $this->permanent_city,
                 'permanent_street' => $this->permanent_street,
                 'permanent_state' => $this->permanent_street,
