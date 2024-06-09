@@ -30,7 +30,7 @@
                         id="phone" wire:model="form.phone" required/>
 
                         <x-adminlte-input type="checkbox" name="allow_login" label="Allow Login:*"
-                        id="phone" wire:model="form.allow_login" checked required/>
+                        id="phone" wire:model="form.allow_login" checked />
                 </div>
             </div>
         </div>
@@ -39,10 +39,10 @@
                 <p>More information</p>
                 <div class="row">
                         <x-adminlte-input type="date" name="date_of_birth" label="Date of birth:*" placeholder="Date of birth"
-                        fgroup-class="col-md-3" id="date_of_birth" wire:model="form.date_of_birth" required/>
+                        fgroup-class="col-md-2" id="date_of_birth" wire:model="form.date_of_birth" required/>
 
                         <x-adminlte-select type="text" name="gender" label="Gender:*" wire:model="form.gender" data-placeholder="Select an option..."
-                        fgroup-class="col-md-3" required>
+                        fgroup-class="col-md-2" required>
                             <option value="null" selected disabled>Please select an option...</option>
                             @foreach ($genderEnums as $genderEnum)
                                 <option>{{$genderEnum}}</option>
@@ -58,11 +58,11 @@
                         </x-adminlte-select>
 
                         <x-adminlte-input type="text" name="employee_alt_number" label="Alternate phone number:"
-                        placeholder="Alternate phone number" fgroup-class="col-md-4"
+                        placeholder="Alternate phone number" fgroup-class="col-md-2"
                         id="employee_alt_number" wire:model="form.employee_alt_number"/>
 
                         <x-adminlte-select type="text" name="nationality" label="Nationality:*" wire:model="form.nationality" data-placeholder="Select an option..."
-                         fgroup-class="col-md-3" required>
+                         fgroup-class="col-md-2" required>
                             <option value="null" selected disabled>Please select an option...</option>
                             @foreach ($countries as $country)
                                 <option wire:key="{{ $country->name }}">{{$country->name}}</option>
@@ -70,7 +70,7 @@
                         </x-adminlte-select>
 
                         <x-adminlte-select type="text" name="id_type" wire:model="form.id_type" label="ID Type:*" data-placeholder="Select an option..."
-                         fgroup-class="col-md-3" required>
+                         fgroup-class="col-md-2" required>
                             <option value="null" selected disabled>Please select an option...</option>
                             @foreach ($idTypes as $idType)
                                 <option>{{$idType}}</option>
@@ -80,17 +80,23 @@
                         <x-adminlte-input name="id_number" label="ID number:*" placeholder="ID number"
                         fgroup-class="col-md-3" id="id_number" wire:model="form.id_number" required/>
 
-                        <x-adminlte-input-file name="id_proof" label="Upload ID proof:*" placeholder="Choose a file..."
-                        fgroup-class="col-md-3" wire:model="form.id_proof" wire:model="form.id_proof"/>
+                        {{--  <div class="col-md-3">
+                            @if ($id_proof_pic)
+                                <img src="{{ $id_proof_pic->temporaryUrl() }}" width="100%" height="auto">
+                                {{ $id_proof_pic->name}};
+                            @endif
+                        <x-adminlte-input-file name="id_proof_pic" label="Upload ID proof:*" placeholder="Choose a file..."
+                            fgroup-class="col-md-12" type="file" accept="image/*" wire:model="id_proof_pic"/>
+                        </div>  --}}
 
                         <x-adminlte-input name="resident_street" label="Resident street:*" placeholder="Resident street"
-                        fgroup-class="col-md-3" id="resident_street" wire:model="form.resident_street" required/>
+                        fgroup-class="col-md-2" id="resident_street" wire:model="form.resident_street" required/>
 
                         <x-adminlte-input name="resident_city" label="Resident city:*" placeholder="Resident city"
-                        fgroup-class="col-md-3" id="resident_city" wire:model="form.resident_city" required/>
+                        fgroup-class="col-md-2" id="resident_city" wire:model="form.resident_city" required/>
 
                         <x-adminlte-input name="resident_state" label="Resident state:*" placeholder="Resident state"
-                        fgroup-class="col-md-3" id="resident_state" wire:model="form.resident_state" required/>
+                        fgroup-class="col-md-2" id="resident_state" wire:model="form.resident_state" required/>
 
                         <x-adminlte-select type="text" name="resident_country" label="Resident country:*" wire:model="form.resident_country" data-placeholder="Select an option..."
                          fgroup-class="col-md-3" required>
@@ -119,11 +125,11 @@
 
                         <x-adminlte-input name="family_contact_name" label="Family contact name:"
                         placeholder="Family contact name" fgroup-class="col-md-4"
-                        id="family_contact_name" wire:model="form.family_contact_name" required wire:model="form.family_contact_name"/>
+                        id="family_contact_name" wire:model="form.family_contact_name" required />
 
                         <x-adminlte-input name="family_contact_number" label="Family contact number:"
                         placeholder="Family contact alt number" fgroup-class="col-md-4"
-                        id="family_contact_number" wire:model="form.family_contact_number" wire:model="form.family_contact_number" required/>
+                        id="family_contact_number" wire:model="form.family_contact_number" required/>
 
                         <x-adminlte-input name="family_contact_alt_number" label="Family contact alt number:"
                         placeholder="Family contact alt number" fgroup-class="col-md-4"
@@ -215,7 +221,7 @@
 
                         <x-adminlte-input name="designated_location_specifics" label="Designated location other specifics:"
                         placeholder="Designated location other specifics" fgroup-class="col-md-4"
-                        id="designated_location_specific" wire:model="form.designated_location_specifics" required/>
+                        id="designated_location_specific" wire:model="form.designated_location_specifics" />
 
                 </div>
             </div>
