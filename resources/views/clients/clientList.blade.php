@@ -31,12 +31,10 @@
             <div class="box-body">
                 <p>All Clients</p>
                 <livewire:clients.clientList />
+                <x-livewire-alert::scripts />
             </div>
         </div>
     </div>
-    @livewireScripts
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <x-livewire-alert::scripts />
 </div>
 @stop
 
