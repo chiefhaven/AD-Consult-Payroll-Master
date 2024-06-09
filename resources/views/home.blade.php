@@ -7,41 +7,38 @@
 @stop
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-9">
+    <div class="row p-4">
+        <div class="col-md-7">
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     <div class="card bg-primary mb-3 p-4">
                         <div class="box-body">
                             <h3>Good Morning</h3>
-                            Welcome to AD; Believe it possible, its all in your mind! Have a fresh day!.
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3>08:00AM</h3>
-                            03/02/2024
+                            {!! \Illuminate\Foundation\Inspiring::quote() !!}
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card bg-light">
-                        <div class="card-body">
-                            <h4>Notifications</h4>
+                    <div class="row mt-5">
+                        <div class="col-md-6">
+                            <x-adminlte-small-box title="{{ App\Models\Employee::get()->count() }}" text="Employees" icon="fas fa-users text-white"
+                            theme="warning"/>
+                        </div>
+                        <div class="col-md-6">
+                            <x-adminlte-small-box title="{{ App\Models\Client::get()->count() }}" text="Clients" icon="fas fa-file-invoice text-white"
+                            theme="danger"/>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-3">
+        <div class="col-md-3 offset-md-2">
             <div class="card">
                 <div class="card-body">
-                    <p>Upcoming events</p>
-                    Welcome to AD; Believe it possible, its all in your mind! Have a fresh day!.
+                    <p><strong>Upcoming events</strong></p>
+
                 </div>
             </div>
         </div>
@@ -55,4 +52,22 @@
 
 @section('js')
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+
+    <script type="text/javascript">
+        function showTime() {
+          var date = new Date(),
+              utc = new Date(Date.UTC(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate(),
+                date.getUTCHours(),
+                date.getMinutes(),
+                date.getSeconds()
+              ));
+
+          document.getElementById('time').innerHTML = utc.toLocaleString();
+        }
+
+        setInterval(showTime, 1000);
+      </script>
 @stop
