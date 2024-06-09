@@ -19,6 +19,9 @@ use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ClientController;
+use App\Livewire\Employees\AddEmployee as EmployeesAddEmployee;
+use App\Livewire\Employees\UpdateEmployee;
+use App\Livewire\Employees\ViewEmployee;
 
 Auth::routes();
 
@@ -26,14 +29,12 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['auth']);
 
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees')->middleware(['auth']);
-Route::get('/add-employee', [EmployeeController::class, 'create'])->name('add-employees')->middleware(['auth']);
-Route::get('/view-employee/{id}', [EmployeeController::class, 'show'])->name('view-employee')->middleware(['auth']);
-Route::get('/update-employee/{id}', [EmployeeController::class, 'edit'])->name('update-employee')->middleware(['auth']);
+Route::get('/add-employee', EmployeesAddEmployee::class)->name('add-employees')->middleware(['auth']);
+Route::get('/view-employee/{id}', ViewEmployee::class)->name('view-employee')->middleware(['auth']);
+Route::get('/update-employee/{id}', UpdateEmployee::class)->name('update-employee')->middleware(['auth']);
 
 Route::get('/clients', [ClientController::class, 'index'])->middleware(['auth']);
-Route::get('/add-client', [ClientController::class, 'create'])->middleware(['auth']);
 Route::get('/addclient', AddClient::class)->middleware(['auth']);
-
 Route::get('/view-client/{id}', [ClientController::class, 'show'])->name('view-client')->middleware(['auth']);
 Route::get('/update-client/{id}', UpdateClient::class)->name('update-employee')->middleware(['auth']);
 

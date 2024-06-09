@@ -2,17 +2,19 @@
 
 namespace App\Livewire\Forms\Employee;
 
+use App\Http\Controllers\Common\BusinessUtil;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 use App\Models\Employee;
-use App\Models\TaxRate;
 use App\Models\Client;
 use App\Models\Designation;
+use App\Models\User;
 use DB;
 use \WW\Countries\Models\Country;
 use \HavenPlus\Districts\Models\District;
 use Carbon\Carbon;
-
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 class EmployeeForm extends Form
 {
 
@@ -122,13 +124,19 @@ class EmployeeForm extends Form
     #[Validate('required')]
     public $pay_period;
 
-    public $tax;
+    public $paye = true;
 
-    public function setEmployee(Employee $employee)
+    public function setEmployee($id)
     {
-
-        $this->employee = Employee::find(20);
+        $this->employee = Employee::find($id);
         $this->country = Country::find($this->employee->nationality_id)->name;
+
+        if(isset($this->employee->user->email)){
+            $email = $this->employee->user->email;
+        }
+        else{
+            $email = null;
+        }
 
         $this->prefix = $this->employee->prefix;
         $this->firstname =$this->employee->fname;
@@ -151,11 +159,11 @@ class EmployeeForm extends Form
         $this->gender = $this->employee->gender;
         $this->bonus = $this->employee->bonus;
         $this->nationality = $this->country;
-        $this->email = $this->employee->user->email;
+        $this->email = $email;
         $this->phone = $this->employee->phone;
         $this->employee_alt_number = $this->employee->employee_alt_number;
         $this->date_of_birth = Carbon::parse($this->employee->date_of_birth)->format('Y-m-d');
-        $this->client = Client::find($this->employee->client)->firstOrFail()->client_name;
+        $this->client = Client::find($this->employee->client_id)->firstOrFail()->client_name;
         $this->project = $this->employee->project;
         $this->family_contact_number = $this->employee->family_contact_number;
         $this->family_contact_name = $this->employee->family_contact_name;
@@ -163,7 +171,7 @@ class EmployeeForm extends Form
         $this->probation_period = $this->employee->probation_period;
         $this->termination_notice_period = $this->employee->termination_notice_period;
         $this->termination_notice_period_type = $this->employee->termination_notice_period_type;
-        $this->designated_location = $this->employee->designated_location;
+        $this->designated_location = District::find($this->employee->designated_location)->name;
         $this->designation = Designation::find($this->employee->designation_id)->name;
         $this->contract_start_date = Carbon::parse($this->employee->contract_start_date)->format('Y-m-d');
         $this->contract_end_date = Carbon::parse($this->employee->contract_end_date)->format('Y-m-d');
@@ -171,12 +179,16 @@ class EmployeeForm extends Form
         $this->basic_pay = $this->employee->salary;
         $this->contract_type = $this->employee->contract_type;
         $this->pay_period = $this->employee->pay_period;
-        $this->tax = TaxRate::find($this->employee->tax)->name;
+        $this->paye = $this->employee->paye;
     }
 
     public function store()
     {
-        $this->validate();
+        $this->validate([
+            'client' => [
+                Rule::exists('clients','client_name'),
+            ],
+        ]);
 
         $this->country = Country::where('name',$this->nationality)->firstOrFail()->id;
 
@@ -191,14 +203,14 @@ class EmployeeForm extends Form
                 'allow_login' => $this->allow_login,
                 'employee_alt_number' => $this->employee_alt_number,
                 'nationality_id' => $this->country,
-                'client_id' => $this->client,
+                'client_id' => Client::where('client_name', $this->client)->firstOrFail()->id,
                 'contract_type' => 1,
                 'designation_id' => Designation::Where('name', $this->designation)->firstOrFail()->name,
                 'project_id' => $this->project,
                 'hiredate' => $this->hiredate,
                 'education_level' => $this->education_level,
                 'workdept_id' => '',
-                'designated_location' => $this->designation,
+                'designated_location' => District::Where('name',$this->designated_location)->first()->id,
                 'id_type' => $this->id_type,
                 'id_number' => $this->id_number,
                 'marital_status' => $this->marital_status,
@@ -210,19 +222,27 @@ class EmployeeForm extends Form
                 'client_id' => 1,
                 'probation_period' => $this->probation_period,
                 'pay_period' => $this->pay_period,
-                'tax1' => $this->tax,
+                'paye' => 1,
                 'permanent_city' => $this->permanent_city,
                 'permanent_street' => $this->permanent_street,
                 'permanent_state' => $this->permanent_street,
-                'permanent_country' => $this->permanent_country,
+                'permanent_country' => Country::where('name', $this->permanent_country)->firstOrFail()->id,
                 'resident_city' => $this->resident_city,
                 'resident_street' => $this->resident_street,
                 'resident_state' => $this->resident_state,
-                'resident_country' => $this->resident_country,
+                'resident_country' => Country::where('name',$this->resident_country)->firstOrFail()->id,
                 'family_contact_name'=>$this->family_contact_name,
                 'family_contact_number'=>$this->family_contact_number,
                 'family_contact_alt_number'=>$this->family_contact_alt_number,
             ]);
+
+            $registerUser = new User();
+                $registerUser->create([
+                    'username' => Str::random(5),
+                    'email' => $this->email,
+                    'password' => Str::random(8),
+                    'client_id' => Employee::orderBy('created_at','DESC')->first()->id,
+                ]);
         }
         catch (\Illuminate\Database\QueryException $exception){
 
@@ -237,6 +257,12 @@ class EmployeeForm extends Form
 
     public function update()
     {
+        $this->validate([
+            'email' => [
+                Rule::unique('users')->ignore($this->employee->user),
+            ],
+        ]);
+
         $this->country = Country::where('name',$this->nationality)->firstOrFail()->id;
 
         try{
@@ -257,6 +283,7 @@ class EmployeeForm extends Form
                 'hiredate' => $this->hiredate,
                 'education_level' => $this->education_level,
                 'workdept_id' => '',
+                'designated_location' => District::Where('name',$this->designated_location)->first()->id,
                 'id_type' => $this->id_type,
                 'id_number' => $this->id_number,
                 //'id_proof_pic' => $this->id_proof_pic,
@@ -269,7 +296,7 @@ class EmployeeForm extends Form
                 'client_id' => 1,
                 'probation_period' => $this->probation_period,
                 'pay_period' => $this->pay_period,
-                'tax1' => $this->tax,
+                'paye' => 1,
                 'permanent_city' => $this->permanent_city,
                 'permanent_street' => $this->permanent_street,
                 'permanent_state' => $this->permanent_street,
@@ -282,6 +309,29 @@ class EmployeeForm extends Form
                 'family_contact_number'=>$this->family_contact_number,
                 'family_contact_alt_number'=>$this->family_contact_alt_number,
             ]);
+
+            if(isset($this->employee->user->email)){
+                try {
+                    $this->updateUser(
+                        $this->email,
+                        'employee_id',
+                        'updated_at'
+                    );
+                }
+                catch(\Illuminate\Database\QueryException $exception){
+                    $errorInfo = $exception;
+                    DB::rollback();
+                }
+            }
+            else{
+                $this->registerUser(
+                    Str::random(),
+                    $this->email,
+                    Str::random(),
+                    'employee_id',
+                    'updated_at'
+                );
+            }
         }
         catch (\Illuminate\Database\QueryException $exception){
 
@@ -292,5 +342,23 @@ class EmployeeForm extends Form
 
 
         }
+    }
+
+    public function registerUser($username, $email, $password, $relationshipColumn, $recentActivity){
+        $registerUser = new User();
+                $registerUser->create([
+                    'username' => $username,
+                    'email' => $email,
+                    'password' => $password,
+                    $relationshipColumn => Employee::orderBy($recentActivity,'DESC')->first()->id,
+                ]);
+    }
+
+    public function updateUser($email, $relationshipColumn, $recentActivity){
+        $updateUser = new User();
+                $updateUser->update([
+                    'email' => $email,
+                    $relationshipColumn => Employee::orderBy($recentActivity,'DESC')->first()->id,
+                ]);
     }
 }

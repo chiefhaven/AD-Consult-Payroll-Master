@@ -28,9 +28,6 @@
 
                         <x-adminlte-input type="tel" name="phone" label="Phone:*" placeholder="Phone" fgroup-class="col-md-3" class="{{ $errors->has('form.phone') ? 'is-invalid' : '' }}"
                         id="phone" wire:model="form.phone" required/>
-
-                        <x-adminlte-input type="checkbox" name="allow_login" label="Allow Login:*" fgroup-class="checkbox" class="{{ $errors->has('form.allow_login') ? 'is-invalid' : '' }}"
-                        id="phone" wire:model="form.allow_login" />
                 </div>
             </div>
         </div>
@@ -58,9 +55,9 @@
                         </x-adminlte-select>
 
                         <x-adminlte-input type="text" name="employee_alt_number" label="Alternate phone number:"
-                        placeholder="Alternate phone number" fgroup-class="col-md-2" class="{{ $errors->has('form.employee_alt_number') ? 'is-invalid' : '' }}" id="employee_alt_number" wire:model="form.employee_alt_number"/>
+                        placeholder="Alternate phone number" fgroup-class="col-md-3" class="{{ $errors->has('form.employee_alt_number') ? 'is-invalid' : '' }}" id="employee_alt_number" wire:model="form.employee_alt_number"/>
 
-                        <x-adminlte-select type="text" name="nationality" label="Nationality:*" wire:model="form.nationality" data-placeholder="Select an option..." fgroup-class="col-md-2" class="{{ $errors->has('form.nationality') ? 'is-invalid' : '' }}" required>
+                        <x-adminlte-select type="text" name="nationality" label="Nationality:*" wire:model="form.nationality" data-placeholder="Select an option..." fgroup-class="col-md-3" class="{{ $errors->has('form.nationality') ? 'is-invalid' : '' }}" required>
                             <option value="null" selected disabled>Please select an option...</option>
                             @foreach ($countries as $country)
                                 <option wire:key="{{ $country->name }}">{{$country->name}}</option>
@@ -75,7 +72,7 @@
                         </x-adminlte-select>
 
                         <x-adminlte-input name="id_number" label="ID number:*" placeholder="ID number"
-                        fgroup-class="col-md-3" class="{{ $errors->has('form.id_number') ? 'is-invalid' : '' }}" id="id_number" wire:model="form.id_number" required/>
+                        fgroup-class="col-md-2" class="{{ $errors->has('form.id_number') ? 'is-invalid' : '' }}" id="id_number" wire:model="form.id_number" required/>
 
                         {{--  <div class="col-md-3">
                             @if ($id_proof_pic)
@@ -96,7 +93,7 @@
                         fgroup-class="col-md-2" class="{{ $errors->has('form.resident_state') ? 'is-invalid' : '' }}" id="resident_state" wire:model="form.resident_state" required/>
 
                         <x-adminlte-select type="text" name="resident_country" label="Resident country:*" wire:model="form.resident_country" data-placeholder="Select an option..."
-                         fgroup-class="col-md-3" class="{{ $errors->has('form.resident_country') ? 'is-invalid' : '' }}" required>
+                         fgroup-class="col-md-2" class="{{ $errors->has('form.resident_country') ? 'is-invalid' : '' }}" required>
                             <option value="null" selected disabled>Please select an option...</option>
                             @foreach ($countries as $country)
                                 <option>{{$country->name}}</option>
@@ -230,11 +227,29 @@
                             <option>{{$payPeriod}}</option>
                         @endforeach
                     </x-adminlte-select>
-                    <x-adminlte-select name="tax" label="Applicable Tax" wire:model="form.tax" fgroup-class="col-md-4" class="{{ $errors->has('form.tax') ? 'is-invalid' : '' }}">
-                            <option selected >Please select an option...</option>
-                            <option>None</option>
-                            <option>Payee</option>
-                    </x-adminlte-select>
+                    <x-adminlte-input type="checkbox" name="paye" label="Paye:" fgroup-class="checkbox" class="{{ $errors->has('form.paye') ? 'is-invalid' : '' }}" id="paye" wire:model="form.paye" checked/>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3 p-4">
+            <div class="box-body">
+                <p>Login details <figcaption class="blockquote-footer">
+                    Leave blank to auto generate credentials
+                  </figcaption></p>
+                <div class="row">
+                        <x-adminlte-input type="text" name="confirm_password" label="Username" placeholder="Username"
+                        fgroup-class="col-md-3" id="username" wire:model="form.username"/>
+
+                        <x-adminlte-input type="password" name="confirm_password" label="Password" placeholder="Password"
+                        fgroup-class="col-md-3" id="password" wire:model="form.password"/>
+
+                        <x-adminlte-input type="password" name="confirm_password" label="Confirm Password" placeholder="Password"
+                        fgroup-class="col-md-3" id="confirm_password" wire:model="form.confirm_password"/>
+
+                        <x-adminlte-input type="checkbox" name="allow_login" label="Allow Login:*" fgroup-class="checkbox" class="{{ $errors->has('form.allow_login') ? 'is-invalid' : '' }}"
+                        id="phone" wire:model="form.allow_login" />
+
                 </div>
             </div>
         </div>

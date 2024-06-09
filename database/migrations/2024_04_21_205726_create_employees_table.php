@@ -52,11 +52,10 @@ return new class extends Migration
             $table->decimal('salary')->nullable();
             $table->decimal('bonus')->nullable();
             $table->decimal('basic_pay')->default(00.00);
-            $table->char('tax')->default('Paye');
             $table->enum('pay_period', ['Hourly', 'Daily', 'Weekly', 'Bi Weekly', 'Monthly']);
             $table->enum('status', ['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended', 'On Probation'])->default('Pending');
             $table->char('client_id');
-            $table->boolean('paye');
+            $table->boolean('paye')->default(0);
             $table->char('company')->default(0);
             $table->string('project_id')->default(0)->nullable();
             $table->char('probation_period')->nullable();

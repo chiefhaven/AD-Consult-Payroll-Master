@@ -15,9 +15,10 @@ class UpdateEmployee extends Component
 
     public EmployeeForm $form;
 
-    public function mount(Employee $employee)
+    public function mount($id)
     {
-        $this->form->setEmployee($employee);
+        $this->form->setEmployee($id);
+
         $this->countries = Country::all();
         $this->districts = District::orderBy('name', 'ASC')->get();
         $this->maritalStatusEnums = BusinessUtil::get_enum_values('employees', 'marital_status');
