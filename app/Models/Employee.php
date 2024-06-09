@@ -33,7 +33,7 @@ class Employee extends Model
         'resident_country',
         'permanent_city',
         'permanent_state',
-        'permanent_street',
+        'permanent_street', 
         'permanent_country',
         'hiredate',
         'education_level',
