@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Employee;
 use App\Models\Client;
+use App\Models\Designation;
 use App\Models\Industry;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -38,5 +39,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Industry::factory()->count(4)->create();
+
+        Designation::factory()->count(4)->create();
+
+        Designation::factory()->create([
+            'name' => 'Accountant',
+            'description' => 'For all field officers'
+        ]);
     }
 }

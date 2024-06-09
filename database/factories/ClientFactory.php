@@ -19,7 +19,6 @@ class ClientFactory extends Factory
         return [
             'client_name' => $this->faker->sentence(3),
             'contract_start_date' => $this->faker->date(),
-            'client_logo' => $this->faker->imageUrl(),
             'phone' => $this->faker->phoneNumber(5),
             'phone2' => $this->faker->phoneNumber(5),
             'address' => $this->faker->address(45),

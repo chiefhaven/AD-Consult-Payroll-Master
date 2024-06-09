@@ -34,7 +34,7 @@ return new class extends Migration
             $table->char('permanent_street');
             $table->date('hiredate');
             $table->enum('education_level', ['PhD', 'MSC', 'BSC', 'MSCE/GSCE', 'JCE', 'Other'])->default('BSC');
-            $table->enum('designated_location', ['Lilongwe', 'Salima']);
+            $table->char('designated_location');
             $table->char('workdept_id');
             $table->char('designation_id');
             $table->string('designated_location_specifics')->nullable();

@@ -25,7 +25,6 @@ class EmployeeForm extends Form
     #[Validate('required')]
     public float $employee_no = 12.0;
 
-    #[Validate('required')]
     public string $prefix;
 
     #[Validate('required')]
@@ -36,10 +35,10 @@ class EmployeeForm extends Form
     #[Validate('required')]
     public $lastname;
 
-    #[Validate('required')]
-    public $resident_street, $resident_city, $resident_state, $resident_country;
+    public $allow_login = true;
 
-    public $permanent_street, $permanent_city, $permanent_state, $permanent_country;
+    #[Validate('required')]
+    public $resident_street, $resident_city, $resident_state, $resident_country, $permanent_street, $permanent_city, $permanent_state, $permanent_country;
 
     #[Validate('required')]
     public $hiredate;
@@ -73,7 +72,6 @@ class EmployeeForm extends Form
     #[Validate('required')]
     public $date_of_birth;
 
-    #[Validate('required')]
     public $employee_alt_number;
 
     #[Validate('required')]
@@ -82,7 +80,6 @@ class EmployeeForm extends Form
     #[Validate('required')]
     public $client;
 
-    #[Validate('required')]
     public $project = null;
 
     #[Validate('required')]
@@ -114,7 +111,6 @@ class EmployeeForm extends Form
     #[Validate('required')]
     public $contract_end_date;
 
-    #[Validate('required')]
     public $designated_location_specifics;
 
     #[Validate('required')]
@@ -126,13 +122,12 @@ class EmployeeForm extends Form
     #[Validate('required')]
     public $pay_period;
 
-    #[Validate('required')]
     public $tax;
 
     public function setEmployee(Employee $employee)
     {
 
-        $this->employee = Employee::find(56);
+        $this->employee = Employee::find(20);
         $this->country = Country::find($this->employee->nationality_id)->name;
 
         $this->prefix = $this->employee->prefix;
@@ -193,6 +188,7 @@ class EmployeeForm extends Form
                 'mname' => $this->middlename,
                 'sname' => $this->lastname,
                 'phone' => $this->phone,
+                'allow_login' => $this->allow_login,
                 'employee_alt_number' => $this->employee_alt_number,
                 'nationality_id' => $this->country,
                 'client_id' => $this->client,
@@ -202,10 +198,9 @@ class EmployeeForm extends Form
                 'hiredate' => $this->hiredate,
                 'education_level' => $this->education_level,
                 'workdept_id' => '',
-                'designation_id' => $this->designation,
+                'designated_location' => $this->designation,
                 'id_type' => $this->id_type,
                 'id_number' => $this->id_number,
-                //'id_proof_pic' => $this->id_proof_pic,
                 'marital_status' => $this->marital_status,
                 'gender' => $this->gender,
                 'birthdate' => $this->date_of_birth,
