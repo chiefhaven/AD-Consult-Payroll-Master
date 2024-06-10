@@ -169,7 +169,7 @@ class EmployeeForm extends Form
         $this->phone = $this->employee->phone;
         $this->employee_alt_number = $this->employee->employee_alt_number;
         $this->date_of_birth = Carbon::parse($this->employee->date_of_birth)->format('Y-m-d');
-        $this->client = Client::find($this->employee->client_id)->firstOrFail()->client_name;
+        $this->client = Client::find($this->employee->client_id)->first()->client_name;
         $this->project = $this->employee->project;
         $this->family_contact_number = $this->employee->family_contact_number;
         $this->family_contact_name = $this->employee->family_contact_name;
@@ -194,7 +194,7 @@ class EmployeeForm extends Form
     {
         $this->validate([
             'client' => [
-                Rule::exists('clients','client_name'),
+                Rule::exists('clients','client_name')
             ],
         ]);
 
@@ -214,7 +214,7 @@ class EmployeeForm extends Form
                 'nationality_id' => $this->country,
                 'client_id' => Client::where('client_name', $this->client)->firstOrFail()->id,
                 'contract_type' => 1,
-                'designation_id' => Designation::Where('name', $this->designation)->firstOrFail()->name,
+                'designation_id' => Designation::Where('name', $this->designation)->firstOrFail()->id,
                 'project_id' => $this->project,
                 'hiredate' => $this->hiredate,
                 'education_level' => $this->education_level,
@@ -228,7 +228,6 @@ class EmployeeForm extends Form
                 'salary' => $this->basic_pay,
                 'bonus' => 00,
                 'status' => 'Active',
-                'client_id' => 1,
                 'probation_period' => $this->probation_period,
                 'pay_period' => $this->pay_period,
                 'paye' => ($this->paye == true) ? 1 : 0,
@@ -250,7 +249,7 @@ class EmployeeForm extends Form
                     'username' => Str::random(5),
                     'email' => $this->email,
                     'password' => Str::random(8),
-                    'client_id' => Employee::orderBy('created_at','DESC')->first()->id,
+                    'employee_id' => Employee::orderBy('created_at','DESC')->first()->id,
                 ]);
         }
         catch (\Illuminate\Database\QueryException $exception){
@@ -270,6 +269,10 @@ class EmployeeForm extends Form
             'email' => [
                 Rule::unique('users')->ignore($this->employee->user),
             ],
+
+            'client' => [
+                Rule::exists('clients','client_name'),
+            ],
         ]);
 
         $this->country = Country::where('name',$this->nationality)->firstOrFail()->id;
@@ -285,7 +288,7 @@ class EmployeeForm extends Form
                 'phone' => $this->phone,
                 'employee_alt_number' => $this->employee_alt_number,
                 'nationality_id' => $this->country,
-                'client_id' => $this->client,
+                'client_id' => Client::where('client_name', $this->client)->firstOrFail()->id,
                 'contract_type' => 1,
                 'designation_id' => Designation::Where('name', $this->designation)->firstOrFail()->id,
                 'project_id' => $this->project,
@@ -295,14 +298,12 @@ class EmployeeForm extends Form
                 'designated_location' => District::Where('name',$this->designated_location)->first()->id,
                 'id_type' => $this->id_type,
                 'id_number' => $this->id_number,
-                //'id_proof_pic' => $this->id_proof_pic,
                 'marital_status' => $this->marital_status,
                 'gender' => $this->gender,
                 'birthdate' => $this->date_of_birth,
                 'salary' => $this->basic_pay,
                 'bonus' => 00,
                 'status' => 'Active',
-                'client_id' => 1,
                 'probation_period' => $this->probation_period,
                 'pay_period' => $this->pay_period,
                 'paye' => ($this->paye == true) ? 1 : 0,
@@ -322,6 +323,7 @@ class EmployeeForm extends Form
             if(isset($this->employee->user->email)){
                 try {
                     $this->updateUser(
+                        $this->username,
                         $this->email,
                         'employee_id',
                         'updated_at'
@@ -363,10 +365,11 @@ class EmployeeForm extends Form
                 ]);
     }
 
-    public function updateUser($email, $relationshipColumn, $recentActivity){
+    public function updateUser($username, $email, $relationshipColumn, $recentActivity){
         $updateUser = new User();
                 $updateUser->update([
                     'email' => $email,
+                    'username' => $username,
                     $relationshipColumn => Employee::orderBy($recentActivity,'DESC')->first()->id,
                 ]);
     }
