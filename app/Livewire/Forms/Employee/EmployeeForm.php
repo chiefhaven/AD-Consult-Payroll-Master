@@ -169,7 +169,7 @@ class EmployeeForm extends Form
         $this->phone = $this->employee->phone;
         $this->employee_alt_number = $this->employee->employee_alt_number;
         $this->date_of_birth = Carbon::parse($this->employee->date_of_birth)->format('Y-m-d');
-        $this->client = Client::find($this->employee->client_id)->first()->client_name;
+        $this->client = (isset($this->employee->client_id) ? '': Client::find($this->employee->client_id)->first()->client_name);
         $this->project = $this->employee->project;
         $this->family_contact_number = $this->employee->family_contact_number;
         $this->family_contact_name = $this->employee->family_contact_name;
@@ -186,7 +186,7 @@ class EmployeeForm extends Form
         $this->contract_type = $this->employee->contract_type;
         $this->pay_period = $this->employee->pay_period;
         $this->paye = ($this->employee->paye == 1) ? true : false;
-        $this->username = $this->employee->user->username;
+        $this->username = (isset($this->employee->user->username) ? $this->employee->user->username : '');
         $this->allow_login = ($this->allow_login == 1) ? true : false;
     }
 
