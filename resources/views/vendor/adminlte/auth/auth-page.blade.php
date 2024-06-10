@@ -23,7 +23,7 @@
         <div class="col-lg-2">
         </div>
         <div class="col-lg-4">
-            <div class="{{ $auth_type ?? 'login' }}-box">
+            <div class="{{ $auth_type ?? 'login' }}-box m-3">
 
                 {{-- Logo --}}
                 <div class="{{ $auth_type ?? 'login' }}-logo">
