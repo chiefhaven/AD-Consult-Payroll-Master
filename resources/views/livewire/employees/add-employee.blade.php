@@ -1,4 +1,6 @@
-<div class="col-lg-12">
+<div>
+    <livewire:common.page-header pageTitle="{{ $pageTitle }}"/>
+    <div class="col-lg-12">
     @if(session()->has('success'))
         <div class="alert alert-success text-center">
             {{ session()->get('success') }}
@@ -260,4 +262,5 @@
             </div>
         </button>
     </form>
+</div>
 </div>

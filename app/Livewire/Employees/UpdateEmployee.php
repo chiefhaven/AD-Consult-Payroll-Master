@@ -15,6 +15,8 @@ class UpdateEmployee extends Component
 
     public EmployeeForm $form;
 
+    public $pageTitle = 'Update Employee';
+
     public function mount($id)
     {
         $this->form->setEmployee($id);

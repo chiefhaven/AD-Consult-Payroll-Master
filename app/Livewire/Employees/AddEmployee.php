@@ -17,7 +17,7 @@ class AddEmployee extends Component
 
     public $countries, $districts, $clients, $genderEnums, $maritalStatusEnums, $idTypes, $educationLevels, $terminationPeriodTypes, $payPeriods =[];
 
-    public $client = 'P';
+    public $client = 'P', $pageTitle = 'Add Employee';
 
     #[Validate('required','image|max:4096')]
     public $id_proof_pic;
