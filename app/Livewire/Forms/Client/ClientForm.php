@@ -113,9 +113,10 @@ class ClientForm extends Form
         $this->email = $email;
         $this->phone = $this->client->phone;
         $this->phone2 = $this->client->phone2;
+        $this->project = $this->client->project;
         $this->street_address = $this->client->street_address;
         $this->street_address_2 = $this->client->street_address_2;
-        $this->postal_code = $this->client->postal_code;
+        $this->postal_code = $this->client->zip_postal_code;
         $this->website = $this->client->website;
         $this->state = $this->client->state;
         $this->city = $this->client->city;
@@ -124,7 +125,7 @@ class ClientForm extends Form
         $this->tax_number = $this->client->tax_number_1;
         $this->tax_label = $this->client->tax_label_1;
         $this->tax_number_2 = $this->client->tax_number_2;
-        $this->tax_number_2 = $this->client->tax_label_2;
+        $this->tax_label_2 = $this->client->tax_label_2;
         $this->time_zone = $this->client->time_zone;
         $this->status = $this->client->status;
         $this->username = $username;
@@ -142,18 +143,21 @@ class ClientForm extends Form
                 'contract_start_date' => $this->contractstartdate,
                 'phone' => $this->phone,
                 'phone2' => $this->phone2,
-                'address_address' => $this->street_address,
+                'street_address' => $this->street_address,
+                'address_address_2' => $this->street_address,
                 'zip_postal_code' => $this->postal_code,
                 'state' => $this->state,
                 'city' => $this->city,
                 'country_id' => Country::where('name',$this->country)->firstOrFail()->id,
                 'industry_id' => $industry_id,
+                'project' => $this->project,
                 'tax_number_1' => $this->tax_number,
                 'tax_label_1' => $this->tax_label,
                 'tax_number_2' => $this->tax_number_2,
-                'tax_label_2' => $this->tax_number_2,
+                'tax_label_2' => $this->tax_label_2,
                 'time_zone' => 'Africa/Blantyre',
                 'status' => 'Active',
+                'website' => $this->website,
 
                 ]
             );
@@ -197,17 +201,20 @@ class ClientForm extends Form
                 'phone' => $this->phone,
                 'phone2' => $this->phone2,
                 'street_address' => $this->street_address,
+                'street_address_2' => $this->street_address,
                 'zip_postal_code' => $this->postal_code,
                 'state' => $this->state,
                 'city' => $this->city,
                 'country_id' => $this->country,
+                'project' => $this->project,
                 'industry_id' => BusinessUtil::get_industry_id($this->industry),
                 'tax_number_1' => $this->tax_number,
                 'tax_label_1' => $this->tax_label,
                 'tax_number_2' => $this->tax_number_2,
-                'tax_label_2' => $this->tax_number_2,
+                'tax_label_2' => $this->tax_label_2,
                 'time_zone' => 'Africa/Blantyre',
                 'status' => 'Active',
+                'website' => $this->website,
             ]);
 
             if(isset($this->client->user->email)){
