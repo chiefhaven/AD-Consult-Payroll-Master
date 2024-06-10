@@ -30,7 +30,7 @@ class ClientForm extends Form
 
     public $client_logo = '';
 
-    public $industry = 'Health';
+    public $industry = '';
 
     public $street_address = '';
 
@@ -75,8 +75,6 @@ class ClientForm extends Form
     public $tax_label_2 = '';
 
     public string $project = '';
-
-    public $industry_id = 'Health';
 
     public $time_zone;
 
@@ -136,7 +134,7 @@ class ClientForm extends Form
     public function store()
     {
         $this->validate();
-        $this->industry_id = BusinessUtil::get_industry_id($this->industry);
+        $industry_id = BusinessUtil::get_industry_id($this->industry);
 
         try{
             Client::create([
@@ -149,7 +147,7 @@ class ClientForm extends Form
                 'state' => $this->state,
                 'city' => $this->city,
                 'country_id' => Country::where('name',$this->country)->firstOrFail()->id,
-                'industry_id' => $this->industry_id,
+                'industry_id' => $industry_id,
                 'tax_number_1' => $this->tax_number,
                 'tax_label_1' => $this->tax_label,
                 'tax_number_2' => $this->tax_number_2,
