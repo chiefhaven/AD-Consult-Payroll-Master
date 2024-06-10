@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Livewire\Forms\Client;
+
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Common\BusinessUtil;
 use Livewire\Attributes\Validate;
 use Illuminate\Validation\Rule;
@@ -10,8 +12,9 @@ use App\Models\Industry;
 use App\Models\User;
 use DB;
 use \WW\Countries\Models\Country;
-use RealRashid\SweetAlert\Facades\Alert;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class ClientForm extends Form
 {
@@ -153,16 +156,17 @@ class ClientForm extends Form
                 'tax_label_2' => $this->tax_number_2,
                 'time_zone' => 'Africa/Blantyre',
                 'status' => 'Active',
+
                 ]
             );
+            $client_id = Client::orderBy('created_at','DESC')->first()->id;
+            User::create([
+                'username' => ($this->username == null ? Str::random(8): $this->username ),
+                'email' => $this->email,
+                'password' => Hash::make(Str::random(8)),
+                'client_id' => $client_id,
+            ]);
 
-            $registerUser = new User();
-                $registerUser->create([
-                    'username' => $this->username,
-                    'email' => $this->email,
-                    'password' => $this->password,
-                    'client_id' => Client::orderBy('created_at','DESC')->first()->id,
-                ]);
         }
         catch (\Illuminate\Database\QueryException $exception){
 
@@ -210,13 +214,11 @@ class ClientForm extends Form
 
             if(isset($this->client->user->email)){
                 try {
-                    $this->registerUser(
-                        $this->username,
-                        $this->email,
-                        $this->password,
-                        'client_id',
-                        'updated_at'
-                    );
+                    $this->client->user->update([
+                        'username' => $this->username,
+                        'email' => $this->email,
+                        'password' => Hash::make($this->password),
+                    ]);
                 }
                 catch(\Illuminate\Database\QueryException $exception){
                     $errorInfo = $exception;
@@ -224,13 +226,13 @@ class ClientForm extends Form
                 }
             }
             else{
-                $this->registerUser(
-                    $this->username,
-                    $this->email,
-                    $this->password,
-                    'client_id',
-                    'updated_at'
-                );
+                $client_id = Client::orderBy('updated_at','DESC')->first()->id;
+                User::create([
+                    'username' => ($this->username == null ? Str::random(8): $this->username ),
+                    'email' => $this->email,
+                    'password' => Hash::make(Str::random(8)),
+                    'client_id' => $client_id,
+                ]);
             }
         }
         catch (\Illuminate\Database\QueryException $exception){
@@ -240,15 +242,5 @@ class ClientForm extends Form
 
 
         }
-    }
-
-    public function registerUser($username, $email, $password, $relationshipColumn, $recentActivity){
-        $registerUser = new User();
-                $registerUser->create([
-                    'username' => $username,
-                    'email' => $email,
-                    'password' => $password,
-                    $relationshipColumn => Client::orderBy($recentActivity,'DESC')->first()->id,
-                ]);
     }
 }
