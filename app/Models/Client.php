@@ -17,7 +17,7 @@ class Client extends Model
         'phone',
         'client_alt_number',
         'address',
-        'street_address', 
+        'street_address',
         'zip_postal_code',
         'postal_code',
         'state',
