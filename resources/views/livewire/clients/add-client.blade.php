@@ -18,7 +18,7 @@
                         id="project" wire:model="form.project"/>
 
                         <x-adminlte-select type="text" name="industry" label="Industry:" wire:model="form.industry" placeholder="Select an option..." fgroup-class="col-md-3" class="{{ $errors->has('form.industry') ? 'is-invalid' : '' }}">
-                            <option value="null" selected disabled>Please select an option...</option>
+                            <option value="" selected disabled>Please select an option...</option>
                             @foreach ($industries as $industries)
                                 <option>{{$industries->name}}</option>
                             @endforeach
@@ -56,7 +56,7 @@
                     placeholder="State/Region/Province" fgroup-class="col-md-4" class="{{ $errors->has('form.state') ? 'is-invalid' : '' }}" id="state" wire:model="form.state"/>
 
                     <x-adminlte-select type="text" name="country" label="Country" wire:model="form.country" data-placeholder="Select an option..." fgroup-class="col-md-4" class="{{ $errors->has('form.country') ? 'is-invalid' : '' }}" autocomplete="false">
-                        <option value="null" disabled>Please select an option...</option>
+                        <option value="" disabled>Please select an option...</option>
                         @foreach ($countries as $country)
                             <option>{{$country->name}}</option>
                         @endforeach
