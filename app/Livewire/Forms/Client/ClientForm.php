@@ -30,7 +30,7 @@ class ClientForm extends Form
 
     public $client_logo = '';
 
-    public $industry = '';
+    public $industry = 'Health';
 
     public $street_address = '';
 
@@ -52,7 +52,7 @@ class ClientForm extends Form
     public $confirm_password = '';
 
     #[Validate('required')]
-    public $country = '';
+    public $country = 'Malawi';
 
     public $email = '';
 
