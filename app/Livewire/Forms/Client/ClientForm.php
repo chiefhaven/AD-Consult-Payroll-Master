@@ -134,8 +134,11 @@ class ClientForm extends Form
 
     public function store()
     {
-        $this->validate();
-        $industry_id = BusinessUtil::get_industry_id($this->industry);
+        $this->validate([
+            'email' => [
+                Rule::unique('users'),
+            ],
+        ]);
 
         try{
             Client::create([
@@ -149,7 +152,7 @@ class ClientForm extends Form
                 'state' => $this->state,
                 'city' => $this->city,
                 'country_id' => Country::where('name',$this->country)->firstOrFail()->id,
-                'industry_id' => $industry_id,
+                'industry_id' => BusinessUtil::get_industry_id($this->industry),
                 'project' => $this->project,
                 'tax_number_1' => $this->tax_number,
                 'tax_label_1' => $this->tax_label,
