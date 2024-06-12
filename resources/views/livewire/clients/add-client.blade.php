@@ -3,7 +3,7 @@
 <div class="col-lg-12">
     @include('includes/error')
     @section('plugins.Select2', true)
-    <form wire:submit="save">
+    <form wire:submit="save" autocomplete="off">
         <div class="card mb-3 p-4">
             <div class="box-body">
                 <p>Client Details</p>
@@ -17,7 +17,7 @@
                         <x-adminlte-input type="text" name="project" label="Project:" placeholder="Project" fgroup-class="col-md-3" class="{{ $errors->has('form.project') ? 'is-invalid' : '' }}"
                         id="project" wire:model="form.project"/>
 
-                        <x-adminlte-select type="option" name="industry" label="Industry:" wire:model="form.industry" placeholder="Select an option..." fgroup-class="col-md-3" class="{{ $errors->has('form.industries') ? 'is-invalid' : '' }}">
+                        <x-adminlte-select type="text" name="industry" label="Industry:" wire:model="form.industry" placeholder="Select an option..." fgroup-class="col-md-3" class="{{ $errors->has('form.industry') ? 'is-invalid' : '' }}">
                             <option value="null" selected disabled>Please select an option...</option>
                             @foreach ($industries as $industries)
                                 <option>{{$industries->name}}</option>
@@ -55,11 +55,11 @@
                     <x-adminlte-input type="text" name="state" label="State/Region/Province:"
                     placeholder="State/Region/Province" fgroup-class="col-md-4" class="{{ $errors->has('form.state') ? 'is-invalid' : '' }}" id="state" wire:model="form.state"/>
 
-                    <x-adminlte-select type="text" name="country" label="Country" wire:model="form.country" data-placeholder="Select an option..." fgroup-class="col-md-4" class="{{ $errors->has('form.country') ? 'is-invalid' : '' }}">
-                        <option value="null" selected disabled>Please select an option...</option>
-                            @foreach ($countries as $country)
-                                <option wire:key="{{ $country->name }}">{{$country->name}}</option>
-                            @endforeach
+                    <x-adminlte-select type="text" name="country" label="Country" wire:model="form.country" data-placeholder="Select an option..." fgroup-class="col-md-4" class="{{ $errors->has('form.country') ? 'is-invalid' : '' }}" autocomplete="false">
+                        <option value="null" disabled>Please select an option...</option>
+                        @foreach ($countries as $country)
+                            <option>{{$country->name}}</option>
+                        @endforeach
                     </x-adminlte-select>
 
                     <x-adminlte-input type="text" name="tax_number" label="Tax number:"
