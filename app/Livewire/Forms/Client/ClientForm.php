@@ -177,7 +177,6 @@ class ClientForm extends Form
 
             DB::rollback();
             $errorInfo = $exception->errorInfo;
-            dd($errorInfo);
 
 
         }

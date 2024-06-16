@@ -43,7 +43,6 @@ class BusinessUtil extends Controller
     static function get_industry_id($industry_name)
     {
         $industry_id = Industry::where('name', $industry_name)->firstOrFail()->id;
-        dd();
         return $industry_id;
     }
 
