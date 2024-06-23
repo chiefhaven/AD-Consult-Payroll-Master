@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Livewire\Forms\Client;
+
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Common\BusinessUtil;
 use Livewire\Attributes\Validate;
 use Illuminate\Validation\Rule;
@@ -10,8 +12,9 @@ use App\Models\Industry;
 use App\Models\User;
 use DB;
 use \WW\Countries\Models\Country;
-use RealRashid\SweetAlert\Facades\Alert;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class ClientForm extends Form
 {
@@ -27,7 +30,7 @@ class ClientForm extends Form
 
     public $client_logo = '';
 
-    public $industry = 'Health';
+    public $industry = '';
 
     public $street_address = '';
 
@@ -73,8 +76,6 @@ class ClientForm extends Form
 
     public string $project = '';
 
-    public $industry_id = 'Health';
-
     public $time_zone;
 
     public $status;
@@ -112,9 +113,10 @@ class ClientForm extends Form
         $this->email = $email;
         $this->phone = $this->client->phone;
         $this->phone2 = $this->client->phone2;
+        $this->project = $this->client->project;
         $this->street_address = $this->client->street_address;
         $this->street_address_2 = $this->client->street_address_2;
-        $this->postal_code = $this->client->postal_code;
+        $this->postal_code = $this->client->zip_postal_code;
         $this->website = $this->client->website;
         $this->state = $this->client->state;
         $this->city = $this->client->city;
@@ -123,7 +125,7 @@ class ClientForm extends Form
         $this->tax_number = $this->client->tax_number_1;
         $this->tax_label = $this->client->tax_label_1;
         $this->tax_number_2 = $this->client->tax_number_2;
-        $this->tax_number_2 = $this->client->tax_label_2;
+        $this->tax_label_2 = $this->client->tax_label_2;
         $this->time_zone = $this->client->time_zone;
         $this->status = $this->client->status;
         $this->username = $username;
@@ -132,8 +134,11 @@ class ClientForm extends Form
 
     public function store()
     {
-        $this->validate();
-        $this->industry_id = BusinessUtil::get_industry_id($this->industry);
+        $this->validate([
+            'email' => [
+                Rule::unique('users'),
+            ],
+        ]);
 
         try{
             Client::create([
@@ -141,34 +146,37 @@ class ClientForm extends Form
                 'contract_start_date' => $this->contractstartdate,
                 'phone' => $this->phone,
                 'phone2' => $this->phone2,
-                'address_address' => $this->street_address,
+                'street_address' => $this->street_address,
+                'address_address_2' => $this->street_address,
                 'zip_postal_code' => $this->postal_code,
                 'state' => $this->state,
                 'city' => $this->city,
                 'country_id' => Country::where('name',$this->country)->firstOrFail()->id,
-                'industry_id' => $this->industry_id,
+                'industry_id' => BusinessUtil::get_industry_id($this->industry),
+                'project' => $this->project,
                 'tax_number_1' => $this->tax_number,
                 'tax_label_1' => $this->tax_label,
                 'tax_number_2' => $this->tax_number_2,
-                'tax_label_2' => $this->tax_number_2,
+                'tax_label_2' => $this->tax_label_2,
                 'time_zone' => 'Africa/Blantyre',
                 'status' => 'Active',
+                'website' => $this->website,
+
                 ]
             );
+            $client_id = Client::orderBy('created_at','DESC')->first()->id;
+            User::create([
+                'username' => ($this->username == null ? Str::random(8): $this->username ),
+                'email' => $this->email,
+                'password' => Hash::make(Str::random(8)),
+                'client_id' => $client_id,
+            ]);
 
-            $registerUser = new User();
-                $registerUser->create([
-                    'username' => $this->username,
-                    'email' => $this->email,
-                    'password' => $this->password,
-                    'client_id' => Client::orderBy('created_at','DESC')->first()->id,
-                ]);
         }
         catch (\Illuminate\Database\QueryException $exception){
 
             DB::rollback();
             $errorInfo = $exception->errorInfo;
-            dd($errorInfo);
 
 
         }
@@ -195,28 +203,29 @@ class ClientForm extends Form
                 'phone' => $this->phone,
                 'phone2' => $this->phone2,
                 'street_address' => $this->street_address,
+                'street_address_2' => $this->street_address,
                 'zip_postal_code' => $this->postal_code,
                 'state' => $this->state,
                 'city' => $this->city,
                 'country_id' => $this->country,
+                'project' => $this->project,
                 'industry_id' => BusinessUtil::get_industry_id($this->industry),
                 'tax_number_1' => $this->tax_number,
                 'tax_label_1' => $this->tax_label,
                 'tax_number_2' => $this->tax_number_2,
-                'tax_label_2' => $this->tax_number_2,
+                'tax_label_2' => $this->tax_label_2,
                 'time_zone' => 'Africa/Blantyre',
                 'status' => 'Active',
+                'website' => $this->website,
             ]);
 
             if(isset($this->client->user->email)){
                 try {
-                    $this->registerUser(
-                        $this->username,
-                        $this->email,
-                        $this->password,
-                        'client_id',
-                        'updated_at'
-                    );
+                    $this->client->user->update([
+                        'username' => $this->username,
+                        'email' => $this->email,
+                        'password' => Hash::make($this->password),
+                    ]);
                 }
                 catch(\Illuminate\Database\QueryException $exception){
                     $errorInfo = $exception;
@@ -224,13 +233,13 @@ class ClientForm extends Form
                 }
             }
             else{
-                $this->registerUser(
-                    $this->username,
-                    $this->email,
-                    $this->password,
-                    'client_id',
-                    'updated_at'
-                );
+                $client_id = Client::orderBy('updated_at','DESC')->first()->id;
+                User::create([
+                    'username' => ($this->username == null ? Str::random(8): $this->username ),
+                    'email' => $this->email,
+                    'password' => Hash::make(Str::random(8)),
+                    'client_id' => $client_id,
+                ]);
             }
         }
         catch (\Illuminate\Database\QueryException $exception){
@@ -240,15 +249,5 @@ class ClientForm extends Form
 
 
         }
-    }
-
-    public function registerUser($username, $email, $password, $relationshipColumn, $recentActivity){
-        $registerUser = new User();
-                $registerUser->create([
-                    'username' => $username,
-                    'email' => $email,
-                    'password' => $password,
-                    $relationshipColumn => Client::orderBy($recentActivity,'DESC')->first()->id,
-                ]);
     }
 }
