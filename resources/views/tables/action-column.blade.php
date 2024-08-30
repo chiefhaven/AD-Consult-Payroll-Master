@@ -6,7 +6,7 @@
         @isset ( $resource )
                 <a href="{{ route('view-client', $resource->id) }}" class="dropdown-item mb-1">
                     <i class="fa fa-solid fa-eye me-2"></i> View
-                </a>
+                </a> 
         @endif
 
         @isset ( $resource )
