@@ -11,7 +11,7 @@
             </div>
             <div class="col-sm-4 d-flex justify-content-end">
                 @if(isset($buttonName))
-                    <a href="{{ route($link) }}" class="btn btn-primary">{{ $buttonName }}</a>
+                    <a href="{{ $link }}" class="btn {{ $buttonClass }}">{{ $buttonName }}</a>
                 @endif
             </div>
          </div>

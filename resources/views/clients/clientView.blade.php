@@ -55,16 +55,16 @@
         </div>
         <div class="row m-4">
             <div class="col-md-4">
-                <x-adminlte-small-box title="{{ $client->Employee->count() }}" text="Employees" icon="fas fa-users text-white"
-                theme="warning"/>
+                <x-adminlte-small-box title="{{ $client->Employee->count() }}" text="Employees" icon="fas fa-users"
+                theme="information"/>
             </div>
             <div class="col-md-4">
-                <x-adminlte-small-box title="K0.00" text="Unpaid Invoices" icon="fas fa-file-invoice text-white"
-                theme="danger"/>
+                <x-adminlte-small-box title="K0.00" text="Unpaid Invoices" icon="fas fa-file-invoice"
+                theme="information"/>
             </div>
             <div class="col-md-4">
-                <x-adminlte-small-box title="0" text="Tickets" icon="fa-regular fas fa-file-invoice text-white"
-                theme="primary"/>
+                <x-adminlte-small-box title="0" text="Tickets" icon="fa-regular fas fa-file-invoice"
+                theme="information"/>
             </div>
         </div>
         <div class="row m-4">

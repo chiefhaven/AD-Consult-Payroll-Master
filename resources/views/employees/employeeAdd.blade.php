@@ -25,8 +25,8 @@
 
 @section('content')
 <div class="row">
-    <livewire:common.page-header pageTitle="Add employee"/>
-    <livewire:employees.addEmployee />
+    <livewire:common.page-header pageTitle="Add employee" buttonName="Go back" link="/view-client/{{ $client->id }}" buttonClass="btn btn-warning"/>
+    <livewire:employees.add-employee :clientName=" $client->client_name " />
 </div>
 @stop
 

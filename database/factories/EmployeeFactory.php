@@ -55,7 +55,7 @@ class EmployeeFactory extends Factory
             'pay_period' => $this->faker->randomElement(['Daily', 'Weekly', 'Bi Weekly', 'Monthly']),
             'bonus' => $this->faker->randomNumber(6),
             'status' => $this->faker->randomElement(['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended', 'On Probation']),
-            'client_id' => $this->faker->randomNumber(2),
+            'client_id' => 1,
             'paye' => $this->faker->boolean(),
             'project_id'=> $this->faker->randomNumber(2)
         ];

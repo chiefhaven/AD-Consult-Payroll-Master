@@ -1,10 +1,11 @@
 <div>
-    <livewire:common.page-header pageTitle="{{ $pageTitle }}"/>
     <div class="col-lg-12">
         @include('includes/error')
         @section('plugins.Select2', true)
-        <div class="box-body">
-            For Client; {{ $client->name }}
+        <div class="card mb-3 p-4">
+            <div class="box-body">
+                <h3>For Client: <strong>{{ $clientName }}</strong></h3>
+            </div>
         </div>
         <form wire:submit="save" autocomplete="off">
             <div class="card mb-3 p-4">
