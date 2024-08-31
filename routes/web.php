@@ -25,12 +25,12 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['auth']);
 
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees')->middleware(['auth']);
-Route::get('/add-employee', AddEmployee::class)->name('add-employees')->middleware(['auth']);
+Route::get('/add-employee/{client}', [EmployeeController::class, 'create'])->middleware(['auth'])->name('add-employee');
 Route::get('/view-employee/{id}', ViewEmployee::class)->name('view-employee')->middleware(['auth']);
 Route::get('/update-employee/{id}', UpdateEmployee::class)->name('update-employee')->middleware(['auth']);
 
-Route::get('/clients', [ClientController::class, 'index'])->middleware(['auth']);
-Route::get('/addclient', AddClient::class)->middleware(['auth']);
+Route::get('/clients', [ClientController::class, 'index'])->middleware(['auth'])->name('client');
+Route::get('/addclient', AddClient::class)->middleware(['auth'])->name('addclient');
 Route::get('/view-client/{id}', [ClientController::class, 'show'])->name('view-client')->middleware(['auth']);
 Route::get('/update-client/{id}', UpdateClient::class)->name('update-employee')->middleware(['auth']);
 

@@ -306,47 +306,6 @@ return [
             'icon' => 'fa fas fa-tachometer-alt',
         ],
         [
-            'text' => 'Employees',
-            'icon' => 'fa fa-fw fa-users',
-            'url' => 'employees',
-            'submenu' => [
-                [
-                    'text' => 'List employees',
-                    'url' => 'employees',
-                    'icon' => 'fa fa-fas fa-arrow-right ',
-                ],
-                // [
-                //     'text' => 'level_one',
-                //     'url' => '#',
-                //     'submenu' => [
-                //         [
-                //             'text' => 'level_two',
-                //             'url' => '#',
-                //         ],
-                //         [
-                //             'text' => 'level_two',
-                //             'url' => '#',
-                //             'submenu' => [
-                //                 [
-                //                     'text' => 'level_three',
-                //                     'url' => '#',
-                //                 ],
-                //                 [
-                //                     'text' => 'level_three',
-                //                     'url' => '#',
-                //                 ],
-                //             ],
-                //         ],
-                //     ],
-                // ],
-                [
-                    'text' => 'Add employee',
-                    'url' => 'add-employee',
-                    'icon' => 'fa fa-fas fa-arrow-right ',
-                ],
-            ],
-        ],
-        [
             'text' => 'Clients',
             'icon' => 'fa fa-fw fa-address-book',
             'submenu' => [

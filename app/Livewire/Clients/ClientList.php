@@ -54,7 +54,7 @@ class ClientList extends DataTableComponent
                 return ['default' => true];
             })
             ->setHideBulkActionsWhenEmptyEnabled();
-        }
+    }
 
     public function columns(): array
     {

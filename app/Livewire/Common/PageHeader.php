@@ -7,7 +7,8 @@ use Livewire\Component;
 class PageHeader extends Component
 {
     public $pageTitle = '';
-    public $buttonName = '';
+    public $buttonName = null;
+    public $link =null;
 
     public function render()
     {

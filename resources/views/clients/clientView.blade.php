@@ -68,7 +68,10 @@
             </div>
         </div>
         <div class="row m-4">
-            <div class="col-md-8 card p-5">
+            <div class="col-md-8 card p-3">
+                <div class="container d-flex justify-content-end">
+                    <a class="btn btn-primary mb-4" href="{{ route('add-employee', $client) }}">Add Employee</a>
+                </div>
                 @include('../employees/includes/employeeTable')
             </div>
             <div class="col-md-1">

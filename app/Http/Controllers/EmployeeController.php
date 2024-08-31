@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
+use App\Models\Client;
 
 class EmployeeController extends Controller
 {
@@ -19,9 +20,9 @@ class EmployeeController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Client $client)
     {
-        return view('employees.employeeAdd');
+        return view('employees.employeeAdd', compact('client'));
     }
 
     /**
