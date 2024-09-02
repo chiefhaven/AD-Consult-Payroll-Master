@@ -67,6 +67,15 @@
                 theme="primary"/>
             </div>
         </div>
+
+        <div class="row m-4">
+            <div class="col-md-12">
+                <a href="{{ route('employees.create') }}" class="btn btn-primary float-right">
+                    <i class="fas fa-plus"></i> Add Employee
+                </a>
+            </div>
+        </div>
+
         <div class="row m-4">
             <div class="col-md-8 card p-5">
                 @include('../employees/includes/employeeTable')

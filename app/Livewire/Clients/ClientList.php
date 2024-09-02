@@ -53,7 +53,13 @@ class ClientList extends DataTableComponent
                 }
                 return ['default' => true];
             })
-            ->setHideBulkActionsWhenEmptyEnabled();
+            ->setHideBulkActionsWhenEmptyEnabled()
+            ->setTrAttributes(function($row) {
+            return [
+                'class' => 'cursor-pointer',
+                'onclick' => 'window.location.href="/view-client/'.$row->id.'"',
+            ];
+        });
         }
 
     public function columns(): array
