@@ -79,9 +79,6 @@ class EmployeeForm extends Form
     #[Validate('required')]
     public $id_number;
 
-    #[Validate('required')]
-    public $client;
-
     public $project = null;
 
     #[Validate('required')]
@@ -190,14 +187,8 @@ class EmployeeForm extends Form
         $this->allow_login = ($this->allow_login == 1) ? true : false;
     }
 
-    public function store()
+    public function store($client)
     {
-        $this->validate([
-            'client' => [
-                Rule::exists('clients','client_name')
-            ],
-        ]);
-
         $this->country = Country::where('name',$this->nationality)->firstOrFail()->id;
 
 
@@ -212,7 +203,7 @@ class EmployeeForm extends Form
                 'allow_login' => $this->allow_login,
                 'employee_alt_number' => $this->employee_alt_number,
                 'nationality_id' => $this->country,
-                'client_id' => Client::where('client_name', $this->client)->firstOrFail()->id,
+                'client_id' => Client::where('client_name', $client)->firstOrFail()->id,
                 'contract_type' => 1,
                 'designation_id' => Designation::Where('name', $this->designation)->firstOrFail()->id,
                 'project_id' => $this->project,
