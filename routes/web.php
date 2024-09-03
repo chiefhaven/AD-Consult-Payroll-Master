@@ -34,7 +34,7 @@ Route::get('/addclient', AddClient::class)->middleware(['auth'])->name('addclien
 Route::get('/view-client/{id}', [ClientController::class, 'show'])->name('view-client')->middleware(['auth']);
 Route::get('/update-client/{id}', UpdateClient::class)->name('update-employee')->middleware(['auth']);
 
-Route::get('/payroll', Payroll::class)->middleware(['auth']);
+Route::get('/add-payroll', Payroll::class)->name('add-payroll')->middleware(['auth']);
 
 Route::get('/leaves', Leaves::class)->middleware(['auth']);
 
