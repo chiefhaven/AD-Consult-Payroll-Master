@@ -4,10 +4,12 @@
         @section('plugins.Select2', true)
         <div class="card mb-3 p-4">
             <div class="box-body">
-                <h3>For Client: <strong>{{ $clientName }}</strong></h3>
+                <h3>For Client: <strong>{{ $client }}</strong></h3>
             </div>
         </div>
         <form wire:submit="save" autocomplete="off">
+            <x-adminlte-input type="text" name="client" label="client"
+                id="client" wire:model="client" autocomplete="false"/>
             <div class="card mb-3 p-4">
                 <div class="box-body">
                     <p>Employee Details</p>
@@ -98,7 +100,7 @@
                             fgroup-class="col-md-3" class="{{ $errors->has('form.permanent_city') ? 'is-invalid' : '' }}" id="permanent_city" wire:model="form.permanent_city" autocomplete="false"/>
 
                             <x-adminlte-input name="permanent_state" label="Permanent state:" placeholder="Permanent state"
-                            fgroup-class="col-md-3" class="{{ $errors->has('form.permanent_state') ? 'is-invalid' : '' }}" id="resident_state" wire:model="form.permanent_state" autocomplete="false"/>
+                            fgroup-class="col-md-3" class="{{ $errors->has('form.permanent_state') ? 'is-invalid' : '' }}" id="permanent_state" wire:model="form.permanent_state" autocomplete="false"/>
 
                             <x-adminlte-select type="text" name="permanent_counrty" label="Permanent country:" wire:model="form.permanent_country" data-placeholder="Select an option..."
                             fgroup-class="col-md-3" class="{{ $errors->has('form.permanent_country') ? 'is-invalid' : '' }}" autocomplete="false">
@@ -162,7 +164,7 @@
                                 <div class="row input-group form-group-lg group-side-padding">
                                     <x-adminlte-input name="probation_period" label="Probation period:" placeholder="Probation period" fgroup-class="col-md-8 pr-0" class="{{ $errors->has('form.probation_period') ? 'is-invalid' : '' }}" id="probation_period" wire:model="form.probation_period" wire:model="form.probation_period" autocomplete="false" required/>
 
-                                    <x-adminlte-select name="termination_notice_period_type" label="Period type" wire:model="form.termination_notice_period_type" fgroup-class="col-md-4 px-0" class="{{ $errors->has('form.termination_notice_period_type') ? 'is-invalid' : '' }}" data-placeholder="Select an option..." autocomplete="false">
+                                    <x-adminlte-select name="probation_period_type" label="Period type" wire:model="form.probation_period_type" fgroup-class="col-md-4 px-0" class="{{ $errors->has('form.probation_period_type') ? 'is-invalid' : '' }}" data-placeholder="Select an option..." autocomplete="false">
                                         <option value="null" selected disabled>Please select an option...</option>
                                         @foreach ($terminationPeriodTypes as $terminationPeriodType)
                                             <option>{{$terminationPeriodType}}</option>
@@ -239,7 +241,7 @@
                             fgroup-class="col-md-3" id="confirm_password" wire:model="form.confirm_password" autocomplete="false"/>
 
                             <x-adminlte-input type="checkbox" name="allow_login" label="Allow Login:*" fgroup-class="checkbox" class="{{ $errors->has('form.allow_login') ? 'is-invalid' : '' }}"
-                            id="phone" wire:model="form.allow_login" autocomplete="false"/>
+                            id="allow_login" wire:model="form.allow_login" autocomplete="false"/>
 
                     </div>
                 </div>
