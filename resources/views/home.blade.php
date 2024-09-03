@@ -8,10 +8,10 @@
 
 @section('content')
     <div class="row p-4">
-        <div class="col-md-7">
+        <div class="col-md-8">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card bg-primary mb-3 p-4">
+                    <div class="border border-primary mb-3 p-4">
                         <div class="box-body">
                             <h3>Good Morning</h3>
                             {!! \Illuminate\Foundation\Inspiring::quote() !!}
@@ -23,18 +23,18 @@
                 <div class="col-lg-12">
                     <div class="row mt-5">
                         <div class="col-md-6">
-                            <x-adminlte-small-box title="{{ App\Models\Employee::get()->count() }}" text="Employees" icon="fas fa-users text-white"
-                            theme="warning"/>
+                            <x-adminlte-small-box title="{{ App\Models\Employee::get()->count() }}" text="Employees" icon="fas fa-users"
+                                theme="information"/>
                         </div>
                         <div class="col-md-6">
-                            <x-adminlte-small-box title="{{ App\Models\Client::get()->count() }}" text="Clients" icon="fas fa-file-invoice text-white"
-                            theme="danger"/>
+                            <x-adminlte-small-box title="{{ App\Models\Client::get()->count() }}" text="Clients" icon="fas fa-file-invoice"
+                            theme="information"/>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 offset-md-2">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
                     <p><strong>Upcoming events</strong></p>
