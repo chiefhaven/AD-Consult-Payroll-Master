@@ -6,6 +6,7 @@ use App\Http\Controllers\Common\BusinessUtil;
 use Livewire\Component;
 use App\Livewire\Forms\Employee\EmployeeForm;
 use App\Models\Client;
+use Illuminate\Validation\Rule;
 use \WW\Countries\Models\Country;
 use \HavenPlus\Districts\Models\District;
 use Livewire\WithFileUploads;
@@ -19,10 +20,12 @@ class AddEmployee extends Component
 
     public $clientName, $pageTitle = null;
 
+    public $client;
+
     #[Validate('required','image|max:4096')]
     public $id_proof_pic;
 
-    public function mount()
+    public function mount($clientName)
     {
         $this->countries = Country::all();
         $this->districts = District::all();
@@ -32,13 +35,20 @@ class AddEmployee extends Component
         $this->educationLevels = BusinessUtil::get_enum_values('employees', 'education_level');
         $this->payPeriods = BusinessUtil::get_enum_values('employees', 'pay_period');
         $this->terminationPeriodTypes = BusinessUtil::get_enum_values('employees', 'termination_notice_period_type');
+        $this->client = $clientName;
     }
 
     public EmployeeForm $form;
 
     public function save()
     {
-        $this->form->store();
+        $this->validate([
+            'client' => [
+                Rule::exists('clients','client_name')
+            ],
+        ]);
+
+        $this->form->store($this->client);
 
         session()->flash('message', 'Employee successfully addeded.');
         return $this->redirect('/employees');
