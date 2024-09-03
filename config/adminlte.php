@@ -346,7 +346,7 @@ return [
             ],
         ],
         [
-            'text' => 'Payroll',
+            'text' => 'Payrolls',
             'url' => 'payroll',
             'icon' => 'fa fa-money-check',
         ],
