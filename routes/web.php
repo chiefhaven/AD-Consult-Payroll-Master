@@ -15,6 +15,7 @@ use App\Livewire\UserList;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\PayrollController;
 use App\Livewire\Employees\AddEmployee;
 use App\Livewire\Employees\UpdateEmployee;
 use App\Livewire\Employees\ViewEmployee;
@@ -34,7 +35,7 @@ Route::get('/addclient', AddClient::class)->middleware(['auth'])->name('addclien
 Route::get('/view-client/{id}', [ClientController::class, 'show'])->name('view-client')->middleware(['auth']);
 Route::get('/update-client/{id}', UpdateClient::class)->name('update-employee')->middleware(['auth']);
 
-Route::get('/add-payroll', Payroll::class)->name('add-payroll')->middleware(['auth']);
+Route::get('/add-payroll/{client}', [PayrollController::class, 'create'])->name('add-payroll')->middleware(['auth']);
 
 Route::get('/leaves', Leaves::class)->middleware(['auth']);
 
