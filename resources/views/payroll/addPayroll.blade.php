@@ -26,7 +26,34 @@
 @section('content')
 <div class="row">
     <livewire:common.page-header pageTitle="Add payroll" buttonName="Go back" link="/view-client/{{ $client->id }}" buttonClass="btn btn-warning"/>
-    <livewire:payroll.add-payroll :clientName="$client->client_name" />
+    <div class="col-lg-12">
+        @include('includes/error')
+        @section('plugins.Select2', true)
+        <div class="card mb-3 p-4">
+            <div class="box-body">
+                <h3>For Client: <strong>{{ $client->client_name }}</strong></h3>
+            </div>
+        </div>
+        <form wire:submit="save" autocomplete="off">
+            <x-adminlte-input type="text" name="client" id="client" wire:model="client" autocomplete="false" hidden/>
+            <div class="card mb-3 p-4">
+                <div class="box-body">
+                    <p>Options</p>
+                    <div class="row">
+                        <x-adminlte-input type="text" name="group" label="Group" placeholder="Month/Year" fgroup-class="col-12" class="{{ $errors->has('form.group') ? 'is-invalid' : '' }}" id="group" wire:model="form.group" autocomplete="off"/>
+
+                        <x-adminlte-input type="text" name="employees" label="Select employees" placeholder="Employees" fgroup-class="col-12" class="{{ $errors->has('form.employees') ? 'is-invalid' : '' }}" id="employees" wire:model="form.employees" autocomplete="off"/>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                Save
+                <div wire:loading>
+                    @include('livewire/common/spinner')
+                </div>
+            </button>
+        </form>
+    </div>
 </div>
 @stop
 
