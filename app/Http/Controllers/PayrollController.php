@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\payroll;
 use App\Http\Requests\StorepayrollRequest;
 use App\Http\Requests\UpdatepayrollRequest;
+use App\Models\Client;
 
 class PayrollController extends Controller
 {
@@ -19,9 +20,9 @@ class PayrollController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Client $client)
     {
-        //
+        return view('payroll.addPayroll', compact('client'));
     }
 
     /**
