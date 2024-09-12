@@ -71,16 +71,26 @@
             <div class="col-md-8 pl-3">
             <div class="row">
                 <div class="col-md-12 mb-4 card p-3">
-                    <div class="container d-flex justify-content-end">
-                        <a class="btn btn-primary mb-4" href="{{ route('add-employee', $client) }}">Add Employee</a>
+                    <div class="row">
+                        <div class="col-md-6 d-flex justify-content-start">
+                            <div class="h4"><strong>Employees</strong></div>
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-end">
+                            <a class="btn btn-primary mb-4" href="{{ route('add-employee', $client) }}">Add Employee</a>
+                        </div>
                     </div>
                     @include('../employees/includes/employeeTable')
                 </div>
                 <div class="col-md-12 card p-3">
-                    <div class="container d-flex justify-content-end">
-                        <a class="btn btn-primary mb-4" href="{{ route('add-payroll', $client) }}">Add Payroll</a>
+                    <div class="row">
+                        <div class="col-md-6 d-flex justify-content-start">
+                            <div class="h4"><strong>Payrolls</strong></div>
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-end">
+                            <a class="btn btn-primary mb-4" href="{{ route('add-payroll', $client) }}">Add Payroll</a>
+                        </div>
                     </div>
-                    @include('../employees/includes/employeeTable')
+                    @include('../payroll/includes/payrollTable')
                 </div>
             </div>
             </div>
