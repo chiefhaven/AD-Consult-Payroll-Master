@@ -38,7 +38,7 @@ class ClientController extends Controller
      */
     public function show(String $id)
     {
-        $client = Client::with('User','Payroll')->find($id);
+        $client = Client::with('users','payrolls')->find($id);
         return view('clients.clientView', [ 'client' => $client ], compact('client'));
     }
 
