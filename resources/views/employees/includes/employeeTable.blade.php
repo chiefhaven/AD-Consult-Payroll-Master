@@ -78,9 +78,3 @@
         <p class="p-5">No employees yet for this client!</p>
     @endif
     </div>
-
-    <script>
-        $(document).ready(function() {
-            $('#employeeTable').DataTable();
-        });
-    </script>
