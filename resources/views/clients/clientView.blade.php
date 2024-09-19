@@ -72,7 +72,7 @@
                                 <a class="btn btn-primary mb-4" href="{{ route('add-employee', $client) }}">Add Employee</a>
                             </div>
                         </div>
-                        @include('../employees/includes/employeeTable')
+                        @include('/employees/includes/employeeTable')
                     </div>
                     <div class="col-md-12 card p-3">
                         <div class="row">

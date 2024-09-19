@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    @if( !$client->employee->isEmpty())
+    @if( !$client->employees->isEmpty())
       <table id="employeeTable"class="table table-bordered table-striped table-vcenter">
           <thead>
               <tr>
@@ -13,7 +13,7 @@
               </tr>
           </thead>
           <tbody>
-            @foreach ($client->employee as $employee)
+            @foreach ($client->employees as $employee)
               <tr>
                 <td class="font-w600">
                     {{$employee->fname}}
