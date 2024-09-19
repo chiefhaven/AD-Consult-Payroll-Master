@@ -99,9 +99,13 @@
 
                                     <!-- Select2 component -->
                                     <x-adminlte-select2 multiple="multiple" name="employees" placeholder="Employees" fgroup-class="col-12" class="{{ $errors->has('employees') ? 'is-invalid' : '' }}" id="employees" required autocomplete="off">
-                                        @foreach($client->employee as $employee)
-                                            <option value="{{ $employee->id }}">{{ $employee->fname }} {{ $employee->mname }} {{ $employee->sname }}</option>
-                                        @endforeach
+                                        @if(isset($payroll->employee))
+                                            @foreach($client->employees as $employee)
+                                                <option value="{{ $employee->id }}">{{ $employee->fname }} {{ $employee->mname }} {{ $employee->sname }}</option>
+                                            @endforeach
+                                        @elseif
+                                            No employees yet
+                                        @endif
                                     </x-adminlte-select2>
                                 </div>
                             </div>
