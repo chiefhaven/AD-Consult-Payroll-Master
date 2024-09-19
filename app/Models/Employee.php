@@ -84,4 +84,9 @@ class Employee extends Model
     {
         return $this->belongsTo(Contact::class);
     }
+
+    public function Payroll()
+    {
+        return $this->hasMany(Payroll::class);
+    }
 }

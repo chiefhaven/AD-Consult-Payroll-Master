@@ -25,15 +25,15 @@
 
 @section('content')
 <div class="row">
-    <div>
+    <div class="col-lg-12">
         <div class="card p-5 employee-profile-header">
             <div class="row">
                 <div class="col-md-3">
                     @if (isset($client->logo))
-                    <img class="" src="/img/$client->logo" height="auto" width="100%">
-                @else
-                    <img class="" src="/img/logo-placeholder-png-2.png" height="auto" width="100%">
-                @endif
+                        <img class="" src="/img/$client->logo" height="auto" width="100%">
+                    @else
+                        <img class="" src="/img/logo-placeholder.png" height="auto" width="100%">
+                    @endif
                 </div>
                 <div class="col-md-1"><p>&nbsp;</p></div>
                 <div class="col-md-8">
@@ -87,7 +87,10 @@
                             <div class="h4"><strong>Payrolls</strong></div>
                         </div>
                         <div class="col-md-6 d-flex justify-content-end">
-                            <a class="btn btn-primary mb-4" href="{{ route('add-payroll', $client) }}">Add Payroll</a>
+                            <button type="button" class="btn btn-primary pull-right mb-4" data-toggle="modal" data-target="#payroll_modal">
+                                <i class="fa fa-plus"></i>
+                                Add payroll
+                            </button>
                         </div>
                     </div>
                     @include('../payroll/includes/payrollTable')
@@ -114,9 +117,44 @@
 <script>
 
     $(document).ready(function() {
-        // Add your common script logic here...
+        $('#employeeTable').DataTable(
+            {
+                scrollX: true,
+            }
+        );
     });
 
+    $(document).ready(function() {
+        $('#payrollTable').DataTable(
+            {
+                scrollX: true,
+            }
+        );
+    });
+
+    $("#payroll_month_year").datepicker( {
+        format: "mm-yyyy",
+        viewMode: "months",
+        minViewMode: "months"
+    });
+
+</script>
+<script>
+    document.querySelector('.select-all').addEventListener('click', function() {
+        let select = document.getElementById('employees');
+        for (let option of select.options) {
+            option.selected = true;
+        }
+        $(select).trigger('change'); // Trigger change event to update the Select2 component
+    });
+
+    document.querySelector('.deselect-all').addEventListener('click', function() {
+        let select = document.getElementById('employees');
+        for (let option of select.options) {
+            option.selected = false;
+        }
+        $(select).trigger('change'); // Trigger change event to update the Select2 component
+    });
 </script>
 @endpush
 

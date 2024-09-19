@@ -1,6 +1,6 @@
 <div class="table-responsive">
     @if( !$client->employee->isEmpty())
-      <table class="table table-bordered table-striped table-vcenter">
+      <table id="employeeTable"class="table table-bordered table-striped table-vcenter">
           <thead>
               <tr>
                   <th>Firstname</th>
@@ -78,3 +78,9 @@
         <p class="p-5">No employees yet for this client!</p>
     @endif
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#employeeTable').DataTable();
+        });
+    </script>

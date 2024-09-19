@@ -12,16 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payrolls', function (Blueprint $table) {
-            $table->id();
-            $table->char('employee_id');
-            $table->date('payment_date');
-            $table->enum('pay_period',['Weekly','Bi weekly','Monthly']);
-            $table->decimal('gross_pay');
-            $table->decimal('net_pay');
-            $table->decimal('deductions');
-            $table->enum('compansation',['salary','wage','commision','bonus']);
-            $table->enum('payment_method',['Direct Deposit','Check']);
-            $table->enum('payment_status',['completed ','pending','']);
+            $table->uuid('id');
+            $table->string('group');
+            $table->uuid('client_id');
+            $table->integer('total_amount');
+            $table->integer('total_deductions');
+            $table->integer('total_payee');
+            $table->enum('status',['Approved', 'Pending', 'Cancled']);
             $table->timestamps();
         });
     }
