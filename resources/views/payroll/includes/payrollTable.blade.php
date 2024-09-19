@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    @if( !$client->payroll->isEmpty())
+    @if( !$client->payrolls->isEmpty())
       <table id="payrollTable" class="table table-bordered table-striped table-vcenter display nowrap">
           <thead>
               <tr>
@@ -14,7 +14,7 @@
               </tr>
           </thead>
           <tbody>
-            @foreach ($client->payroll as $payroll)
+            @foreach ($client->payrolls as $payroll)
               <tr>
                 <td class="font-w600">
                    {{ $payroll->group }}
