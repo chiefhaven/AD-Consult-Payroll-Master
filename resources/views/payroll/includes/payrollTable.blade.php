@@ -103,7 +103,7 @@
                                             @foreach($client->employees as $employee)
                                                 <option value="{{ $employee->id }}">{{ $employee->fname }} {{ $employee->mname }} {{ $employee->sname }}</option>
                                             @endforeach
-                                        @elseif
+                                        @else
                                             No employees yet
                                         @endif
                                     </x-adminlte-select2>
