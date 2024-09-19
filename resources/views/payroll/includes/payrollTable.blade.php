@@ -20,7 +20,9 @@
                    {{ $payroll->group }}
                 </td>
                 <td class="font-w600">
-                    {{ $payroll->employee->count() }}
+                    @if(isset($payroll->employee))
+                        {{ $payroll->employee->count() }}
+                    @endif
                 </td>
                 <td class="font-w600">
                     K{{ number_format($payroll->total_amount) }}
