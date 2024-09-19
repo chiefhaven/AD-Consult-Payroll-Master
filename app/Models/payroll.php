@@ -19,6 +19,6 @@ class Payroll extends Model
 
     public function employees()
     {
-        return $this->belongsToMany(Employee::class, "payroll_employee");
+        return $this->belongsToMany(Employee::class, "payroll_employee"); //komatu
     }
 }
