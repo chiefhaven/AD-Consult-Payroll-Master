@@ -12,12 +12,12 @@ class Payroll extends Model
 
     ];
 
-    public function Client()
+    public function clients()
     {
         return $this->belongsTo(Client::class);
     }
 
-    public function Employee()
+    public function employees()
     {
         return $this->belongsToMany(Employee::class, "payroll_employee");
     }
