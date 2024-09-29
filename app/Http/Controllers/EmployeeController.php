@@ -38,7 +38,8 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
-        return view('employees.employeeView');
+        $employee = $employee->load('User','Payrolls', 'Client', 'Designation');
+        return view('employees.employeeView', compact('employee'));
     }
 
     /**

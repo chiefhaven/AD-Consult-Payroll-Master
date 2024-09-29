@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Common\BusinessUtil;
 use App\Models\payroll;
 use App\Http\Requests\StorepayrollRequest;
 use App\Http\Requests\UpdatepayrollRequest;
 use App\Models\Client;
 use App\Models\Employee;
+use Carbon\Carbon;
+use Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PayrollController extends Controller
 {
@@ -24,7 +28,8 @@ class PayrollController extends Controller
     public function create(Client $client)
     {
         $employee_ids = request('employees');
-        $month_year_arr = explode('/', request('payroll_month_year'));
+        $payroll_month_year = request('payroll_month_year');
+        $month_year_arr = explode('-', request('payroll_month_year'));
         $month = $month_year_arr[0];
         $year = $month_year_arr[1];
 
@@ -41,66 +46,29 @@ class PayrollController extends Controller
 
             //initialize required data
             $start_date = $payroll_date;
-            $end_date = \Carbon::parse($start_date)->lastOfMonth();
+            $end_date = Carbon::parse($start_date)->lastOfMonth();
             $month_name = $end_date->format('F');
 
             $employees = Employee::where('client_id', $client->id)
-                            ->find($add_payroll_for);
+            ->find($add_payroll_for);
 
             $payrolls = [];
             foreach ($employees as $employee) {
-
-                //get employee info
-                $payrolls[$employee->id]['name'] = $employee->user_full_name;
-                $payrolls[$employee->id]['essentials_salary'] = $employee->essentials_salary;
-                $payrolls[$employee->id]['essentials_pay_period'] = $employee->essentials_pay_period;
-
-                //get total work duration of employee(attendance)
-                $payrolls[$employee->id]['total_work_duration'] = $this->essentialsUtil->getTotalWorkDuration('hour', $employee->id, $business_id, $start_date, $end_date->format('Y-m-d'));
-
-                //get total earned commission for employee
-                $business_details = $this->businessUtil->getDetails($business_id);
-                $pos_settings = empty($business_details->pos_settings) ? $this->businessUtil->defaultPosSettings() : json_decode($business_details->pos_settings, true);
-
-                $commsn_calculation_type = empty($pos_settings['cmmsn_calculation_type']) || $pos_settings['cmmsn_calculation_type'] == 'invoice_value' ? 'invoice_value' : $pos_settings['cmmsn_calculation_type'];
-
-                $total_commission = 0;
-                if ($commsn_calculation_type == 'payment_received') {
-                    $payment_details = $this->transactionUtil->getTotalPaymentWithCommission($business_id, $start_date, $end_date, null, $employee->id);
-                    //Get Commision
-                    $total_commission = $employee->cmmsn_percent * $payment_details['total_payment_with_commission'] / 100;
-                } else {
-                    $sell_details = $this->transactionUtil->getTotalSellCommission($business_id, $start_date, $end_date, null, $employee->id);
-                    $total_commission = $employee->cmmsn_percent * $sell_details['total_sales_with_commission'] / 100;
-                }
-
-                if ($total_commission > 0) {
-                    $payrolls[$employee->id]['allowances']['allowance_names'][] = __('essentials::lang.sale_commission');
-                    $payrolls[$employee->id]['allowances']['allowance_amounts'][] = $total_commission;
-                    $payrolls[$employee->id]['allowances']['allowance_types'][] = 'fixed';
-                    $payrolls[$employee->id]['allowances']['allowance_percents'][] = 0;
-                }
-
-                //get earnings & deductions of employee
-                $allowances_and_deductions = $this->essentialsUtil->getEmployeeAllowancesAndDeductions($business_id, $employee->id, $start_date, $end_date);
-                foreach ($allowances_and_deductions as $ad) {
-                    if ($ad->type == 'allowance') {
-                        $payrolls[$employee->id]['allowances']['allowance_names'][] = $ad->description;
-                        $payrolls[$employee->id]['allowances']['allowance_amounts'][] = $ad->amount_type == 'fixed' ? $ad->amount : 0;
-                        $payrolls[$employee->id]['allowances']['allowance_types'][] = $ad->amount_type;
-                        $payrolls[$employee->id]['allowances']['allowance_percents'][] = $ad->amount_type == 'percent' ? $ad->amount : 0;
-                    } else {
-                        $payrolls[$employee->id]['deductions']['deduction_names'][] = $ad->description;
-                        $payrolls[$employee->id]['deductions']['deduction_amounts'][] = $ad->amount_type == 'fixed' ? $ad->amount : 0;
-                        $payrolls[$employee->id]['deductions']['deduction_types'][] = $ad->amount_type;
-                        $payrolls[$employee->id]['deductions']['deduction_percents'][] = $ad->amount_type == 'percent' ? $ad->amount : 0;
-                    }
-                }
+                // Get employee info and populate the payrolls array
+                $payrolls[$employee->id] = [
+                    'employee' => $employee,
+                    'salary' => $employee->salary,
+                    'pay_period' => $employee->pay_period,
+                    'bonus' => $employee->bonus,
+                    'payee' => $employee->paye,
+                ];
             }
 
+            // Action to determine the context of the view (e.g., create or edit)
             $action = 'create';
 
-            return view('payroll.addPayroll', compact('client'));
+            // Pass the client, payrolls, and action variables to the view
+            return view('payroll.addPayroll', compact('client', 'payrolls', 'action', 'payroll_month_year'));
 
         } else {
             return redirect()->back()
@@ -118,7 +86,79 @@ class PayrollController extends Controller
      */
     public function store(StorepayrollRequest $request)
     {
-        //
+        //dd(request()->all());
+        $messages = [
+            'payrollGroupName.required' => 'Payroll Group Name is required',
+            'payrollStatus.required'   => 'Payroll Status is required',
+        ];
+
+        // Validate the request
+        $this->validate($request, [
+            'payrollGroupName'  =>'required',
+            'payrollStatus'   =>'required',
+
+        ], $messages);
+
+        $post = $request->all();
+        $payrollGroupName = $post['payrollGroupName'];
+        $status = $post['payrollStatus'];
+        $client = $post['client'];
+
+        $employeePayments = $post['payroll'];
+
+        $payroll = new payroll();
+        $payroll->group = $payrollGroupName;
+        $payroll->status = $status;
+        $payroll->client_id = $client;
+        $payroll->added_by = Auth::user()->id;
+
+        $payroll->save();
+
+        foreach ($employeePayments as $data) {
+            // Processing each employee's payroll
+            $employeeId = $data['employee'];
+            $salary = (float) $data['salary'];
+            $earningDescription = $data['earning_description'] ?? null;
+            $earningAmount = (float) ($data['earning_amount'] ?? 0);
+            $deductionDescription = $data['deduction_description'] ?? null;
+            $deductionAmount = (float) ($data['deduction_amount'] ?? 0);
+            $tax = new BusinessUtil();
+            $paye = $tax->calculatePaye($salary);
+            $payPeriod = $data['pay_period'];
+
+            // Calculating the net salary
+            $netSalary = $salary - $paye;
+
+            // Get the most recent payroll ID
+            $payrollId = Payroll::orderBy('created_at', 'desc')->first()->id;
+
+            // Fetch the employee by ID
+            $employee = Employee::find($employeeId);
+
+            // Attach the employee to the payroll with all required details in the pivot
+            if ($employee) {
+                $employee->payrolls()->attach($payrollId, [
+                    'salary' => $salary,
+                    'pay_period' => $payPeriod,
+                    'earning_description' => $earningDescription,
+                    'earning_amount' => $earningAmount,
+                    'deduction_description' => $deductionDescription,
+                    'deduction_amount' => $deductionAmount,
+                    'payee' => $paye,
+                    'net_salary' => $netSalary,
+                    'total_paid' => $netSalary + $earningAmount - $deductionAmount,
+                ]);
+            }
+        }
+
+        if(!$payroll->save()){
+            return false;
+        }
+
+        // After successfully adding payroll
+        Alert::toast('Payroll added successfully!', 'success');
+
+        return redirect()->route('view-client', ['client' => $client, 'data' => $data]);
     }
 
     /**
@@ -150,6 +190,22 @@ class PayrollController extends Controller
      */
     public function destroy(payroll $payroll)
     {
-        //
+
+        // Check if the payroll entry exists
+        if ($payroll) {
+
+            // If you want to detach the employees from the payroll
+            $payroll->employees()->detach();
+            // Delete the payroll entry
+            $payroll->delete();
+
+            // Show success message
+            Alert::toast('Payroll deleted', 'success');
+        } else {
+            // Show error message if not found
+            Alert::toast('Payroll not found', 'error');
+        }
+
+        return back();
     }
 }

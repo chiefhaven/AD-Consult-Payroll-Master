@@ -135,3 +135,7 @@
         margin: 0px 0px 0px -20px !important;
         background: #007bff;
 }
+
+.bg-light {
+    background-color: #ffffff !important;
+}

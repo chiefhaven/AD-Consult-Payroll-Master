@@ -4,11 +4,13 @@
           <thead>
               <tr>
                   <th style="min-width: 150px;">Group</th>
-                  <th style="min-width: 150px;">Total employees</th>
-                  <th style="min-width: 150px;">Total amount</th>
+                  <th style="min-width: 50px;">Employees</th>
+                  <th style="min-width: 150px;">Total gross</th>
+                  <th style="min-width: 150px;">Total Paye</th>
+                  <th style="min-width: 150px;">Total net</th>
+                  <th style="min-width: 150px;">Total earnings</th>
                   <th style="min-width: 150px;">Total deductions</th>
-                  <th style="min-width: 150px;">Payee</th>
-                  <th style="min-width: 150px;">Bonuses</th>
+                  <th style="min-width: 150px;">Total paid</th>
                   <th>Status</th>
                   <th class="text-center" style="width: 100px;">Actions</th>
               </tr>
@@ -20,21 +22,27 @@
                    {{ $payroll->group }}
                 </td>
                 <td class="font-w600">
-                    @if(isset($payroll->employee))
-                        {{ $payroll->employee->count() }}
+                    @if(isset($payroll->employees))
+                        {{ $payroll->employees()->count() }}
                     @endif
                 </td>
                 <td class="font-w600">
-                    K{{ number_format($payroll->total_amount) }}
+                    K{{ number_format($payroll->employees()->sum('payroll_employee.salary')) }}
+                </td>
+                <td>
+                    K{{ number_format($payroll->employees()->sum('payroll_employee.payee')) }}
                 </td>
                 <td class="font-w600">
-                    K{{ number_format($payroll->total_deductions) }}
+                    K{{ number_format($payroll->employees()->sum('payroll_employee.net_salary')) }}
                 </td>
                 <td>
-                    K{{ number_format($payroll->total_payee) }}
+                    K{{ $payroll->employees()->sum('payroll_employee.earning_amount') }}
+                </td>
+                <td class="font-w600">
+                    K{{ number_format($payroll->employees()->sum('payroll_employee.deduction_amount')) }}
                 </td>
                 <td>
-                    K{{ number_format($payroll->bonuses) }}
+                    K{{ number_format($payroll->employees()->sum('payroll_employee.total_paid')) }}
                 </td>
                 <td>
                     {{ $payroll->status }}
@@ -42,25 +50,31 @@
                 <td class="text-center">
                     <div class="dropdown d-inline-block">
                         <button type="button" class="btn btn-primary" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="d-sm-inline-block">Action</span>
+                            <span class="d-sm-inline-block">Action</span>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end p-0">
-                        <div class="p-2">
-                            <a class="dropdown-item nav-main-link" href="{{ url('/viewpayroll', $payroll->id) }}">
-                            <i class="nav-main-link-icon fa fa-user"></i><div class="btn">Profile</div>
-                            </a>
-                            <form method="POST" class="dropdown-item nav-main-link" action="{{ url('/edit-student', $payroll->id) }}">
-                                {{ csrf_field() }}
-                                <i class="nav-main-link-icon fa fa-pencil"></i>
-                                <button class="btn" type="submit">Edit</button>
-                            </form>
-                            <form class="dropdown-item nav-main-link" method="POST" action="{{ url('student-delete', $payroll->id) }}">
-                                {{ csrf_field() }}
-                                {{ method_field('DELETE') }}
-                                <i class="nav-main-link-icon fa fa-trash"></i>
-                                <button class="btn delete-confirm" type="submit">Delete</button>
-                            </form>
-                        </div>
+                            <div class="p-2">
+                                <!-- View Payroll Link -->
+                                <a class="dropdown-item nav-main-link" href="{{ url('/view-payroll', $payroll->id) }}">
+                                    <i class="nav-main-link-icon fas fa-eye"></i>
+                                    <span class="btn">View</span>
+                                </a>
+
+                                <!-- Edit Payroll Form -->
+                                <form method="POST" class="dropdown-item nav-main-link" action="{{ url('/edit-payroll', $payroll->id) }}">
+                                    @csrf
+                                    <i class="nav-main-link-icon fas fa-pencil-alt"></i>
+                                    <button class="btn" type="submit">Edit</button>
+                                </form>
+
+                                <!-- Delete Payroll Form -->
+                                <form class="dropdown-item nav-main-link" method="POST" action="{{ url('delete-payroll', $payroll->id) }}" onsubmit="return confirm('Are you sure you want to delete this payroll?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <i class="nav-main-link-icon fas fa-trash-alt"></i>
+                                    <button class="btn delete-confirm" type="submit">Delete</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </td>
@@ -98,13 +112,22 @@
                                     </div>
 
                                     <!-- Select2 component -->
-                                    <x-adminlte-select2 multiple="multiple" name="employees" placeholder="Employees" fgroup-class="col-12" class="{{ $errors->has('employees') ? 'is-invalid' : '' }}" id="employees" required autocomplete="off">
-                                        @if(isset($payroll->employee))
+                                    <x-adminlte-select2
+                                        multiple="multiple"
+                                        name="employees[]"
+                                        fgroup-class="col-12"
+                                        class="{{ $errors->has('employees') ? 'is-invalid' : '' }} no-rounded-corners"
+                                        id="employees"
+                                        required
+                                        autocomplete="off"
+                                    >
+
+                                        @if(isset($client->employees) && count($client->employees) > 0)
                                             @foreach($client->employees as $employee)
                                                 <option value="{{ $employee->id }}">{{ $employee->fname }} {{ $employee->mname }} {{ $employee->sname }}</option>
                                             @endforeach
                                         @else
-                                            No employees yet
+                                            <option disabled>No employees yet</option>
                                         @endif
                                     </x-adminlte-select2>
                                 </div>

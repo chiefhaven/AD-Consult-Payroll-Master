@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
+    use HasUuids;
     use HasFactory;
+    protected $keyType = 'string';
+    public $incrementing = false;
 
     /**
      * The attributes that are mass assignable.
@@ -17,6 +21,9 @@ class Employee extends Model
 
      protected $casts = [
         'country' => \WW\Countries\Casts\Country::class,
+        'hiredate' => 'date',
+        'birthdate' => 'date',
+        'contract_end_date' => 'date',
     ];
 
     protected $fillable = [
@@ -85,8 +92,13 @@ class Employee extends Model
         return $this->belongsTo(Contact::class);
     }
 
-    public function Payroll()
+    public function Designation()
     {
-        return $this->hasMany(Payroll::class);
+        return $this->belongsTo(Designation::class);
+    }
+
+    public function Payrolls()
+    {
+        return $this->belongsToMany(Payroll::class, 'payroll_employee')->withPivot('salary', 'pay_period', 'earning_description', 'earning_amount', 'deduction_description', 'deduction_amount', 'payee', 'net_salary', 'total_paid');
     }
 }

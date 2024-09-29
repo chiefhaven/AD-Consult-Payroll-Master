@@ -58,4 +58,42 @@ class BusinessUtil extends Controller
 
         return $this->clients;
     }
+
+    function calculatePaye($salary) {
+        // Define the tax brackets
+        $brackets = [
+            [150000, 0],        // 0% for the first MK 150,000
+            [350000, 0.25],     // 25% for the next MK 350,000
+            [2050000, 0.30],    // 30% for the next MK 2,050,000
+            [PHP_INT_MAX, 0.35] // 35% for amounts over MK 2,550,000
+        ];
+
+        // Initialize the total tax
+        $tax = 0;
+
+        // Calculate the taxable income for each bracket
+        foreach ($brackets as $index => $bracket) {
+            // Get the current bracket's limit and rate
+            $limit = $bracket[0];
+            $rate = $bracket[1];
+
+            if ($index === 0) {
+                // First MK 150,000 - no tax
+                if ($salary <= $limit) {
+                    break;
+                }
+            } else {
+                // Calculate taxable income for each bracket
+                $previousLimit = $brackets[$index - 1][0];
+                if ($salary > $previousLimit) {
+                    $taxableIncome = min($salary - $previousLimit, $limit - $previousLimit);
+                    $tax += $taxableIncome * $rate;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return $tax;
+    }
 }

@@ -107,10 +107,12 @@
     $(document).ready(function() {
         $('#employeeTable').DataTable({
             scrollX: true,
+            scrollY: true,
         });
 
         $('#payrollTable').DataTable({
             scrollX: true,
+            scrollY: true,
         });
 
         $("#payroll_month_year").datepicker({

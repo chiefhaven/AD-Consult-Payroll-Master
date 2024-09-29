@@ -46,24 +46,19 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-end p-0">
                     <div class="p-2">
-                        <a class="dropdown-item nav-main-link" href="{{ url('/viewstudent', $employee->id) }}">
-                        <i class="nav-main-link-icon fa fa-user"></i><div class="btn">Profile</div>
+                        <a class="dropdown-item nav-main-link" href="{{ url('/view-employee', $employee) }}">
+                        <i class="nav-main-link-icon fa fa-eye"></i><div class="btn">Profile</div>
                         </a>
-                        <form method="POST" class="dropdown-item nav-main-link" action="{{ url('/edit-student', $employee->id) }}">
+                        <form method="POST" class="dropdown-item nav-main-link" action="{{ url('/edit-employee', $employee) }}">
                             {{ csrf_field() }}
-                            <i class="nav-main-link-icon fa fa-pencil"></i>
+                            <i class="nav-main-link-icon fa fa-pencil-alt"></i>
                             <button class="btn" type="submit">Edit</button>
                         </form>
-                        <form class="dropdown-item nav-main-link" method="POST" action="{{ url('student-delete', $employee->id) }}">
+                        <form class="dropdown-item nav-main-link" method="POST" action="{{ url('delete-employee', $employee->id) }}">
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
                             <i class="nav-main-link-icon fa fa-trash"></i>
                             <button class="btn delete-confirm" type="submit">Delete</button>
-                        </form>
-                        <form method="POST" class="dropdown-item nav-main-link" action="{{ url('send-notification', $employee->id) }}">
-                            {{ csrf_field() }}
-                            <i class="nav-main-link-icon fa fa-paper-plane"></i>
-                            <button class="btn" type="submit">Send balance reminder</button>
                         </form>
                     </div>
                     </div>

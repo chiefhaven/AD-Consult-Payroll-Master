@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payrolls', function (Blueprint $table) {
-            $table->uuid('id');
-            $table->string('group');
-            $table->uuid('client_id');
-            $table->integer('total_amount');
-            $table->integer('total_deductions');
-            $table->integer('total_payee');
-            $table->enum('status',['Approved', 'Pending', 'Cancled']);
-            $table->timestamps();
+            $table->uuid('id')->primary();  // Unique identifier for payroll using UUID
+            $table->string('group');  // Grouping field for payroll (can be department, batch, etc.)
+            $table->uuid('client_id');  // Foreign key for client (likely referencing clients table)
+            $table->integer('total_amount');  // Total payroll amount
+            $table->integer('total_deductions');  // Total payroll deductions
+            $table->integer('total_payee');  // Total Pay As You Earn (PAYE) deductions
+            $table->enum('status', ['Draft', 'Approved', 'Pending Approval', 'Cancelled', 'Final']);  // Status of payroll
+            $table->timestamps();  // Created_at and updated_at timestamps
         });
     }
 

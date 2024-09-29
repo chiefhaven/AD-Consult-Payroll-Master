@@ -26,195 +26,219 @@
 {{-- Rename section content to content_body --}}
 
 @section('content')
-<div class="row">
+<div class="row" id="payroll">
     <livewire:common.page-header pageTitle="Add payroll" buttonName="Go back" link="/view-client/{{ $client->id }}" buttonClass="btn btn-warning"/>
     <div class="col-lg-12">
         @include('includes/error')
         @section('plugins.Select2', true)
-        <div class="card mb-3 p-4">
-            <div class="box-body">
-                <h3>For Client: <strong>{{ $client->client_name }}</strong></h3>
+        <form action="/save-payroll" method="post">
+            @csrf
+            <div class="card mb-3 p-4">
+                <div class="box-body">
+                    <h3>For Client: <strong>{{ $client->client_name }}</strong></h3>
+                    <div class="row">
+                        <x-adminlte-input type="text" name="payrollGroupName" label="Payroll group name" placeholder="Group name (Month/Year)" value="{{ \Carbon\Carbon::createFromFormat('m-Y', $payroll_month_year )->format('F Y')}}" fgroup-class="col-md-4" class="{{ $errors->has('payroll_group_name') ? 'is-invalid' : '' }}" id="payroll_group_name" autocomplete="off"/>
+                        <x-adminlte-input name="client" value="{{ $client->id }}" hidden />
+
+                        <x-adminlte-select
+                            name="payrollStatus"
+                            label="Status"
+                            data-placeholder="Select an option..."
+                            fgroup-class="col-md-4"
+                            class="{{ $errors->has('status') ? 'is-invalid' : '' }}"
+                            autocomplete="off"
+                            required
+                        >
+                            <option value="" selected disabled>Please select an option...</option>
+                            <option>Draft</option>
+                            <option>Cancelled</option>
+                            <option>Pending Approval</option>
+                            <option>Final</option>
+                        </x-adminlte-select>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="card">
-            <table class="table" id="payroll_table">
-                <tr>
-                    <th>
-                        Employee
-                    </th>
-                    <th>
-                        Salary
-                    </th>
-                    <th>
-                        Allowances
-                    </th>
-                    <th>
-                        Deductions
-                    </th>
-                    <th>
-                        Net amount
-                    </th>
-                </tr>
-                {{--  @foreach($payrolls as $employee => $payroll)
-                    @php
-                        if ($action != 'edit') {
-                            $amount_per_unit_duration = (double)$payroll['essentials_salary'];
-                            $total_work_duration = 1;
-                            $duration_unit = __('lang_v1.month');
-                            if ($payroll['essentials_pay_period'] == 'week') {
-                                $total_work_duration = 4;
-                                $duration_unit = __('essentials::lang.week');
-                            } elseif ($payroll['essentials_pay_period'] == 'day') {
-                                $total_work_duration = \Carbon::parse($transaction_date)->daysInMonth;
-                                $duration_unit = __('lang_v1.day');
-                            }
-                            $total = $total_work_duration * $amount_per_unit_duration;
-                        } else {
-                            $amount_per_unit_duration = $payroll['essentials_amount_per_unit_duration'];
-                            $total_work_duration = $payroll['essentials_duration'];
-                            $duration_unit = $payroll['essentials_duration_unit'];
-                            $total = $total_work_duration * $amount_per_unit_duration;
-                        }
-                    @endphp
-                    <tr data-id="{{$employee}}">
-                        <input type="hidden" name="payrolls[{{$employee}}][expense_for]" value="{{$employee}}">
-                        @if($action == 'edit')
-                            {!! Form::hidden('payrolls['.$employee.'][transaction_id]', $payroll['transaction_id']); !!}
-                        @endif
-                        <td>
-                            {{$payroll['name']}}
-                            <br><br>
-                            <b>{{__('essentials::lang.leaves')}} :</b>
-                            {{
-                                __('essentials::lang.total_leaves_days', ['total_leaves' => $payroll['total_leaves']])
-                            }}
-                            <br><br>
-                            <b>{{__('essentials::lang.work_duration')}} :</b>
-                            {{
-                                __('essentials::lang.work_duration_hour', ['duration' => $payroll['total_work_duration']])
-                            }}
-                            <br><br>
-                            <b>
-                                {{__('essentials::lang.attendance')}}:
-                            </b>
-                            {{$payroll['total_days_worked']}} @lang('lang_v1.days')
-                        </td>
-                        <td>
-                            {!! Form::label('essentials_duration_'.$employee, __( 'essentials::lang.total_work_duration' ) . ':*') !!}
-                            {!! Form::text('payrolls['.$employee.'][essentials_duration]', $total_work_duration, ['class' => 'form-control input_number essentials_duration', 'placeholder' => __( 'essentials::lang.total_work_duration' ), 'required', 'data-id' => $employee, 'id' => 'essentials_duration_'.$employee]); !!}
-                            <br>
+            <div class="card">
+                <table class="table" id="payroll_table">
+                    <thead>
+                        <th>
+                            Employee
+                        </th>
+                        <th>
+                            Salary
+                        </th>
+                        <th>
+                            Earnings
+                        </th>
+                        <th>
+                            Deductions
+                        </th>
+                        <th>
+                            Paye
+                        </th>
+                        <th>
+                            Net amount
+                        </th>
+                    </thead>
+                    <tbody>
+                        @foreach($payrolls as $key => $payroll)
+                            <tr>
+                                <td>
+                                    <input name="payroll[{{ $key}}][employee]" value="{{ $payroll['employee']->id }}" hidden>
+                                    {{ $payroll['employee']->fname }} {{ $payroll['employee']->mname }} {{ $payroll['employee']->sname }} {{ $payroll['employee']->sname }}
+                                </td>
+                                <td>
+                                    <x-adminlte-input
+                                        type="text"
+                                        name="payroll[{{ $key}}][salary]"
+                                        value="{{ $payroll['salary'] }}"
+                                        autocomplete="off"
+                                    />
+                                    <p>
+                                        <x-adminlte-select2
+                                            name="payroll[{{ $key }}][pay_period]" label="Pay Period:">
+                                            <option>{{ $payroll['pay_period'] }}</option>
+                                        </x-adminlte-select2>
+                                    </p>
+                                </td>
 
-                            {!! Form::label('essentials_duration_unit_'.$employee, __( 'essentials::lang.duration_unit' ) . ':') !!}
-                            {!! Form::text('payrolls['.$employee.'][essentials_duration_unit]', $duration_unit, ['class' => 'form-control', 'placeholder' => __( 'essentials::lang.duration_unit' ), 'data-id' => $employee, 'id' => 'essentials_duration_unit_'.$employee]); !!}
+                                <!-- Earnings Section -->
+                                <td>
+                                    <div class="p-2 mb-3 shadow-sm border-primary">
+                                        <table class="table" style="border: none;">
+                                            <thead style="border-bottom: none;">
+                                                <tr>
+                                                    <th>Description</th>
+                                                    <th>Amount</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="(row, index) in earningsRows[{{ $loop->index }}]" :key="index">
+                                                    <td>
+                                                        <!-- Description Input -->
+                                                        <x-adminlte-input
+                                                            type="text"
+                                                            name="payroll[{{ $key }}][earning_description]"
+                                                            v-model="row.description"
+                                                            placeholder="Earning Description"
+                                                            autocomplete="off"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <!-- Amount Input -->
+                                                        <x-adminlte-input
+                                                            type="text"
+                                                            name="payroll[{{ $key }}][earning_amount]"
+                                                            v-model="row.amount"
+                                                            placeholder="Earnings Amount"
+                                                            autocomplete="off"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <!-- Remove Button or Add Button for First Row -->
+                                                        <div>
+                                                            <button v-if="index > 0" type="button" class="btn btn-danger" @click="removeEarningRow({{ $loop->index }}, index)">
+                                                                <i class="fa fa-minus"></i>
+                                                            </button>
+                                                            <button v-else type="button" class="btn btn-primary" @click="addEarningRow({{ $loop->index }})">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td>Total Earnings:</td>
+                                                    <td>
+                                                        <!-- <strong>K @{{ calculateEarningsTotal({{ $loop->index }}) }}</strong> -->
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </td>
 
-                            <br>
+                                <!-- Deductions Section -->
+                                <td>
+                                    <div class="p-2 mb-3 shadow-sm border-danger">
+                                        <table class="table" style="border: none;">
+                                            <thead style="border-bottom: none;">
+                                                <tr>
+                                                    <th>Description</th>
+                                                    <th>Amount</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="(row, index) in deductionsRows[{{ $loop->index }}]" :key="index">
+                                                    <td>
+                                                        <!-- Description Input -->
+                                                        <x-adminlte-input
+                                                            type="text"
+                                                            name="payroll[{{ $key }}][deduction_description]"
+                                                            v-model="row.description"
+                                                            placeholder="Deduction Description"
+                                                            autocomplete="off"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <!-- Amount Input -->
+                                                        <x-adminlte-input
+                                                            type="text"
+                                                            name="payroll[{{ $key }}][deduction_amount]"
+                                                            v-model="row.amount"
+                                                            placeholder="Deduction Amount"
+                                                            autocomplete="off"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <!-- Remove Button or Add Button for First Row -->
+                                                        <div>
+                                                            <button v-if="index > 0" type="button" class="btn btn-danger" @click="removeDeductionRow({{ $loop->index }}, index)">
+                                                                <i class="fa fa-minus"></i>
+                                                            </button>
+                                                            <button v-else type="button" class="btn btn-primary" @click="addDeductionRow({{ $loop->index }})">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td>Total Deductions:</td>
+                                                    <td>
+                                                        <!-- <strong>K @{{ calculateDeductionsTotal({{ $loop->index }}) }}</strong> -->
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </td>
 
-                            {!! Form::label('essentials_amount_per_unit_duration_'.$employee, __( 'essentials::lang.amount_per_unit_duartion' ) . ':*') !!}
-                            {!! Form::text('payrolls['.$employee.'][essentials_amount_per_unit_duration]', $amount_per_unit_duration, ['class' => 'form-control input_number essentials_amount_per_unit_duration', 'placeholder' => __( 'essentials::lang.amount_per_unit_duartion' ), 'required', 'data-id' => $employee, 'id' => 'essentials_amount_per_unit_duration_'.$employee]); !!}
-
-                            <br>
-                            {!! Form::label('total_'.$employee, __( 'sale.total' ) . ':') !!}
-                            {!! Form::text('payrolls['.$employee.'][total]', $total, ['class' => 'form-control input_number total', 'placeholder' => __( 'sale.total' ), 'data-id' => $employee, 'id' => 'total_'.$employee]); !!}
-                        </td>
-                        <td>
-                            @component('components.widget')
-                                <table class="table table-condenced allowance_table" id="allowance_table_{{$employee}}" data-id="{{$employee}}">
-                                    <thead>
-                                        <tr>
-                                            <th class="col-md-5">@lang('essentials::lang.description')</th>
-                                            <th class="col-md-3">@lang('essentials::lang.amount_type')</th>
-                                            <th class="col-md-3">@lang('sale.amount')</th>
-                                            <th class="col-md-1">&nbsp;</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $total_allowances = 0;
-                                        @endphp
-                                        @if(!empty($payroll['allowances']))
-                                            @foreach($payroll['allowances']['allowance_names'] as $key => $value)
-                                                @include('essentials::payroll.allowance_and_deduction_row', ['add_button' => $loop->index == 0 ? true : false, 'type' => 'allowance', 'name' => $value, 'value' => $payroll['allowances']['allowance_amounts'][$key], 'amount_type' => $payroll['allowances']['allowance_types'][$key],
-                                                'percent' => $payroll['allowances']['allowance_percents'][$key] ])
-
-                                                @php
-                                                    $total_allowances += $payroll['allowances']['allowance_amounts'][$key];
-                                                @endphp
-                                            @endforeach
-                                        @else
-                                            @include('essentials::payroll.allowance_and_deduction_row', ['add_button' => true, 'type' => 'allowance'])
-                                            @include('essentials::payroll.allowance_and_deduction_row', ['type' => 'allowance'])
-                                            @include('essentials::payroll.allowance_and_deduction_row', ['type' => 'allowance'])
-                                        @endif
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th colspan="2">@lang('sale.total')</th>
-                                            <td><span id="total_allowances_{{$employee}}" class="display_currency" data-currency_symbol="true">{{$total_allowances}}</span></td>
-                                            <td>&nbsp;</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            @endcomponent
-                        </td>
-                        <td>
-                            @component('components.widget')
-                                <table class="table table-condenced deductions_table" id="deductions_table_{{$employee}}" data-id="{{$employee}}">
-                                    <thead>
-                                        <tr>
-                                            <th class="col-md-5">@lang('essentials::lang.description')</th>
-                                            <th class="col-md-3">@lang('essentials::lang.amount_type')</th>
-                                            <th class="col-md-3">@lang('sale.amount')</th>
-                                            <th class="col-md-1">&nbsp;</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $total_deductions = 0;
-                                        @endphp
-                                        @if(!empty($payroll['deductions']))
-                                            @foreach($payroll['deductions']['deduction_names'] as $key => $value)
-                                                @include('essentials::payroll.allowance_and_deduction_row', ['add_button' => $loop->index == 0 ? true : false, 'type' => 'deduction', 'name' => $value, 'value' => $payroll['deductions']['deduction_amounts'][$key],
-                                                'amount_type' => $payroll['deductions']['deduction_types'][$key], 'percent' => $payroll['deductions']['deduction_percents'][$key]])
-
-                                                @php
-                                                    $total_deductions += $payroll['deductions']['deduction_amounts'][$key];
-                                                @endphp
-                                            @endforeach
-                                        @else
-                                            @include('essentials::payroll.allowance_and_deduction_row', ['add_button' => true, 'type' => 'deduction'])
-                                            @include('essentials::payroll.allowance_and_deduction_row', ['type' => 'deduction'])
-                                            @include('essentials::payroll.allowance_and_deduction_row', ['type' => 'deduction'])
-                                        @endif
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th colspan="2">@lang('sale.total')</th>
-                                            <td><span id="total_deductions_{{$employee}}" class="display_currency" data-currency_symbol="true">{{$total_deductions}}</span></td>
-                                            <td>&nbsp;</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            @endcomponent
-                        </td>
-                        <td>
-                            <strong>
-                                <span id="gross_amount_text_{{$employee}}">0</span>
-                            </strong>
-                            <br>
-                            {!! Form::hidden('payrolls['.$employee.'][final_total]', 0, ['id' => 'gross_amount_'.$employee, 'class' => 'gross_amount']); !!}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="5">
-                            <div class="form-group">
-                                {!! Form::label('note_'.$employee, __( 'brand.note' ) . ':') !!}
-                                {!! Form::textarea('payrolls['.$employee.'][staff_note]', $payroll['staff_note'] ?? null, ['class' => 'form-control', 'placeholder' => __( 'sale.total' ), 'id' => 'note_'.$employee, 'rows' => 3]); !!}
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach  --}}
-            </table>
-        </div>
+                                <td>
+                                    <input name="payroll[{{ $key}}][payee]" value="{{ $payroll['payee'] }}" hidden>
+                                    K{{ $payroll['payee'] }}
+                                </td>
+                                <td>
+                                    <input name="payroll[{{ $key}}][net_salary]" value="{{ number_format($payroll['salary'] + $payroll['bonus'] - $payroll['payee'] - $payroll['payee'], 2) }}" hidden>
+                                    K{{ number_format($payroll['salary'] + $payroll['bonus'] - $payroll['payee'] - $payroll['payee'], 2) }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary btn-lg" @click="handleSubmit">
+                    Add
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 @stop
@@ -230,6 +254,104 @@
         // Add your common script logic here...
     });
 
+</script>
+<script setup>
+    const { createApp, ref, reactive } = Vue
+
+
+    const app = createApp({
+      setup() {
+
+        // Define reactive data for earnings and deductions
+    const earningsRows = ref({});
+    const deductionsRows = ref({});
+    const state = ref(
+        {
+            salary: '',
+            paye: {{ $payroll['payee']}},
+            deductions: '',
+        }
+    )
+
+    // Initialize earnings and deductions for each payroll
+    @foreach($payrolls as $payroll)
+        earningsRows.value[{{ $loop->index }}] = [{ description: 'Bonus', amount: {{ $payroll['bonus']}} }];
+        deductionsRows.value[{{ $loop->index }}] = [{ description: '', amount: '' }];
+        state.value.salary[{{ $loop->index }}] = {{ $payroll['salary'] }};
+    @endforeach
+
+    // Add a new earnings row for a specific payroll
+    const addEarningRow = (payrollIndex) => {
+        earningsRows.value[payrollIndex].push({ description: '', amount: '' });
+    };
+
+    // Remove an earnings row for a specific payroll
+    const removeEarningRow = (payrollIndex, rowIndex) => {
+        if (earningsRows.value[payrollIndex].length > 1) {
+            earningsRows.value[payrollIndex].splice(rowIndex, 1);
+        }
+    };
+
+    // Add a new deduction row for a specific payroll
+    const addDeductionRow = (payrollIndex) => {
+        deductionsRows.value[payrollIndex].push({ description: '', amount: '' });
+    };
+
+    // Remove a deduction row for a specific payroll
+    const removeDeductionRow = (payrollIndex, rowIndex) => {
+        if (deductionsRows.value[payrollIndex].length > 1) {
+            deductionsRows.value[payrollIndex].splice(rowIndex, 1);
+        }
+    };
+
+    // Compute total earnings for a specific payroll
+    const calculateEarningsTotal = (payrollIndex) => {
+        return earningsRows.value[payrollIndex].reduce((sum, row) => {
+            return sum + parseFloat(row.amount || 0);
+        }, 0).toFixed(2);
+    };
+
+    // Compute total deductions for a specific payroll
+    const calculateDeductionsTotal = (payrollIndex) => {
+        return deductionsRows.value[payrollIndex].reduce((sum, row) => {
+            return sum + parseFloat(row.amount || 0);
+        }, 0).toFixed(2);
+    };
+
+    // Handle form submission
+    const handleSubmit = () => {
+        // Log form data to the console
+        console.log('Form submitted:', {
+            earningsRows: earningsRows.value,
+            deductionsRows: deductionsRows.value
+        });
+
+        // Here, you can perform form validation or submit data to the server via API call
+        // For example:
+        // axios.post('/api/submit-payroll', { earnings: earningsRows.value, deductions: deductionsRows.value })
+        // .then(response => {
+        //     // handle success
+        // })
+        // .catch(error => {
+        //     // handle error
+        // });
+    };
+
+        return {
+            earningsRows,
+            deductionsRows,
+            addEarningRow,
+            removeEarningRow,
+            addDeductionRow,
+            removeDeductionRow,
+            calculateDeductionsTotal,
+            calculateEarningsTotal,
+            handleSubmit,
+            state
+        };
+      }
+    })
+    app.mount('#payroll')
 </script>
 @endpush
 
