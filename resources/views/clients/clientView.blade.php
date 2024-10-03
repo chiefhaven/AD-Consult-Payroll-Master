@@ -22,7 +22,7 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12">
-        <div class="card p-5 employee-profile-header">
+        <div class="card p-5 mt-3">
             <div class="row">
                 <div class="col-md-3">
                     @if (isset($client->client_logo))
@@ -33,12 +33,12 @@
                 </div>
                 <div class="col-md-1"><p>&nbsp;</p></div>
                 <div class="col-md-8">
-                    <h2 class="text-white fw-bold">{{ $client->client_name }}</h2>
+                    <h2 class="fw-bold">{{ $client->client_name }}</h2>
                     <div class="text-bold">Slogan</div>
-                    <p class="text-white">
-                        <div class="text-white">Address: {{ $client->address }}</div>
-                        <div class="text-white">Phone: {{ $client->phone }}</div>
-                        <div class="text-white">Email:
+                    <p class="">
+                        <div class="">Address: {{ $client->address }}</div>
+                        <div class="">Phone: {{ $client->phone }}</div>
+                        <div class="">Email:
                             @if(isset($client->user->email))
                                 {{ $client->user->email }}
                             @else
@@ -49,18 +49,18 @@
                 </div>
             </div>
         </div>
-        <div class="row m-4">
+        <div class="row">
             <div class="col-md-4">
-                <x-adminlte-small-box title="{{ $client->employees->count() }}" text="Employees" icon="fas fa-users" theme="information"/>
+                <x-adminlte-small-box title="{{ $client->employees->count() }}" text="Employees" icon="fas fa-users" theme="light"/>
             </div>
             <div class="col-md-4">
-                <x-adminlte-small-box title="K0.00" text="Unpaid Invoices" icon="fas fa-file-invoice" theme="information"/>
+                <x-adminlte-small-box title="K0.00" text="Unpaid Invoices" icon="fas fa-file-invoice" theme="light"/>
             </div>
             <div class="col-md-4">
-                <x-adminlte-small-box title="0" text="Tickets" icon="fa-regular fas fa-file-invoice" theme="information"/>
+                <x-adminlte-small-box title="0" text="Tickets" icon="fa-regular fas fa-file-invoice" theme="light"/>
             </div>
         </div>
-        <div class="row m-4">
+        <div class="row">
             <div class="col-md-8 pl-3">
                 <div class="row">
                     <div class="col-md-12 mb-4 card p-3">
@@ -137,6 +137,133 @@
             $(select).trigger('change'); // Trigger change event to update the Select2 component
         });
     });
+</script>
+<script>
+    const { createApp, computed, ref } = Vue;
+
+    const app = createApp({
+      setup() {
+        const showPayrollModal = ref(false);  // Modal hidden by default
+        const data = ref(null);        // Store payroll data
+        const loading = ref(false);    // Manage loading state
+        const error = ref(null);       // Store error messages
+
+        // Open the modal and fetch payroll data
+        const fetchPayrollDetails = (payroll) => {
+          showPayrollModal.value = true;
+          fetchData(payroll);  // Fetch data when the modal opens
+        };
+
+        // Close the modal
+        const closeModal = () => {
+            data.value = null
+            showPayrollModal.value = false;
+        };
+
+        // Fetch Payroll details
+        const fetchData = async (payroll) => {
+            loading.value = true;
+            error.value = null;
+            try {
+                const response = await axios.get(`/view-payroll/${payroll}`);
+                if (response.data && response.data.length > 0) {
+                    data.value = response.data[0];  // Access the first object in the response array
+                    console.log(response.data)
+                } else {
+                    error.value = "No data found for the provided payroll ID.";
+                }
+            } catch (err) {
+                error.value = "Failed to fetch payroll data";
+            } finally {
+                loading.value = false;
+            }
+        };
+
+        // Computed properties for different totals
+        const totalGross = computed(() => {
+            const total = data.value?.employees?.reduce((sum, emp) => sum + parseFloat(emp.pivot.salary || 0), 0) || 0;
+
+            return new Intl.NumberFormat('en-MW', {
+                style: 'currency',
+                currency: 'MWK',
+                currencyDisplay: 'narrowSymbol'
+              }).format(total).replace('MWK', 'K');
+        });
+
+        const totalNet = computed(() => {
+            const total = data.value?.employees?.reduce((sum, emp) => sum + parseFloat(emp.pivot.net_salary || 0), 0) || 0;
+
+            return new Intl.NumberFormat('en-MW', {
+                style: 'currency',
+                currency: 'MWK',
+                currencyDisplay: 'narrowSymbol'
+              }).format(total).replace('MWK', 'K');
+        });
+
+        const totalPaye = computed(() => {
+            const total = data.value?.employees?.reduce((sum, emp) => sum + parseFloat(emp.pivot.payee || 0), 0) || 0;
+
+            return new Intl.NumberFormat('en-MW', {
+                style: 'currency',
+                currency: 'MWK',
+                currencyDisplay: 'narrowSymbol'
+              }).format(total).replace('MWK', 'K');
+        });
+
+        const totalPaid = computed(() => {
+            const total = data.value?.employees?.reduce((sum, emp) => sum + parseFloat(emp.pivot.total_paid || 0), 0) || 0;
+
+            return new Intl.NumberFormat('en-MW', {
+                style: 'currency',
+                currency: 'MWK',
+                currencyDisplay: 'narrowSymbol'
+              }).format(total).replace('MWK', 'K');
+        });
+
+        const totalDeductions = computed(() => {
+            const total = data.value?.employees?.reduce((sum, emp) => sum + parseFloat(emp.pivot.deduction_amount || 0), 0) || 0;
+
+            return new Intl.NumberFormat('en-MW', {
+                style: 'currency',
+                currency: 'MWK',
+                currencyDisplay: 'narrowSymbol'
+              }).format(total).replace('MWK', 'K');
+        });
+
+        const totalEarnings = computed(() => {
+            const total = data.value?.employees?.reduce((sum, emp) => sum + parseFloat(emp.pivot.earning_amount || 0), 0) || 0;
+
+            return new Intl.NumberFormat('en-MW', {
+                style: 'currency',
+                currency: 'MWK',
+                currencyDisplay: 'narrowSymbol'
+              }).format(total).replace('MWK', 'K');
+        });
+
+        const proceed = () => {
+            // Add your logic to proceed here
+            console.log("Proceed button clicked");
+        };
+
+        return {
+            showPayrollModal,
+            data,
+            loading,
+            error,
+            totalGross,
+            totalNet,
+            totalPaye,
+            totalPaid,
+            totalDeductions,
+            totalEarnings,
+            closeModal,
+            proceed,
+            fetchPayrollDetails,
+        };
+      },
+    });
+
+    app.mount('#viewClient');
 </script>
 @endpush
 

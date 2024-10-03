@@ -16,13 +16,13 @@ class Payroll extends Model
 
     ];
 
-    public function clients()
+    public function client()
     {
         return $this->belongsTo(Client::class);
     }
 
     public function employees()
     {
-        return $this->belongsToMany(Employee::class, "payroll_employee")->withPivot('salary', 'pay_period', 'earning_description', 'earning_amount', 'deduction_description', 'deduction_amount', 'payee', 'net_salary', 'total_paid'); //komatu
+        return $this->belongsToMany(Employee::class, "payroll_employee")->withPivot('salary', 'pay_period', 'earning_description', 'earning_amount', 'deduction_description', 'deduction_amount', 'payee', 'net_salary', 'total_paid');
     }
 }

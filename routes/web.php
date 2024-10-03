@@ -16,9 +16,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\PayrollController;
-use App\Livewire\Employees\AddEmployee;
 use App\Livewire\Employees\UpdateEmployee;
-use App\Livewire\Employees\ViewEmployee;
 
 Auth::routes();
 

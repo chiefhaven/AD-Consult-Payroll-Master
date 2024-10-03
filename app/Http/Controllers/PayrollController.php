@@ -166,7 +166,13 @@ class PayrollController extends Controller
      */
     public function show(payroll $payroll)
     {
-        //
+        $payroll = Payroll::with('Client', 'Employees')->find($payroll->id ?? null);
+
+        if (!$payroll) {
+            // Handle the case where the payroll is not found
+            abort(404, 'Payroll not found');
+        }
+        return response()->json([$payroll], 200);
     }
 
     /**

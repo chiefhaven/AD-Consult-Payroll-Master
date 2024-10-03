@@ -139,3 +139,10 @@
 .bg-light {
     background-color: #ffffff !important;
 }
+
+@media (min-width: 576px) {
+    .modal-dialog {
+        max-width: none !important;
+        margin: 1.75rem;
+    }
+}

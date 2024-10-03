@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<div class="table-responsive" id="viewClient">
     @if( !$client->payrolls->isEmpty())
       <table id="payrollTable" class="table table-bordered table-striped table-vcenter display nowrap">
           <thead>
@@ -55,20 +55,20 @@
                         <div class="dropdown-menu dropdown-menu-end p-0">
                             <div class="p-2">
                                 <!-- View Payroll Link -->
-                                <a class="dropdown-item nav-main-link" href="{{ url('/view-payroll', $payroll->id) }}">
+                                <button class="dropdown-item nav-main-link" @click="fetchPayrollDetails('{{ $payroll->id }}')">
                                     <i class="nav-main-link-icon fas fa-eye"></i>
                                     <span class="btn">View</span>
-                                </a>
+                                </button>
 
                                 <!-- Edit Payroll Form -->
-                                <form method="POST" class="dropdown-item nav-main-link" action="{{ url('/edit-payroll', $payroll->id) }}">
+                                <form method="POST" class="dropdown-item nav-main-link" action="{{ url('/edit-payroll', $payroll) }}">
                                     @csrf
                                     <i class="nav-main-link-icon fas fa-pencil-alt"></i>
                                     <button class="btn" type="submit">Edit</button>
                                 </form>
 
                                 <!-- Delete Payroll Form -->
-                                <form class="dropdown-item nav-main-link" method="POST" action="{{ url('delete-payroll', $payroll->id) }}" onsubmit="return confirm('Are you sure you want to delete this payroll?');">
+                                <form class="dropdown-item nav-main-link" method="POST" action="{{ url('delete-payroll', $payroll) }}" onsubmit="return confirm('Are you sure you want to delete this payroll?');">
                                     @csrf
                                     @method('DELETE')
                                     <i class="nav-main-link-icon fas fa-trash-alt"></i>
@@ -82,6 +82,8 @@
               @endforeach
           </tbody>
       </table>
+
+        @include('../payroll/includes/viewPayrollModal')
 
     @else
         <p class="p-5">No payrolls yet for this client!</p>
