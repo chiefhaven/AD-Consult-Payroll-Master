@@ -6,16 +6,22 @@
     <div class="modal fade" :class="{ show: showPayrollModal }" v-if="showPayrollModal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel" style="display: block;">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
         <div class="modal-content">
+            <div class="modal-header">
+                <h3>Payroll Details</h3>
+            </div>
             <div class="modal-body">
                 <div class="mb-3 p-4">
                     <div class="box-body">
-                    <h3>Payroll Details</h3>
-                    <hr>
                     <p v-if="loading">
-                        Please wait...
+                        Loading data, please wait...
                     </p>
                     <div v-if="!loading && data">
                         <div class="row" v-if="data && data.client">
+                        <p>
+                            For client:@{{ data.client.client_name }}
+                            Month/Year:@{{ data.group }}
+                            Status:@{{ data.status }}
+                        </p>
                             <div class="row">
                                 <!-- Employees Count -->
                                 <div class="col-md-3">
