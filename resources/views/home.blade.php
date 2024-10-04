@@ -8,37 +8,21 @@
 
 @section('content')
     <div class="row p-4">
-        <div class="col-md-7">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card bg-primary mb-3 p-4">
-                        <div class="box-body">
-                            <h3>Good Morning</h3>
-                            {!! \Illuminate\Foundation\Inspiring::quote() !!}
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="col-md-12">
+
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row mt-5">
-                        <div class="col-md-6">
-                            <x-adminlte-small-box title="{{ App\Models\Employee::get()->count() }}" text="Employees" icon="fas fa-users text-white"
-                            theme="warning"/>
+                        <div class="col-md-4">
+                            <x-adminlte-small-box title="Employe Directory" text="{{  App\Models\Employee::get()->count() }}"  theme="primary"/>
                         </div>
-                        <div class="col-md-6">
-                            <x-adminlte-small-box title="{{ App\Models\Client::get()->count() }}" text="Clients" icon="fas fa-file-invoice text-white"
-                            theme="danger"/>
+                        <div class="col-md-4">
+                            <x-adminlte-small-box title="Payroll" text="{{ App\Models\Client::get()->count() }}"   theme="primary"/>
+                        </div>
+                         <div class="col-md-4">
+                            <x-adminlte-small-box title="Billings" text="{{ App\Models\Client::get()->count() }}"   theme="primary"/>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 offset-md-2">
-            <div class="card">
-                <div class="card-body">
-                    <p><strong>Upcoming events</strong></p>
-
                 </div>
             </div>
         </div>
