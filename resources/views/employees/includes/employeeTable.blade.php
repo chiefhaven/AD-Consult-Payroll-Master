@@ -1,6 +1,6 @@
 <div class="table-responsive">
     @if( !$client->employees->isEmpty())
-      <table id="employeeTable"class="table table-bordered table-striped table-vcenter">
+      <table id="employeeTable" class="table table-bordered table-striped table-vcenter">
           <thead>
               <tr>
                   <th>Firstname</th>
