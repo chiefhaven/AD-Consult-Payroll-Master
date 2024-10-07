@@ -19,6 +19,13 @@ use App\Livewire\Employees\AddEmployee;
 use App\Livewire\Employees\UpdateEmployee;
 use App\Livewire\Employees\ViewEmployee;
 
+use App\Http\Controllers\BillingController;
+use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\PayrollController;
+
+
+
 
 Auth::routes();
 
@@ -28,6 +35,22 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index')->middleware(['auth']);
 
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
+
+//payroll routes
+Route::get('/payrolls', [PayrollController::class, 'index'])->name('payrolls');
+
+//report routes
+
+
+
+//Billing routes
+Route::get('/billings', [BillingController::class, 'index'])->name('billings');
+Route::get('/billings/view', [BillingController::class, 'show'])->name('billingsView');
+Route::get('/billings/edit', [BillingController::class, 'update'])->name('billingsEdit');
+
+//Leave routes
+Route::get('/leaves', [LeaveController::class, 'index'])->name('leaves');
+
 
 
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees')->middleware(['auth']);

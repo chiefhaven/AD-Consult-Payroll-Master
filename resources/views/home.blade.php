@@ -18,12 +18,40 @@
                             </a>
                         </div>
 
-                        <div class="col-md-4">
-                            <x-adminlte-small-box title="Payroll" text="{{ App\Models\Client::get()->count() }}"   theme="secondary"/>
-                        </div>
                          <div class="col-md-4">
-                            <x-adminlte-small-box title="Billings" text="{{ App\Models\Client::get()->count() }}"   theme="secondary"/>
+                            <a href="{{ route('payrolls') }}" style="text-decoration: none;">
+                            <x-adminlte-small-box title="Payroll" text="{{ App\Models\Payroll::get()->count() }}" theme="secondary" />
+                            </a>
                         </div>
+
+                         <div class="col-md-4">
+                            <a href="{{ route('billings') }}" style="text-decoration: none;">
+                            <x-adminlte-small-box title="Billings" text="{{ App\Models\Billing::get()->count() }}" theme="secondary" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="row p-4">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row mt-2">
+                        {{-- <div class="col-md-4">
+                            <a href="{{ route('reports') }}" style="text-decoration: none;">
+                            <x-adminlte-small-box title="Report" text="{{ App\Models\Reports::get()->count() }}" theme="secondary" />
+                            </a>
+                        </div> --}}
+
+                         <div class="col-md-4">
+                            <a href="{{ route('leaves') }}" style="text-decoration: none;">
+                            <x-adminlte-small-box title="Leaves" text="{{ App\Models\Leaves::get()->count() }}" theme="secondary" />
+                            </a>
+                        </div>
+
+                        
                     </div>
                 </div>
             </div>
