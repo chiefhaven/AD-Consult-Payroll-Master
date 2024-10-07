@@ -31,7 +31,8 @@
             <div class="box-body">
                 <p>All employees</p>
                 <livewire:employees.employeeList />
-                <x-livewire-alert::scripts />
+                <x-livewire-alert::scripts /> 
+
             </div>
         </div>
     </div>

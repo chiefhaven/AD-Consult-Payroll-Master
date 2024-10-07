@@ -19,10 +19,16 @@ use App\Livewire\Employees\AddEmployee;
 use App\Livewire\Employees\UpdateEmployee;
 use App\Livewire\Employees\ViewEmployee;
 
+
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['auth']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['auth']);
+
+// Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index')->middleware(['auth']);
+
+Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
+
 
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees')->middleware(['auth']);
 Route::get('/add-employee', AddEmployee::class)->name('add-employees')->middleware(['auth']);

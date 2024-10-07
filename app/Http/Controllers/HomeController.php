@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Employee;
+use DB;
+
 
 class HomeController extends Controller
 {
@@ -23,6 +26,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        // Get counts for each qualification type
+        $education_levels = Employee::select('education_level', DB::raw('count(*) as total'))
+                    ->groupBy('education_level')
+                    ->get();
+
+        // Pass the data to the view
+        return view('home', compact('education_levels'));
     }
 }
