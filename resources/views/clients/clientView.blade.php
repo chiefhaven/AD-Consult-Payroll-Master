@@ -121,7 +121,7 @@
         });
 
         $("#payroll_month_year").datepicker({
-            format: "mm-yyyy",
+            format: "MM yyyy",
             viewMode: "months",
             minViewMode: "months"
         });

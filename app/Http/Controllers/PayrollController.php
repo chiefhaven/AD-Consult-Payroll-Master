@@ -28,12 +28,21 @@ class PayrollController extends Controller
     public function create(Client $client)
     {
         $employee_ids = request('employees');
+        // Get the month-year string from the request
         $payroll_month_year = request('payroll_month_year');
-        $month_year_arr = explode('-', request('payroll_month_year'));
-        $month = $month_year_arr[0];
-        $year = $month_year_arr[1];
 
-        $payroll_date = $year.'-'.$month.'-01';
+        // Create a DateTime object from the month-year string
+        $date = \DateTime::createFromFormat('F Y', $payroll_month_year);
+
+        // Check if the date was created successfully
+        if ($date) {
+            // Format the date as 'Y-m-d' (year-month-day)
+            $payroll_date = $date->format('Y-m-01');
+        } else {
+            // Handle error if the date couldn't be created
+            // e.g., throw an exception or set $payroll_date to null
+            $payroll_date = null; // or handle the error appropriately
+        }
 
         //check if payrolls exists for the month year
         $payrolls = Payroll::where('client_id', $client->id)
@@ -86,21 +95,21 @@ class PayrollController extends Controller
      */
     public function store(StorepayrollRequest $request)
     {
-        //dd(request()->all());
         $messages = [
-            'payrollGroupName.required' => 'Payroll Group Name is required',
-            'payrollStatus.required'   => 'Payroll Status is required',
+            'payrollMonthYear.required' => 'The payroll month and year field is required.',
+            'payrollStatus.required' => 'The status field is required.',
+            'payrollStatus.string' => 'The status must be a string.',
+            'payrollStatus.in' => 'The selected status is invalid. Please choose a valid option.',
         ];
 
-        // Validate the request
+        // Validation
         $this->validate($request, [
-            'payrollGroupName'  =>'required',
-            'payrollStatus'   =>'required',
-
+            'payrollMonthYear'  => 'required',
+            'payrollStatus' => 'required|string|in:Draft,Cancelled,Pending Approval,Final',
         ], $messages);
 
         $post = $request->all();
-        $payrollGroupName = $post['payrollGroupName'];
+        $payrollGroupName = $post['payrollMonthYear'];
         $status = $post['payrollStatus'];
         $client = $post['client'];
 
@@ -180,7 +189,8 @@ class PayrollController extends Controller
      */
     public function edit(payroll $payroll)
     {
-        //
+        // Return the edit view with the specified payroll
+        return view('payroll.editPayroll', compact('payroll'));
     }
 
     /**
@@ -188,7 +198,77 @@ class PayrollController extends Controller
      */
     public function update(UpdatepayrollRequest $request, payroll $payroll)
     {
-        //
+        // Validate request data
+        $this->validate($request, [
+            'payrollMonthYear' => 'required',
+            'payrollStatus' => 'required|string|in:draft,cancelled,pending_approval,final',
+            'client' => 'required|exists:clients,id', // Assuming clients is a table in your database
+            'payroll' => 'required|array',
+            'payroll.*.employee' => 'required|exists:employees,id',
+            'payroll.*.salary' => 'required|numeric',
+            // Add more validation rules for earnings and deductions as needed
+        ]);
+
+        // Retrieve the request data
+        $post = $request->all();
+        $payrollGroupName = $post['payrollMonthYear'];
+        $status = $post['payrollStatus'];
+        $client = $post['client'];
+
+        // Find the existing payroll record
+        $payroll = Payroll::findOrFail($payroll->id);
+        $payroll->group = $payrollGroupName;
+        $payroll->status = $status;
+        $payroll->client_id = $client;
+        $payroll->added_by = Auth::user()->id; // Assuming this is the user who is updating the payroll
+
+        // Update the payroll record
+        if (!$payroll->save()) {
+            return response()->json(['message' => 'Failed to update payroll.'], 500);
+        }
+
+        // Clear existing employee payments to avoid duplicates
+        $payroll->employees()->detach();
+
+        foreach ($post['payroll'] as $data) {
+            // Processing each employee's payroll
+            $employeeId = $data['employee'];
+            $salary = (float) $data['salary'];
+            $earningDescription = $data['earning_description'] ?? null;
+            $earningAmount = (float) ($data['earning_amount'] ?? 0);
+            $deductionDescription = $data['deduction_description'] ?? null;
+            $deductionAmount = (float) ($data['deduction_amount'] ?? 0);
+
+            // Assuming BusinessUtil is correctly defined
+            $tax = new BusinessUtil();
+            $paye = $tax->calculatePaye($salary);
+
+            // Calculating the net salary
+            $netSalary = $salary - $paye;
+
+            // Attach the employee to the payroll with all required details in the pivot
+            $employee = Employee::find($employeeId);
+            if ($employee) {
+                $employee->payrolls()->attach($payroll->id, [
+                    'salary' => $salary,
+                    'pay_period' => $data['pay_period'],
+                    'earning_description' => $earningDescription,
+                    'earning_amount' => $earningAmount,
+                    'deduction_description' => $deductionDescription,
+                    'deduction_amount' => $deductionAmount,
+                    'payee' => $paye,
+                    'net_salary' => $netSalary,
+                    'total_paid' => $netSalary + $earningAmount - $deductionAmount,
+                ]);
+            }
+        }
+
+        // After successfully updating payroll
+        Alert::toast('Payroll updated successfully!', 'success');
+
+        return redirect()->route('view-client', ['client' => $client]);
+
+
     }
 
     /**

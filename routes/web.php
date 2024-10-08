@@ -7,7 +7,6 @@ use App\Livewire\AddUser;
 use App\Livewire\Attendances;
 use App\Livewire\Leaves;
 use App\Livewire\Notifications;
-use App\Livewire\Payroll;
 use App\Livewire\Reports;
 use App\Livewire\Settings;
 use App\Livewire\TaxRateList;
@@ -37,7 +36,8 @@ Route::get('/update-client/{id}', UpdateClient::class)->name('update-employee')-
 Route::get('/add-payroll/{client}', [PayrollController::class, 'create'])->name('add-payroll')->middleware(['auth']);
 Route::post('/save-payroll', [PayrollController::class, 'store'])->name('save-payroll')->middleware(['auth']);
 Route::get('/view-payroll/{payroll}', [PayrollController::class, 'show'])->name('show-payroll')->middleware(['auth']);
-Route::post('/update-payroll/{payroll}', [PayrollController::class, 'edit'])->name('update-payroll')->middleware(['auth']);
+Route::get('/edit-payroll/{payroll}', [PayrollController::class, 'edit'])->name('edit-payroll')->middleware(['auth']);
+Route::put('/update-payroll/{payroll}', [PayrollController::class, 'update'])->name('update-payroll')->middleware(['auth']);
 Route::delete('/delete-payroll/{payroll}', [PayrollController::class, 'destroy'])->name('delete-payroll')->middleware(['auth']);
 
 Route::get('/leaves', Leaves::class)->middleware(['auth']);

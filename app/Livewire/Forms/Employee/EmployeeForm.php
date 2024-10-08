@@ -174,7 +174,7 @@ class EmployeeForm extends Form
         $this->probation_period = $this->employee->probation_period;
         $this->termination_notice_period = $this->employee->termination_notice_period;
         $this->termination_notice_period_type = $this->employee->termination_notice_period_type;
-        $this->designated_location = District::find($this->employee->designated_location)->name;
+        $this->designated_location = District::find($this->employee->designated_location)->name ?? null;
         $this->designation = Designation::find($this->employee->designation_id)->name;
         $this->contract_start_date = Carbon::parse($this->employee->contract_start_date)->format('Y-m-d');
         $this->contract_end_date = Carbon::parse($this->employee->contract_end_date)->format('Y-m-d');

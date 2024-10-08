@@ -27,18 +27,20 @@
 
 @section('content')
 <div class="row" id="payroll">
-    <livewire:common.page-header pageTitle="Add payroll" buttonName="Go back" link="/client/{{ $client->id }}" buttonClass="btn btn-warning"/>
+    <livewire:common.page-header pageTitle="Add payroll" buttonName="Go back" link="/client/{{ $payroll->client->id }}" buttonClass="btn btn-warning"/>
     <div class="col-lg-12">
         @include('includes/error')
         @section('plugins.Select2', true)
-        <form action="/save-payroll" method="post">
+        <form action="/update-payroll/{{ $payroll->id }}" method="post" enctype="multipart/form-data">
             @csrf
+            @method('PUT')
             <div class="card mb-3 p-4">
                 <div class="box-body">
-                    <h3>For Client: <strong>{{ $client->client_name }}</strong></h3>
+                    <h3>For Client: <strong>{{ $payroll->client->client_name }}</strong></h3>
                     <div class="row">
-                        <x-adminlte-input type="text" name="payrollMonthYear" label="Payroll month year" placeholder="Payroll Month/Year" value="{{ $payroll_month_year }}" fgroup-class="col-md-4" class="{{ $errors->has('payroll_group_name') ? 'is-invalid' : '' }}" id="payroll_month_year" autocomplete="off"/>
-                        <x-adminlte-input name="client" value="{{ $client->id }}" hidden />
+                        <x-adminlte-input type="text" name="payrollMonthYear" label="Month/Year:*" placeholder="Month/Year"  value="{{ $payroll->group }}" fgroup-class="col-md-4" class="{{ $errors->has('payroll_month_year') ? 'is-invalid' : '' }}" id="payrollMonthYear" required autocomplete="off"/>
+
+                        <x-adminlte-input name="client" value="{{ $payroll->client->id }}" hidden />
 
                         <x-adminlte-select
                             name="payrollStatus"
@@ -49,10 +51,11 @@
                             autocomplete="off"
                             required
                         >
-                            <option value="Draft">Draft</option>
-                            <option value="Cancelled">Cancelled</option>
-                            <option value="pending_approval">Pending Approval</option>
-                            <option value="Final">Final</option>
+                            <option value="" disabled>Please select an option...</option>
+                            <option value="draft" {{ $payroll->status === 'draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="cancelled" {{ $payroll->status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                            <option value="pending_approval" {{ $payroll->status === 'pending_approval' ? 'selected' : '' }}>Pending Approval</option>
+                            <option value="final" {{ $payroll->status === 'final' ? 'selected' : '' }}>Final</option>
                         </x-adminlte-select>
                     </div>
                 </div>
@@ -80,23 +83,23 @@
                         </th>
                     </thead>
                     <tbody>
-                        @foreach($payrolls as $key => $payroll)
+                        @foreach($payroll->employees as $key => $employee)
                             <tr>
                                 <td>
-                                    <input name="payroll[{{ $key}}][employee]" value="{{ $payroll['employee']->id }}" hidden>
-                                    {{ $payroll['employee']->fname }} {{ $payroll['employee']->mname }} {{ $payroll['employee']->sname }} {{ $payroll['employee']->sname }}
+                                    <input name="payroll[{{ $key }}][employee]" value="{{ $employee->id }}" hidden>
+                                    {{ $employee->fname }} {{ $employee->mname }} {{ $employee->sname }}
                                 </td>
                                 <td>
                                     <x-adminlte-input
                                         type="text"
-                                        name="payroll[{{ $key}}][salary]"
-                                        value="{{ $payroll['salary'] }}"
+                                        name="payroll[{{ $key }}][salary]"
+                                        value="{{ $employee->salary ?? '' }}"
                                         autocomplete="off"
                                     />
                                     <p>
                                         <x-adminlte-select2
                                             name="payroll[{{ $key }}][pay_period]" label="Pay Period:">
-                                            <option>{{ $payroll['pay_period'] }}</option>
+                                            <option>{{ $employee->pay_period ?? 'Select Pay Period' }}</option>
                                         </x-adminlte-select2>
                                     </p>
                                 </td>
@@ -115,7 +118,6 @@
                                             <tbody>
                                                 <tr v-for="(row, index) in earningsRows[{{ $loop->index }}]" :key="index">
                                                     <td>
-                                                        <!-- Description Input -->
                                                         <x-adminlte-input
                                                             type="text"
                                                             name="payroll[{{ $key }}][earning_description]"
@@ -125,7 +127,6 @@
                                                         />
                                                     </td>
                                                     <td>
-                                                        <!-- Amount Input -->
                                                         <x-adminlte-input
                                                             type="text"
                                                             name="payroll[{{ $key }}][earning_amount]"
@@ -135,7 +136,6 @@
                                                         />
                                                     </td>
                                                     <td>
-                                                        <!-- Remove Button or Add Button for First Row -->
                                                         <div>
                                                             <button v-if="index > 0" type="button" class="btn btn-danger" @click="removeEarningRow({{ $loop->index }}, index)">
                                                                 <i class="fa fa-minus"></i>
@@ -174,7 +174,6 @@
                                             <tbody>
                                                 <tr v-for="(row, index) in deductionsRows[{{ $loop->index }}]" :key="index">
                                                     <td>
-                                                        <!-- Description Input -->
                                                         <x-adminlte-input
                                                             type="text"
                                                             name="payroll[{{ $key }}][deduction_description]"
@@ -184,7 +183,6 @@
                                                         />
                                                     </td>
                                                     <td>
-                                                        <!-- Amount Input -->
                                                         <x-adminlte-input
                                                             type="text"
                                                             name="payroll[{{ $key }}][deduction_amount]"
@@ -194,7 +192,6 @@
                                                         />
                                                     </td>
                                                     <td>
-                                                        <!-- Remove Button or Add Button for First Row -->
                                                         <div>
                                                             <button v-if="index > 0" type="button" class="btn btn-danger" @click="removeDeductionRow({{ $loop->index }}, index)">
                                                                 <i class="fa fa-minus"></i>
@@ -220,12 +217,12 @@
                                 </td>
 
                                 <td>
-                                    <input name="payroll[{{ $key}}][payee]" value="{{ $payroll['payee'] }}" hidden>
-                                    K{{ $payroll['payee'] }}
+                                    <input name="payroll[{{ $key }}][payee]" value="{{ $employee->payee ?? '' }}" hidden>
+                                    K{{ $employee->payee ?? '0.00' }}
                                 </td>
                                 <td>
-                                    <input name="payroll[{{ $key}}][net_salary]" value="{{ number_format($payroll['salary'] + $payroll['bonus'] - $payroll['payee'] - $payroll['payee'], 2) }}" hidden>
-                                    K{{ number_format($payroll['salary'] + $payroll['bonus'] - $payroll['payee'] - $payroll['payee'], 2) }}
+                                    <input name="payroll[{{ $key }}][net_salary]" value="{{ number_format(($employee->salary ?? 0) + ($employee->bonus ?? 0) - ($employee->payee ?? 0), 2) }}" hidden>
+                                    K{{ number_format(($employee->salary ?? 0) + ($employee->bonus ?? 0) - ($employee->payee ?? 0), 2) }}
                                 </td>
                             </tr>
                         @endforeach
@@ -234,7 +231,7 @@
             </div>
             <div class="mt-3">
                 <button type="submit" class="btn btn-primary btn-lg" @click="handleSubmit">
-                    Add
+                    Update
                 </button>
             </div>
         </form>
@@ -250,13 +247,13 @@
 <script>
 
     $(document).ready(function() {
-        $("#payroll_month_year").datepicker({
+        $("#payrollMonthYear").datepicker({
             format: "MM yyyy",
             viewMode: "months",
             minViewMode: "months"
         });
-    });
 
+    });
 </script>
 <script setup>
     const { createApp, ref, reactive } = Vue
@@ -266,92 +263,92 @@
       setup() {
 
         // Define reactive data for earnings and deductions
-    const earningsRows = ref({});
-    const deductionsRows = ref({});
-    const state = ref(
-        {
-            salary: '',
-            paye: {{ $payroll['payee']}},
-            deductions: '',
-        }
-    )
+        const earningsRows = ref({});
+        const deductionsRows = ref({});
+        const state = ref(
+            {
+                salary: 0,
+                paye: 0,
+                deductions: 0,
+            }
+        )
 
-    // Initialize earnings and deductions for each payroll
-    @foreach($payrolls as $payroll)
-        earningsRows.value[{{ $loop->index }}] = [{ description: 'Bonus', amount: {{ $payroll['bonus']}} }];
-        deductionsRows.value[{{ $loop->index }}] = [{ description: '', amount: '' }];
-        state.value.salary[{{ $loop->index }}] = {{ $payroll['salary'] }};
-    @endforeach
+        // Initialize earnings and deductions for each payroll
+        @foreach($payroll->employees as $index => $payroll)
+            earningsRows.value[{{ $index }}] = [{ description: 'Bonus', amount: {{ $payroll['bonus'] ?? 0 }} }];
+            deductionsRows.value[{{ $index }}] = [{ description: '', amount: '' }];
+            state.value.salary[{{ $index }}] = {{ $payroll['salary'] ?? 0 }};
+        @endforeach
 
-    // Add a new earnings row for a specific payroll
-    const addEarningRow = (payrollIndex) => {
-        earningsRows.value[payrollIndex].push({ description: '', amount: '' });
-    };
+        // Add a new earnings row for a specific payroll
+        const addEarningRow = (payrollIndex) => {
+            earningsRows.value[payrollIndex].push({ description: '', amount: '' });
+        };
 
-    // Remove an earnings row for a specific payroll
-    const removeEarningRow = (payrollIndex, rowIndex) => {
-        if (earningsRows.value[payrollIndex].length > 1) {
-            earningsRows.value[payrollIndex].splice(rowIndex, 1);
-        }
-    };
+        // Remove an earnings row for a specific payroll
+        const removeEarningRow = (payrollIndex, rowIndex) => {
+            if (earningsRows.value[payrollIndex].length > 1) {
+                earningsRows.value[payrollIndex].splice(rowIndex, 1);
+            }
+        };
 
-    // Add a new deduction row for a specific payroll
-    const addDeductionRow = (payrollIndex) => {
-        deductionsRows.value[payrollIndex].push({ description: '', amount: '' });
-    };
+        // Add a new deduction row for a specific payroll
+        const addDeductionRow = (payrollIndex) => {
+            deductionsRows.value[payrollIndex].push({ description: '', amount: '' });
+        };
 
-    // Remove a deduction row for a specific payroll
-    const removeDeductionRow = (payrollIndex, rowIndex) => {
-        if (deductionsRows.value[payrollIndex].length > 1) {
-            deductionsRows.value[payrollIndex].splice(rowIndex, 1);
-        }
-    };
+        // Remove a deduction row for a specific payroll
+        const removeDeductionRow = (payrollIndex, rowIndex) => {
+            if (deductionsRows.value[payrollIndex].length > 1) {
+                deductionsRows.value[payrollIndex].splice(rowIndex, 1);
+            }
+        };
 
-    // Compute total earnings for a specific payroll
-    const calculateEarningsTotal = (payrollIndex) => {
-        return earningsRows.value[payrollIndex].reduce((sum, row) => {
-            return sum + parseFloat(row.amount || 0);
-        }, 0).toFixed(2);
-    };
+        // Compute total earnings for a specific payroll
+        const calculateEarningsTotal = (payrollIndex) => {
+            return earningsRows.value[payrollIndex].reduce((sum, row) => {
+                return sum + parseFloat(row.amount || 0);
+            }, 0).toFixed(2);
+        };
 
-    // Compute total deductions for a specific payroll
-    const calculateDeductionsTotal = (payrollIndex) => {
-        return deductionsRows.value[payrollIndex].reduce((sum, row) => {
-            return sum + parseFloat(row.amount || 0);
-        }, 0).toFixed(2);
-    };
+        // Compute total deductions for a specific payroll
+        const calculateDeductionsTotal = (payrollIndex) => {
+            return deductionsRows.value[payrollIndex].reduce((sum, row) => {
+                return sum + parseFloat(row.amount || 0);
+            }, 0).toFixed(2);
+        };
 
-    // Handle form submission
-    const handleSubmit = () => {
-        // Log form data to the console
-        console.log('Form submitted:', {
-            earningsRows: earningsRows.value,
-            deductionsRows: deductionsRows.value
-        });
+        // Handle form submission
+        const handleSubmit = () => {
+            // Log form data to the console
+            console.log('Form submitted:', {
+                earningsRows: earningsRows.value,
+                deductionsRows: deductionsRows.value
+            });
 
-        // Here, you can perform form validation or submit data to the server via API call
-        // For example:
-        // axios.post('/api/submit-payroll', { earnings: earningsRows.value, deductions: deductionsRows.value })
-        // .then(response => {
-        //     // handle success
-        // })
-        // .catch(error => {
-        //     // handle error
-        // });
-    };
+            // Here, you can perform form validation or submit data to the server via API call
+            // For example:
+            // axios.post('/api/submit-payroll', { earnings: earningsRows.value, deductions: deductionsRows.value })
+            // .then(response => {
+            //     // handle success
+            // })
+            // .catch(error => {
+            //     // handle error
+            // });
+        };
 
-    return {
-        earningsRows,
-        deductionsRows,
-        addEarningRow,
-        removeEarningRow,
-        addDeductionRow,
-        removeDeductionRow,
-        calculateDeductionsTotal,
-        calculateEarningsTotal,
-        handleSubmit,
-        state
-    };
+        return {
+            earningsRows,
+            deductionsRows,
+            addEarningRow,
+            removeEarningRow,
+            addDeductionRow,
+            removeDeductionRow,
+            calculateDeductionsTotal,
+            calculateEarningsTotal,
+            handleSubmit,
+            state
+        };
     }
     })
     app.mount('#payroll')

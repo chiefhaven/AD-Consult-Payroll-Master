@@ -60,12 +60,11 @@
                                     <span class="btn">View</span>
                                 </button>
 
-                                <!-- Edit Payroll Form -->
-                                <form method="POST" class="dropdown-item nav-main-link" action="{{ url('/edit-payroll', $payroll) }}">
-                                    @csrf
+                                <!-- Edit Payroll -->
+                                <a class="dropdown-item nav-main-link btn" href="{{ route('edit-payroll', $payroll) }}">
                                     <i class="nav-main-link-icon fas fa-pencil-alt"></i>
-                                    <button class="btn" type="submit">Edit</button>
-                                </form>
+                                    <span class="btn">Edit</span>
+                                </a>
 
                                 <!-- Delete Payroll Form -->
                                 <form class="dropdown-item nav-main-link" method="POST" action="{{ url('delete-payroll', $payroll) }}" onsubmit="return confirm('Are you sure you want to delete this payroll?');">
