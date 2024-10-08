@@ -39,7 +39,8 @@ Route::get('/employees', [EmployeeController::class, 'index'])->name('employees'
 //payroll routes
 Route::get('/payrolls', [PayrollController::class, 'index'])->name('payrolls');
 
-//report routes
+//route leaves
+Route::get('/leaves', [LeaveController::class, 'index'])->name('leave');
 
 
 
@@ -48,8 +49,8 @@ Route::get('/billings', [BillingController::class, 'index'])->name('billings');
 Route::get('/billings/view', [BillingController::class, 'show'])->name('billingsView');
 Route::get('/billings/edit', [BillingController::class, 'update'])->name('billingsEdit');
 
-//Leave routes
-Route::get('/leaves', [LeaveController::class, 'index'])->name('leaves');
+// //Leave routes
+// Route::get('/leaves', [LeaveController::class, 'index'])->name('leaves');
 
 
 

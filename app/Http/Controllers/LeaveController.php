@@ -14,6 +14,7 @@ class LeaveController extends Controller
     public function index()
     {
         //
+        return view('Leaves.Leave');
     }
 
     /**
