@@ -110,6 +110,11 @@
             scrollY: true,
         });
 
+        $('#employeePayrollTable').DataTable({
+            scrollX: true,
+            scrollY: true,
+        });
+
         $('#payrollTable').DataTable({
             scrollX: true,
             scrollY: true,

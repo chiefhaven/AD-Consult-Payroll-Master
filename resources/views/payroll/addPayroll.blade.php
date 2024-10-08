@@ -337,21 +337,21 @@
         // });
     };
 
-        return {
-            earningsRows,
-            deductionsRows,
-            addEarningRow,
-            removeEarningRow,
-            addDeductionRow,
-            removeDeductionRow,
-            calculateDeductionsTotal,
-            calculateEarningsTotal,
-            handleSubmit,
-            state
-        };
-      }
-    })
-    app.mount('#payroll')
+    return {
+        earningsRows,
+        deductionsRows,
+        addEarningRow,
+        removeEarningRow,
+        addDeductionRow,
+        removeDeductionRow,
+        calculateDeductionsTotal,
+        calculateEarningsTotal,
+        handleSubmit,
+        state
+    };
+}
+})
+app.mount('#payroll')
 </script>
 @endpush
 

@@ -12,117 +12,117 @@
             <div class="modal-body">
                 <div class="mb-3 p-4">
                     <div class="box-body">
-                    <p v-if="loading">
-                        Loading data, please wait...
-                    </p>
-                    <div v-if="!loading && data">
-                        <div class="row" v-if="data && data.client">
-                        <p>
-                            For client:@{{ data.client.client_name }}
-                            Month/Year:@{{ data.group }}
-                            Status:@{{ data.status }}
-                        </p>
-                            <div class="row">
-                                <!-- Employees Count -->
-                                <div class="col-md-3">
-                                    <div class="small-box bg-light">
-                                    <div class="inner">
-                                        <h4>@{{ data.employees.length }}</h4>
-                                        <p>Employees</p>
+                        <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: 200px;" v-if="loading">
+                            <p class="spinner"></p>
+                            <p>
+                                Loading data, please wait...
+                            </p>
+                        </div>
+                        <div v-if="!loading && data">
+                            <div class="row" v-if="data && data.client">
+                            <p>
+                                For client:@{{ data.client.client_name }}
+                                Month/Year:@{{ data.group }}
+                                Status:@{{ data.status }}
+                            </p>
+                                <div class="row">
+                                    <!-- Employees Count -->
+                                    <div class="col-md-3">
+                                        <div class="small-box bg-light">
+                                        <div class="inner">
+                                            <h4>@{{ data.employees.length }}</h4>
+                                            <p>Employees</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        </div>
                                     </div>
-                                    <div class="icon">
-                                        <i class="fas fa-users"></i>
-                                    </div>
-                                    </div>
-                                </div>
 
-                                <!-- Total Gross -->
-                                <div class="col-md-3">
-                                    <div class="small-box bg-light">
-                                    <div class="inner">
-                                        <h4>@{{ totalGross }}</h4>
-                                        <p>Total Gross</p>
+                                    <!-- Total Gross -->
+                                    <div class="col-md-3">
+                                        <div class="small-box bg-light">
+                                        <div class="inner">
+                                            <h4>@{{ totalGross }}</h4>
+                                            <p>Total Gross</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-info-circle"></i>
+                                        </div>
+                                        </div>
                                     </div>
-                                    <div class="icon">
-                                        <i class="fas fa-info-circle"></i>
-                                    </div>
-                                    </div>
-                                </div>
 
-                                <!-- Total Net -->
-                                <div class="col-md-3">
-                                    <div class="small-box bg-light">
-                                    <div class="inner">
-                                        <h4>@{{ totalNet }}</h4>
-                                        <p>Total Net</p>
+                                    <!-- Total Net -->
+                                    <div class="col-md-3">
+                                        <div class="small-box bg-light">
+                                        <div class="inner">
+                                            <h4>@{{ totalNet }}</h4>
+                                            <p>Total Net</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-info-circle"></i>
+                                        </div>
+                                        </div>
                                     </div>
-                                    <div class="icon">
-                                        <i class="fas fa-info-circle"></i>
-                                    </div>
-                                    </div>
-                                </div>
 
-                                <!-- Total Paye -->
-                                <div class="col-md-3">
-                                    <div class="small-box bg-light">
-                                    <div class="inner">
-                                        <h4>@{{ totalPaye }}</h4>
-                                        <p>Total Paye</p>
+                                    <!-- Total Paye -->
+                                    <div class="col-md-3">
+                                        <div class="small-box bg-light">
+                                        <div class="inner">
+                                            <h4>@{{ totalPaye }}</h4>
+                                            <p>Total Paye</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-info-circle"></i>
+                                        </div>
+                                        </div>
                                     </div>
-                                    <div class="icon">
-                                        <i class="fas fa-info-circle"></i>
-                                    </div>
-                                    </div>
-                                </div>
 
-                                <!-- Total Deductions -->
-                                <div class="col-md-3">
-                                    <div class="small-box bg-light">
-                                    <div class="inner">
-                                        <h4>@{{ totalDeductions }}</h4>
-                                        <p>Total Deductions</p>
+                                    <!-- Total Deductions -->
+                                    <div class="col-md-3">
+                                        <div class="small-box bg-light">
+                                        <div class="inner">
+                                            <h4>@{{ totalDeductions }}</h4>
+                                            <p>Total Deductions</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-info-circle"></i>
+                                        </div>
+                                        </div>
                                     </div>
-                                    <div class="icon">
-                                        <i class="fas fa-info-circle"></i>
-                                    </div>
-                                    </div>
-                                </div>
 
-                                <!-- Total Earnings -->
-                                <div class="col-md-3">
-                                    <div class="small-box bg-light">
-                                    <div class="inner">
-                                        <h4>@{{ totalEarnings }}</h4>
-                                        <p>Total Earnings</p>
+                                    <!-- Total Earnings -->
+                                    <div class="col-md-3">
+                                        <div class="small-box bg-light">
+                                        <div class="inner">
+                                            <h4>@{{ totalEarnings }}</h4>
+                                            <p>Total Earnings</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-info-circle"></i>
+                                        </div>
+                                        </div>
                                     </div>
-                                    <div class="icon">
-                                        <i class="fas fa-info-circle"></i>
-                                    </div>
-                                    </div>
-                                </div>
 
-                                <!-- Total Paid -->
-                                <div class="col-md-3">
-                                    <div class="small-box bg-light">
-                                    <div class="inner">
-                                        <h4>@{{ totalPaid }}</h4>
-                                        <p>Total Paid</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-info-circle"></i>
-                                    </div>
+                                    <!-- Total Paid -->
+                                    <div class="col-md-3">
+                                        <div class="small-box bg-light">
+                                        <div class="inner">
+                                            <h4>@{{ totalPaid }}</h4>
+                                            <p>Total Paid</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-info-circle"></i>
+                                        </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-12">
                                     @include('../payroll/includes/employeesPayrollTable')
-
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <p v-if="error">@{{ error }}</p>
+                        <p v-if="error">@{{ error }}</p>
                     </div>
                 </div>
             </div>
