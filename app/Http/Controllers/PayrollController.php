@@ -18,7 +18,7 @@ class PayrollController extends Controller
         $payrolls = Payroll::all();
 
         // Return a view and pass the payroll data
-        return view('payroll.index', ['payrolls' => $payrolls]);
+        return view('payrolls.payroll', ['payrolls' => $payrolls]);
     }
     }
 

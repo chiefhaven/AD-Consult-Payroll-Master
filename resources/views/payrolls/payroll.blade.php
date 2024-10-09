@@ -49,12 +49,23 @@
                     <td>{{ $payroll->name }}</td>
                     <td>{{ $payroll->total }}</td>
                     <td>{{ $payroll->date }}</td>
-                    <td>{{ $payroll->date }}</td>
-                    
+                    <td>{{ $payroll->total_employees }}</td>
+                    <td>{{ $payroll->status }}</td>
+
                 </tr>
             @endforeach
         </tbody>
     </table>
+
+    {{-- <x-adminlte-datatable id="payroll" :heads="$heads">
+    @foreach($config['data'] as $row)
+        <tr>
+            @foreach($row as $cell)
+                <td>{!! $cell !!}</td>
+            @endforeach
+        </tr>
+    @endforeach
+    </x-adminlte-datatable> --}}
 
 @stop
 
