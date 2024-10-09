@@ -39,6 +39,7 @@ Route::get('/employees', [EmployeeController::class, 'index'])->name('employees'
 //payroll routes
 Route::get('/payrolls', [PayrollController::class, 'index'])->name('payrolls');
 
+
 //route leaves
 Route::get('/leaves', [LeaveController::class, 'index'])->name('leave');
 

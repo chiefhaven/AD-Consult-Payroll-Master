@@ -45,13 +45,13 @@
                             </a>
                         </div> --}}
 
-                         <div class="col-md-4">
+                         {{-- <div class="col-md-4">
                             <a href="{{ route('leaves') }}" style="text-decoration: none;">
                             <x-adminlte-small-box title="Leaves" text="{{ App\Models\Leaves::get()->count() }}" theme="secondary" />
                             </a>
-                        </div>
+                        </div> --}}
 
-                        
+
                     </div>
                 </div>
             </div>

@@ -13,7 +13,13 @@ class PayrollController extends Controller
      */
     public function index()
     {
-        //
+    {
+        // Fetch all payroll data
+        $payrolls = Payroll::all();
+
+        // Return a view and pass the payroll data
+        return view('payroll.index', ['payrolls' => $payrolls]);
+    }
     }
 
     /**
