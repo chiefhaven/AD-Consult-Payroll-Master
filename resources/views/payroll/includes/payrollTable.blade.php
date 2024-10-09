@@ -66,6 +66,12 @@
                                     <span class="btn">Edit</span>
                                 </a>
 
+                                <!-- Edit Payroll -->
+                                <a class="dropdown-item nav-main-link btn" href="{{ route('export-payroll', $payroll) }}">
+                                    <i class="nav-main-link-icon fas fa-print"></i>
+                                    <span class="btn">Print payroll</span>
+                                </a>
+
                                 <!-- Delete Payroll Form -->
                                 <form class="dropdown-item nav-main-link" method="POST" action="{{ url('delete-payroll', $payroll) }}" onsubmit="return confirm('Are you sure you want to delete this payroll?');">
                                     @csrf

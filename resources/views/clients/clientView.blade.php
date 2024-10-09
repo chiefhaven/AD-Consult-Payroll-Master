@@ -110,11 +110,6 @@
             scrollY: true,
         });
 
-        $('#employeePayrollTable').DataTable({
-            scrollX: true,
-            scrollY: true,
-        });
-
         $('#payrollTable').DataTable({
             scrollX: true,
             scrollY: true,
@@ -149,11 +144,13 @@
     const app = createApp({
       setup() {
         const showPayrollModal = ref(false);  // Modal hidden by default
+        const showEmployeePayModal = ref(false);  // Modal hidden by default
         const data = ref(null);        // Store payroll data
+        const employeeData = ref(null);        // Store employee payroll data
         const loading = ref(false);    // Manage loading state
         const error = ref(null);       // Store error messages
 
-        // Open the modal and fetch payroll data
+        // Open the payroll details modal and fetch payroll data
         const fetchPayrollDetails = (payroll) => {
           showPayrollModal.value = true;
           fetchData(payroll);  // Fetch data when the modal opens
@@ -173,6 +170,7 @@
                 const response = await axios.get(`/view-payroll/${payroll}`);
                 if (response.data && response.data.length > 0) {
                     data.value = response.data[0];  // Access the first object in the response array
+
                     console.log(response.data)
                 } else {
                     error.value = "No data found for the provided payroll ID.";
@@ -184,65 +182,77 @@
             }
         };
 
+        // Open the payroll details modal and fetch payroll data
+        const employeePayDetails = (employee, payroll) => {
+            showEmployeePayModal.value = true;
+            showPayrollModal.value = false;
+            fetchEmployeePayDetails(employee, payroll);  // Fetch data when the modal opens
+        };
+
+        // Fetch Employee Payroll details
+        const fetchEmployeePayDetails = async (employee, payroll) => {
+            loading.value = true;
+            error.value = null;
+            try {
+                const response = await axios.get(`/view-employee-payroll/${employee}/${payroll}`);
+                if (response.data && response.data.length > 0) {
+                    employeeData.value = response.data[0];  // Access the first object in the response array
+                    console.log(response.data);
+                } else {
+                    error.value = "No data found for the provided payroll ID.";
+                }
+            } catch (err) {
+                error.value = "Failed to fetch payroll data";
+            } finally {
+                loading.value = false;
+            }
+        };
+
+        // Close the modal
+        const closeEmployeePayModal = () => {
+            showEmployeePayModal.value = false;
+            showPayrollModal.value = true;
+        };
+
         // Computed properties for different totals
         const totalGross = computed(() => {
             const total = data.value?.employees?.reduce((sum, emp) => sum + parseFloat(emp.pivot.salary || 0), 0) || 0;
 
-            return new Intl.NumberFormat('en-MW', {
-                style: 'currency',
-                currency: 'MWK',
-                currencyDisplay: 'narrowSymbol'
-              }).format(total).replace('MWK', 'K');
+            return formatCurrency(total);
         });
 
         const totalNet = computed(() => {
             const total = data.value?.employees?.reduce((sum, emp) => sum + parseFloat(emp.pivot.net_salary || 0), 0) || 0;
 
-            return new Intl.NumberFormat('en-MW', {
-                style: 'currency',
-                currency: 'MWK',
-                currencyDisplay: 'narrowSymbol'
-              }).format(total).replace('MWK', 'K');
+            return formatCurrency(total);
         });
 
         const totalPaye = computed(() => {
             const total = data.value?.employees?.reduce((sum, emp) => sum + parseFloat(emp.pivot.payee || 0), 0) || 0;
 
-            return new Intl.NumberFormat('en-MW', {
-                style: 'currency',
-                currency: 'MWK',
-                currencyDisplay: 'narrowSymbol'
-              }).format(total).replace('MWK', 'K');
+            return formatCurrency(total);
         });
 
         const totalPaid = computed(() => {
             const total = data.value?.employees?.reduce((sum, emp) => sum + parseFloat(emp.pivot.total_paid || 0), 0) || 0;
 
-            return new Intl.NumberFormat('en-MW', {
-                style: 'currency',
-                currency: 'MWK',
-                currencyDisplay: 'narrowSymbol'
-              }).format(total).replace('MWK', 'K');
+            return formatCurrency(total);
         });
 
         const totalDeductions = computed(() => {
             const total = data.value?.employees?.reduce((sum, emp) => sum + parseFloat(emp.pivot.deduction_amount || 0), 0) || 0;
 
-            return new Intl.NumberFormat('en-MW', {
-                style: 'currency',
-                currency: 'MWK',
-                currencyDisplay: 'narrowSymbol'
-              }).format(total).replace('MWK', 'K');
+            return formatCurrency(total);
         });
+
+        const formatCurrency = (value) => {
+            return `K ${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        };
 
         const totalEarnings = computed(() => {
             const total = data.value?.employees?.reduce((sum, emp) => sum + parseFloat(emp.pivot.earning_amount || 0), 0) || 0;
 
-            return new Intl.NumberFormat('en-MW', {
-                style: 'currency',
-                currency: 'MWK',
-                currencyDisplay: 'narrowSymbol'
-              }).format(total).replace('MWK', 'K');
+            return formatCurrency(total);
         });
 
         const proceed = () => {
@@ -253,6 +263,7 @@
         return {
             showPayrollModal,
             data,
+            employeeData,
             loading,
             error,
             totalGross,
@@ -264,6 +275,10 @@
             closeModal,
             proceed,
             fetchPayrollDetails,
+            closeEmployeePayModal,
+            showEmployeePayModal,
+            employeePayDetails,
+            formatCurrency
         };
       },
     });

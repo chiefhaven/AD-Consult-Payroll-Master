@@ -39,6 +39,8 @@ Route::get('/view-payroll/{payroll}', [PayrollController::class, 'show'])->name(
 Route::get('/edit-payroll/{payroll}', [PayrollController::class, 'edit'])->name('edit-payroll')->middleware(['auth']);
 Route::put('/update-payroll/{payroll}', [PayrollController::class, 'update'])->name('update-payroll')->middleware(['auth']);
 Route::delete('/delete-payroll/{payroll}', [PayrollController::class, 'destroy'])->name('delete-payroll')->middleware(['auth']);
+Route::get('/export-payroll/{payroll}', [PayrollController::class, 'export'])->name('export-payroll')->middleware(['auth']);
+Route::get('/view-employee-payroll/{employee}/{payroll}', [PayrollController::class, 'viewEmployeePayroll'])->name('viewEmployeePayroll')->middleware(['auth']);
 
 Route::get('/leaves', Leaves::class)->middleware(['auth']);
 
