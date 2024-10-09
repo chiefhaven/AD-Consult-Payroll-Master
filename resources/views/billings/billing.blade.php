@@ -40,7 +40,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($billings as $billing)
+        @foreach($billings as $Billing)
         <tr>
             <td>{{ $billing->id }}</td>
             <td>{{ $billing->client->name }}</td>

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Billing;
 use App\Models\Employee;
 use App\Models\Client;
 use App\Models\Designation;
@@ -18,6 +19,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        Billing::factory()->count(50)->create([
+            // 'status' => 'Active',
+            ]);
+
         Employee::factory()->count(50)->create([
             'status' => 'Active',
             ]);

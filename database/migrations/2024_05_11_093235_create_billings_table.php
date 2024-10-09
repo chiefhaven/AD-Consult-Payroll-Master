@@ -25,6 +25,10 @@ return new class extends Migration
             $table->float('tax_amount');
             $table->string('discount_type');
             $table->string('transaction_terms');
+            $table->string('discription')->nullable();
+            $table->date('issue_date');
+            $table->date('due_date')->nullable();
+            $table->unsignedBigInteger('client_id');
             $table->timestamps();
         });
     }
