@@ -3,6 +3,9 @@
 {{-- Extend and customize the browser title --}}
 @section('title', 'View Client')
 
+@section('plugins.Datatables', true)
+@section('plugins.DatatablesPlugin', true)
+
 {{-- Extend and customize the page content header --}}
 @section('content_header')
     @hasSection('content_header_title')
@@ -106,11 +109,19 @@
 <script>
     $(document).ready(function() {
         $('#employeeTable').DataTable({
+            dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'excel', 'pdf', 'print'
+                ],
             scrollX: true,
             scrollY: true,
         });
 
         $('#payrollTable').DataTable({
+            dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'excel', 'pdf', 'print'
+                ],
             scrollX: true,
             scrollY: true,
         });

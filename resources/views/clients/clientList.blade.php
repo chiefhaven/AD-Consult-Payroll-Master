@@ -29,9 +29,11 @@
     <div class="col-lg-12">
         <div class="card mb-3 p-4">
             <div class="box-body">
-                <p>All Clients</p>
-                <livewire:clients.clientList />
-                <x-livewire-alert::scripts />
+                <div class="row">
+                    <div class="col-md-12">
+                        @include('/clients/includes/clientsTable')
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -48,7 +50,14 @@
 <script>
 
     $(document).ready(function() {
-        // Add your common script logic here...
+        $('#clientsTable').DataTable({
+            dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'excel', 'pdf', 'print'
+                ],
+            scrollX: true,
+            scrollY: true,
+        });
     });
 
 </script>
