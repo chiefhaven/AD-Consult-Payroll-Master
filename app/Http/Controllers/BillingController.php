@@ -38,8 +38,10 @@ class BillingController extends Controller
      */
     public function show(string $id)
     {
-        //
-        return view('Billings.billingView');
+
+        $billing = Billing::findOrFail($id);
+        return view('billing.view', compact('billing'));
+    
     }
 
     /**

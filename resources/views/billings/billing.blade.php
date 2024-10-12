@@ -28,38 +28,40 @@
     <table>
     <thead>
         <tr>
-            <th>ID</th>
             <th>Client Name</th>
             <th>Type</th>
             <th>Amount</th>
+            <th>Status </th>
             <th>Issue Date</th>
             <th>Due Date</th>
-            <th>Description</th>
-            <th>Status</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach($billings as $Billing)
+        @foreach($billings as $billing)
         <tr>
-            <td>{{ $billing->id }}</td>
-            <td>{{ $billing->client->name }}</td>
-            <td>{{ $billing->type->name }}</td> <!-- Assuming 'type' is a relationship -->
-            <td>{{ $billing->amount }}</td>
+            <td>{{ $billing->client_name }}</td>
+            <td>{{ $billing->bill_type }}</td>
+            <td>
+                @if($billing->bill_type == 'invoice')
+                    ${{ number_format($billing->invoice_amount, 2) }}
+                @elseif($billing->bill_type == 'quotation')
+                    ${{ number_format($billing->quotation_amount, 2) }}
+                @endif
+            </td>
+            <td>{{ $billing->status }}</td>
             <td>{{ $billing->issue_date }}</td>
             <td>{{ $billing->due_date }}</td>
-            <td>{{ $billing->description }}</td>
-            <td>{{ $billing->status->name }}</td> <!-- Assuming 'status' is a relationship -->
-            <td>
+            {{-- <td>
                 <!-- Actions like edit, delete, etc. -->
-                <a href="{{ route('billings.billingView', $billing->id) }}">View</a>
-                <a href="{{ route('billings.billingEdit', $billing->id) }}">Edit</a>
-                <form action="{{ route('billings.destroy', $billing->id) }}" method="POST">
+                <a href="{{ route('billingView') }}">View</a>
+                <a href="{{ route('billingEdit') }}">Edit</a>
+                <form action="{{ route('billings.destroy') }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit">Delete</button>
                 </form>
-            </td>
+            </td> --}}
         </tr>
         @endforeach
     </tbody>
@@ -82,15 +84,27 @@
     });
 
 </script>
-@endpush
-
-{{-- Add common CSS customizations --}}
-
 @push('css')
 <style type="text/css">
 
-    {{-- You can add AdminLTE customizations here --}}
+    {{-- Table styles --}}
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
+    table th, table td {
+        border: 1px solid #dee2e6; /* Border for table cells */
+        padding: 8px; /* Padding for content */
+        text-align: left; /* Align text to the left */
+    }
+
+    table th {
+        background-color: #f8f9fa; /* Light background for table headers */
+        font-weight: bold; /* Bold font for headers */
+    }
+
+    {{-- Custom styles for AdminLTE card component --}}
     .card {
         border-radius: none;
     }
@@ -98,6 +112,6 @@
         font-weight: 600;
     }
 
-
 </style>
 @endpush
+

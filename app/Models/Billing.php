@@ -10,26 +10,24 @@ class Billing extends Model
     use HasFactory;
 
         protected $fillable = [
-            'client_name',
-            'is_quotation',
-            'is_invoice',
+            'client_id',
+            'bill_type',
             'quotation_amount',
             'invoice_amount',
             'discount',
             'paid_amount',
             'status',
             'balance',
-            'amount_before_tax',
             'tax_amount',
             'discount_type',
             'transaction_terms',
             'discription',
             'issue_date',
             'due_date',
-            'client_id',
+
     ];
         public function Client()
     {
-        return $this->belongsTo(Client::class);
+        return $this->hasMany(Client::class);
     }
 }

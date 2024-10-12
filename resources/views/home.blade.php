@@ -25,7 +25,7 @@
                         </div>
 
                          <div class="col-md-4">
-                            <a href="{{ route('billings') }}" style="text-decoration: none;">
+                            <a href="{{ route('billing') }}" style="text-decoration: none;">
                             <x-adminlte-small-box title="Billings" text="{{ App\Models\Billing::get()->count() }}" theme="secondary" />
                             </a>
                         </div>
