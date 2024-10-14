@@ -34,14 +34,13 @@
             <th>Status </th>
             <th>Issue Date</th>
             <th>Due Date</th>
-            <th>discount</th>
             <th>paid Amount</th>
             <th>Discount</th>
             <th>Balance</th>
             <th>Tax Amount</th>
             <th>Discount Type</th>
-            <th>Transaction Terms</th>
             <th>Discription</th>
+            <th>Transaction Terms</th>
         </tr>
     </thead>
     <tbody>
@@ -59,36 +58,18 @@
             <td>{{ $billing->status }}</td>
             <td>{{ $billing->issue_date }}</td>
             <td>{{ $billing->due_date }}</td>
-            {{-- <td>
-                <!-- Actions like edit, delete, etc. -->
-                <a href="{{ route('billingView') }}">View</a>
-                <a href="{{ route('billingEdit') }}">Edit</a>
-                <form action="{{ route('billings.destroy') }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit">Delete</button>
-                </form>
-            </td> --}}
+            <td>{{ $billing->paid_amount }}</td>
+            <td>{{ $billing->discount }}</td>
+            <td>{{ $billing->balance }}</td>
+            <td>{{ $billing->tax_amount }}</td>
+            <td>{{ $billing->discount_type }}</td>
+            <td>{{ $billing->discription }}</td>
+            <td>{{ $billing->transaction_terms }}</td>
         </tr>
         @endforeach
     </tbody>
 </table>
 
-
-            {{-- 'client_id',
-            'bill_type',
-            'quotation_amount',
-            'invoice_amount',
-            'discount',
-            'paid_amount',
-            'status',
-            'balance',
-            'tax_amount',
-            'discount_type',
-            'transaction_terms',
-            'discription',
-            'issue_date',
-            'due_date', --}}
 </div>
 @stop
 

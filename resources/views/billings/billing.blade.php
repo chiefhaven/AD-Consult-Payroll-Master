@@ -52,16 +52,18 @@
             <td>{{ $billing->status }}</td>
             <td>{{ $billing->issue_date }}</td>
             <td>{{ $billing->due_date }}</td>
-            {{-- <td>
+            <td>
                 <!-- Actions like edit, delete, etc. -->
-                <a href="{{ route('billingView') }}">View</a>
-                <a href="{{ route('billingEdit') }}">Edit</a>
+                {{-- <a href="{{ route('billingView') }}">View</a> --}}
+                <a href="{{ route('billingView', ['id'=> $billing->id]) }}">View</a>
+                <a href="{{ route('billingEdit', ['id'=> $billing->id]) }}">Edit</a>
+                {{-- <a href="{{ route('billingEdit') }}">Edit</a> --}}
                 <form action="{{ route('billings.destroy') }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit">Delete</button>
                 </form>
-            </td> --}}
+            </td>
         </tr>
         @endforeach
     </tbody>
