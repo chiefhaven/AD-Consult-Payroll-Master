@@ -60,10 +60,10 @@
                 <div class="row">
                     <!-- Product ID -->
                     <div class="col-md-12 form-group">
-                        <x-adminlte-select2 class="form-control" name="product_ids[]" v-model="selectedProductIds" multiple @change="updateProductDetails" required>
+                        <x-adminlte-select class="form-control" name="product_ids[]" v-model="selectedProductIds" multiple @change="updateProductDetails" required>
                             <option value="" disabled>Select Product</option>
                             <option v-for="product in products" :key="product.id" :value="product.id">@{{ product.name }}</option>
-                        </x-adminlte-select2>
+                        </x-adminlte-select>
                     </div>
 
                     <table class="table mt-3">
@@ -96,7 +96,7 @@
                         </tbody>
                     </table>
                     <div class="text-right">
-                        <strong>Total Sales: @{{ formatCurrency(totalSales) }}</strong>
+                        <strong>Total Sales: K@{{ formatCurrency(totalSales) }}</strong>
                     </div>
                 </div>
             </div>
@@ -140,6 +140,82 @@
 @stop
 @push('js')
 <script>
+    const { createApp, ref, computed, onMounted } = Vue;
 
+    const addSale = createApp({
+        setup() {
+            // Reactive references
+            const selectedProductIds = ref([]); // Array to hold selected product IDs
+            const quantities = ref([1]); // Array to hold quantities for each selected product
+            const products = ref([]); // This should be populated with your products array from the API
+
+            // Computed property to get product details based on selected IDs
+            const productDetails = computed(() => {
+                return selectedProductIds.value.map((id, index) => {
+                    const product = products.value.find(product => product.id === id);
+                    if (product) {
+                        return {
+                            name: product.name,
+                            description: product.description,
+                            price: parseFloat(product.price) || 0, // Ensure price is a number
+                            quantity: quantities.value[index],
+                            total: (parseFloat(product.price) || 0) * quantities.value[index] // Ensure total is also a number
+                        };
+                    }
+                    return null;
+                }).filter(Boolean); // Filter out any null values
+            });
+
+            // Computed property for total sales amount
+            const totalSales = computed(() => {
+                return productDetails.value.reduce((acc, item) => acc + item.total, 0);
+            });
+
+            // Function to handle adding a new product row
+            const addProduct = () => {
+                selectedProductIds.value.push(''); // Add an empty entry for product selection
+                quantities.value.push(1); // Add a default quantity of 1
+            };
+
+            // Function to handle product selection changes
+            const updateProductDetails = (index) => {
+                if (selectedProductIds.value[index] !== '') {
+                    quantities.value[index] = 1; // Reset to 1 for the selected product
+                } else {
+                    quantities.value[index] = 0; // Set quantity to 0 if no product is selected
+                }
+            };
+
+            // Function to simulate fetching products from an API
+            const fetchProducts = async () => {
+                try {
+                    const response = await axios.get('/products'); // Adjust the API endpoint
+                    products.value = response.data; // Populate the products array
+                } catch (error) {
+                    console.error('Error fetching products:', error);
+                }
+            };
+
+            const formatCurrency = (value) => {
+                return `K ${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            };
+
+            // Fetch products when the component is mounted
+            onMounted(fetchProducts);
+
+            return {
+                selectedProductIds,
+                quantities,
+                addProduct,
+                productDetails,
+                totalSales,
+                updateProductDetails,
+                products,
+                formatCurrency
+            };
+        }
+    });
+
+    addSale.mount('#addSale');
 </script>
 @endpush
