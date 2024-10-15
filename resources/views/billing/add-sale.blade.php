@@ -60,20 +60,19 @@
                 <div class="row">
                     <!-- Product ID -->
                     <div class="col-md-12 form-group">
-                        <label for="product_id">Select a product</label>
-                        <select class="form-control" v-model="selectedProductIds" multiple @change="updateProductDetails" required>
-                            <option value="">Select Product</option>
+                        <x-adminlte-select2 class="form-control" name="product_ids[]" v-model="selectedProductIds" multiple @change="updateProductDetails" required>
+                            <option value="" disabled>Select Product</option>
                             <option v-for="product in products" :key="product.id" :value="product.id">@{{ product.name }}</option>
-                        </select>
+                        </x-adminlte-select2>
                     </div>
 
                     <table class="table mt-3">
                         <thead>
                             <tr>
-                                <th>Product</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Total</th>
+                                <th style="max-width: 100px;">Product</th>
+                                <th style="max-width: 100px;">Price</th>
+                                <th style="max-width: 100px;">Quantity</th>
+                                <th style="max-width: 100px;">Total</th>
                             </tr>
                         </thead>
                         <tbody id="product-details">
@@ -82,11 +81,17 @@
                                     <strong>@{{ detail.name }}</strong>
                                     <p>@{{ detail.description }}</p>
                                 </td>
-                                <td>@{{ detail.price.toFixed(2) }}</td>
+                                <td>K@{{ detail.price.toFixed(2) }}</td>
                                 <td>
-                                    <input type="number" v-model="quantities[index]" min="1" @input="updateProductDetails(index)" />
+                                    <x-adminlte-input
+                                        type="number"
+                                        name="quantities"
+                                        v-model="quantities[index]"
+                                        min="1"
+                                        @input="updateProductDetails(index)"
+                                    />
                                 </td>
-                                <td>@{{ detail.total.toFixed(2) }}</td>
+                                <td>K@{{ detail.total.toFixed(2) }}</td>
                             </tr>
                         </tbody>
                     </table>
