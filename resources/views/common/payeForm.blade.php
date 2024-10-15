@@ -55,6 +55,7 @@
 </div>
 @push('js')
 <script>
+    const { createApp, ref, computed, onMounted } = Vue;
 
     const payeBracket = createApp({
         setup() {
