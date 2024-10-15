@@ -93,7 +93,7 @@
             };
 
             // Fetch data when the component is mounted (optional for initial load)
-            onMounted(fetchBrackets); // Optional: You can call this if you want to fetch data immediately
+            onMounted(fetchBrackets); // Optional: call this if you want to fetch data immediately
 
             return {
                 brackets,
