@@ -12,9 +12,10 @@
                 <form @submit.prevent="updateBrackets">
                     <x-adminlte-card title="Edit PAYE Tax Brackets" theme="light" icon="fas fa-edit" collapsible>
                         <div v-for="(bracket, index) in brackets" :key="index">
+                            <!-- Limit Input Field -->
                             <x-adminlte-input
-                                name="fdf"
-                                label="dfdfg"
+                                :name="'limit_' + index"
+                                label="Income Limit"
                                 v-model="bracket.limit"
                                 igroup-size="sm"
                                 required
@@ -25,9 +26,11 @@
                                     </div>
                                 </x-slot>
                             </x-adminlte-input>
+
+                            <!-- Tax Rate Input Field -->
                             <x-adminlte-input
-                                name="fdgf"
-                                label="'Tax Rate'"
+                                :name="'rate_' + index"
+                                label="Tax Rate (%)"
                                 v-model="bracket.rate"
                                 igroup-size="sm"
                                 required
@@ -38,7 +41,6 @@
                                     </div>
                                 </x-slot>
                             </x-adminlte-input>
-
                         </div>
 
                         <x-slot name="footerSlot">
@@ -46,6 +48,7 @@
                         </x-slot>
                     </x-adminlte-card>
                 </form>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeModal">Close</button>
@@ -108,6 +111,7 @@
 
     payeBracket.mount('#payBlacket_modal');
 
+    //Add Sale App
     const addSale = createApp({
         setup() {
             // Reactive references
