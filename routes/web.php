@@ -19,6 +19,7 @@ use App\Livewire\Employees\UpdateEmployee;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\Common\BusinessUtil;
 use App\Http\Controllers\ProductController;
+use Illuminate\Support\Facades\Artisan;
 
 Auth::routes();
 
@@ -85,3 +86,8 @@ Route::get('/users', UserList::class)->middleware(['auth']);
 Route::get('/add-user', AddUser::class)->middleware(['auth']);
 
 Route::get('/settings', Settings::class)->middleware(['auth']);
+
+Route::get('/migrate', function(){
+    Artisan::call('migrate',['--force' => true]);
+     dd('migrated!');
+ })->middleware(['auth']);
