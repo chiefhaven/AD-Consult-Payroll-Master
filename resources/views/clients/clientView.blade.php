@@ -217,6 +217,8 @@
     });
 </script>
 <script>
+    const { createApp, ref, computed, onMounted } = Vue;
+
     const app = createApp({
       setup() {
         const showPayrollModal = ref(false);  // Modal hidden by default
