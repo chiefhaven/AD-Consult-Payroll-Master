@@ -8,6 +8,7 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Industry;
+use App\Models\PayeBracket;
 use App\Models\User;
 
 class BusinessUtil extends Controller
@@ -60,31 +61,25 @@ class BusinessUtil extends Controller
     }
 
     function calculatePaye($salary) {
-        // Define the tax brackets
-        $brackets = [
-            [150000, 0],        // 0% for the first MK 150,000
-            [350000, 0.25],     // 25% for the next MK 350,000
-            [2050000, 0.30],    // 30% for the next MK 2,050,000
-            [PHP_INT_MAX, 0.35] // 35% for amounts over MK 2,550,000
-        ];
+        // Get the current tax brackets from the database
+        $brackets = PayeBracket::orderBy('limit')->get();
 
         // Initialize the total tax
         $tax = 0;
 
         // Calculate the taxable income for each bracket
         foreach ($brackets as $index => $bracket) {
-            // Get the current bracket's limit and rate
-            $limit = $bracket[0];
-            $rate = $bracket[1];
+            $limit = $bracket->limit;
+            $rate = $bracket->rate;
 
             if ($index === 0) {
-                // First MK 150,000 - no tax
+                // First bracket - no tax
                 if ($salary <= $limit) {
                     break;
                 }
             } else {
                 // Calculate taxable income for each bracket
-                $previousLimit = $brackets[$index - 1][0];
+                $previousLimit = $brackets[$index - 1]->limit;
                 if ($salary > $previousLimit) {
                     $taxableIncome = min($salary - $previousLimit, $limit - $previousLimit);
                     $tax += $taxableIncome * $rate;
@@ -95,5 +90,59 @@ class BusinessUtil extends Controller
         }
 
         return $tax;
+    }
+
+    public function updatePayeBrackets(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'brackets.*.limit' => 'required|numeric',
+            'brackets.*.rate' => 'required|numeric|min:0|max:1',
+        ]);
+
+        // Get the brackets from the request
+        $brackets = $request->input('brackets');
+
+        // Clear existing brackets
+        PayeBracket::truncate();
+
+        // Store the updated brackets in the database
+        foreach ($brackets as $bracket) {
+            PayeBracket::create([
+                'limit' => $bracket['limit'],
+                'rate' => $bracket['rate'],
+            ]);
+        }
+
+        // Optionally, you can return a success message or redirect
+        return redirect()->back()->with('success', 'PAYE brackets updated successfully!');
+    }
+
+    // Method to get PAYE brackets
+    public function getPayeBrackets(Request $request)
+    {
+        // Fetch all PAYE brackets from the database
+        $brackets = PayeBracket::all(); // Retrieve all records
+
+        // Return the brackets as a JSON response
+        return response()->json($brackets);
+    }
+
+
+    static function date($payroll_date){
+        // Create a DateTime object from the month-year string
+        $date = \DateTime::createFromFormat('F Y', $payroll_date);
+
+        // Check if the date was created successfully
+        if ($date) {
+            // Format the date as 'Y-m-d' (year-month-day)
+            $payroll_date = $date->format('Y-m-01');
+        } else {
+            // Handle error if the date couldn't be created
+            // e.g., throw an exception or set $payroll_date to null
+            $payroll_date = null; // or handle the error appropriately
+        }
+
+        return $payroll_date;
     }
 }

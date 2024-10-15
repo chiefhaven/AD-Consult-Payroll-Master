@@ -67,12 +67,34 @@
             <div class="col-md-8 pl-3">
                 <div class="row">
                     <div class="col-md-12 mb-4 card p-3">
-                        <div class="row">
+                        <div class="row pb-4">
                             <div class="col-md-6 d-flex justify-content-start">
                                 <div class="h4"><strong>Employees</strong></div>
                             </div>
                             <div class="col-md-6 d-flex justify-content-end">
-                                <a class="btn btn-primary mb-4" href="{{ route('add-employee', $client) }}">Add Employee</a>
+                                <div class="dropdown d-inline-block">
+                                    <button type="button" class="btn btn-primary" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="d-sm-inline-block">Action</span>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end p-0">
+                                        <div class="p-2">
+                                            <a class="dropdown-item nav-main-link btn" href="{{ route('add-employee', $client) }}">
+                                                <i class="fa fa-plus me-2"></i>
+                                                <span class="btn">Add Employee</span>
+                                            </a>
+
+                                            <a class="dropdown-item nav-main-link btn" href="{{ route('export-employees', [$client, 'csv']) }}">
+                                                <i class="nav-main-link-icon fas fa-download"></i>
+                                                <span class="btn">Export CSV</span>
+                                            </a>
+
+                                            <a class="dropdown-item nav-main-link btn" href="{{ route('export-employees', [$client, 'pdf']) }}">
+                                                <i class="nav-main-link-icon fas fa-download"></i>
+                                                <span class="btn">Export PDF</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         @include('/employees/includes/employeeTable')
@@ -83,13 +105,28 @@
                                 <div class="h4"><strong>Payrolls</strong></div>
                             </div>
                             <div class="col-md-6 d-flex justify-content-end">
-                                <button type="button" class="btn btn-primary pull-right mb-4" data-toggle="modal" data-target="#payroll_modal">
-                                    <i class="fa fa-plus"></i>
-                                    Add Payroll
-                                </button>
+                                    <button type="button" class="btn btn-primary pull-right mb-4" data-toggle="modal" data-target="#payroll_modal">
+                                        <i class="fa fa-plus"></i>
+                                        Add Payroll
+                                    </button>
                             </div>
                         </div>
                         @include('../payroll/includes/payrollTable')
+                    </div>
+
+                    <div class="col-md-12 card p-3">
+                        <div class="row">
+                            <div class="col-md-6 d-flex justify-content-start">
+                                <div class="h4"><strong>Billing</strong></div>
+                            </div>
+                            <div class="col-md-6 d-flex justify-content-end">
+                                    <button type="button" class="btn btn-primary pull-right mb-4">
+                                        <i class="fa fa-plus"></i>
+                                        Add Sale
+                                    </button>
+                            </div>
+                        </div>
+                        @include('../billing/includes/clientBillingTable')
                     </div>
                 </div>
             </div>
@@ -108,11 +145,41 @@
 @push('js')
 <script>
     $(document).ready(function() {
+        $('.delete-payroll-confirm').on('click', function (e) {
+            e.preventDefault(); // Prevent default button behavior
+            var form = $(this).closest('form'); // Get the closest form element
+            Swal.fire({
+                title: 'Delete Payroll',
+                text: 'Do you want to delete this payroll? This action cannot be undone!',
+                icon: 'warning', // Use warning icon
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit the form if confirmed
+                }
+            });
+        });
+
+        $('.delete-employee-confirm').on('click', function (e) {
+            e.preventDefault(); // Prevent default button behavior
+            var form = $(this).closest('form'); // Get the closest form element
+            Swal.fire({
+                title: 'Delete Employee',
+                text: 'Do you want to delete this employee? This action cannot be undone!',
+                icon: 'warning', // Use warning icon
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delet!',
+                cancelButtonText: 'No, keep'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit the form if confirmed
+                }
+            });
+        });
+
         $('#employeeTable').DataTable({
-            dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'excel', 'pdf', 'print'
-                ],
             scrollX: true,
             scrollY: true,
         });
@@ -150,8 +217,6 @@
     });
 </script>
 <script>
-    const { createApp, computed, ref } = Vue;
-
     const app = createApp({
       setup() {
         const showPayrollModal = ref(false);  // Modal hidden by default

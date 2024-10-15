@@ -23,20 +23,24 @@
                 <div class="col-lg-12">
                     <div class="row mt-5">
                         <div class="col-md-6">
-                            <x-adminlte-small-box
-                                title="{{ App\Models\Employee::get()->count() }}"
-                                text="Employees"
-                                icon="fas fa-users"
-                                theme="light"
-                            />
+                            <a href="{{ route('employees') }}" class="text-decoration-none">
+                                <x-adminlte-small-box
+                                    title="{{ App\Models\Employee::get()->count() }}"
+                                    text="Employees"
+                                    icon="fas fa-users"
+                                    theme="light"
+                                />
+                            </a>
                         </div>
                         <div class="col-md-6">
-                            <x-adminlte-small-box
-                                title="{{ App\Models\Client::get()->count() }}"
-                                text="Clients"
-                                icon="fas fa-file-invoice"
-                                theme="light"
-                            />
+                            <a href="{{ route('clients') }}" class="text-decoration-none">
+                                <x-adminlte-small-box
+                                    title="{{ App\Models\Client::get()->count() }}"
+                                    text="Clients"
+                                    icon="fas fa-file-invoice"
+                                    theme="light"
+                                />
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
-<div class="col-lg-12">
-    <div class="mb-3 p-4">
+<div class="col-lg-12 pt-4">
+    <div class="mb-3">
         <div class="box-body">
          <div class="row">
             <div class="col-sm-8">

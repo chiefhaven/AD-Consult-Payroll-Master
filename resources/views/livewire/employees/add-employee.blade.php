@@ -8,8 +8,7 @@
             </div>
         </div>
         <form wire:submit="save" autocomplete="off">
-            <x-adminlte-input type="text" name="client" label="client"
-                id="client" wire:model="client" autocomplete="false"/>
+            <x-adminlte-input type="text" name="client" id="client" wire:model="client" autocomplete="false" hidden/>
             <div class="card mb-3 p-4">
                 <div class="box-body">
                     <p>Employee Details</p>

@@ -10,6 +10,7 @@ use App\Models\Client;
 use App\Models\Employee;
 use Carbon\Carbon;
 use Auth;
+use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PayrollController extends Controller
@@ -25,31 +26,47 @@ class PayrollController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Client $client)
+    public function create(Request $request, Client $client)
     {
+        $messages = [
+            'client.required' => 'The client field is required.',
+            'payroll_month_year.required' => 'The payroll month and year field is required.',
+            'payroll_month_year.regex' => 'The payroll month and year must be in the format "Month Year", e.g., "October 2024".',
+            'employees.required' => 'The employees field must contain at least one employee.',
+            'employees.array' => 'The employees field must contain at least one employee.',
+            'employees.min' => 'The employees field must contain at least one employee.',
+            'employees.*.required' => 'Each employee entry is required.',
+        ];
+
+        // Validation
+        $this->validate($request, [
+            'client'  => 'required',
+            'payroll_month_year' => [
+                'required',
+                'regex:/^(January|February|March|April|May|June|July|August|September|October|November|December) \d{4}$/'
+            ],
+            'employees' => 'required|array|min:1',
+        ], $messages);
+
         $employee_ids = request('employees');
         // Get the month-year string from the request
         $payroll_month_year = request('payroll_month_year');
 
-        // Create a DateTime object from the month-year string
-        $date = \DateTime::createFromFormat('F Y', $payroll_month_year);
+        $payroll_date = BusinessUtil::date($payroll_month_year);
 
-        // Check if the date was created successfully
-        if ($date) {
-            // Format the date as 'Y-m-d' (year-month-day)
-            $payroll_date = $date->format('Y-m-01');
-        } else {
-            // Handle error if the date couldn't be created
-            // e.g., throw an exception or set $payroll_date to null
-            $payroll_date = null; // or handle the error appropriately
-        }
-
-        //check if payrolls exists for the month year
+        // Check if payrolls exist for the specified date
         $payrolls = Payroll::where('client_id', $client->id)
-                    ->whereDate('payroll_date', $payroll_date)
-                    ->get();
+        ->whereDate('payroll_date', $payroll_date)
+        ->with('employees') // Load the related employees
+        ->get();
 
-        $add_payroll_for = array_diff($employee_ids, $payrolls->pluck('payroll_employee')->toArray());
+        // Get the IDs of employees that have payroll records
+        $payrollEmployeeIds = $payrolls->flatMap(function ($payroll) {
+        return $payroll->employees->pluck('id'); // Adjust 'id' if your employee ID field is named differently
+        })->unique()->toArray();
+
+        // Determine which employees do not have payroll records for the specified date
+        $add_payroll_for = array_diff($employee_ids, $payrollEmployeeIds);
 
         if (! empty($add_payroll_for)) {
 
@@ -80,13 +97,8 @@ class PayrollController extends Controller
             return view('payroll.addPayroll', compact('client', 'payrolls', 'action', 'payroll_month_year'));
 
         } else {
-            return redirect()->back()
-                ->with('status',
-                    [
-                        'success' => true,
-                        'msg' => __('essentials::lang.payroll_already_added_for_given_user'),
-                    ]
-                );
+            Alert::error('Payroll already exist',  'Payroll already exist for the selected Employees for the specified month');
+            return redirect()->back();
         }
     }
 
@@ -95,6 +107,7 @@ class PayrollController extends Controller
      */
     public function store(StorepayrollRequest $request)
     {
+
         $messages = [
             'payrollMonthYear.required' => 'The payroll month and year field is required.',
             'payrollStatus.required' => 'The status field is required.',
@@ -109,16 +122,20 @@ class PayrollController extends Controller
         ], $messages);
 
         $post = $request->all();
-        $payrollGroupName = $post['payrollMonthYear'];
+
+        $payroll_month_year = $post['payrollMonthYear'];
         $status = $post['payrollStatus'];
         $client = $post['client'];
+
+        $payroll_date = BusinessUtil::date($payroll_month_year);
 
         $employeePayments = $post['payroll'];
 
         $payroll = new payroll();
-        $payroll->group = $payrollGroupName;
+        $payroll->group = $payroll_month_year;
         $payroll->status = $status;
         $payroll->client_id = $client;
+        $payroll->payroll_date = $payroll_date;
         $payroll->added_by = Auth::user()->id;
 
         $payroll->save();

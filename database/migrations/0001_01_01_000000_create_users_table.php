@@ -12,31 +12,34 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('username')->unique();
-            $table->string('name')->nullable();
-            $table->string('email')->unique();
-            $table->string('employee_id')->nullable();
-            $table->string('client_id')->nullable();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
+            $table->id();  // Auto-incrementing ID
+            $table->string('username')->unique();  // Unique username for the user
+            $table->string('name')->nullable();  // User's name
+            $table->string('email')->unique();  // Unique email for login
+            $table->uuid('employee_id')->nullable()->constrained('employees')->onDelete('set null'); // Foreign key for employees
+            $table->uuid('client_id')->nullable()->constrained('clients')->onDelete('set null'); // Foreign key for clients
+            $table->timestamp('email_verified_at')->nullable();  // Timestamp for email verification
+            $table->string('password');  // Password for user authentication
+            $table->rememberToken();  // Token for "remember me" functionality
+            $table->timestamps();  // Created_at and updated_at timestamps
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
+            $table->string('email')->primary();  // Email associated with the token, set as primary key
+            $table->string('token');  // Token for password reset
+            $table->timestamp('created_at')->nullable();  // Timestamp for when the token was created
+            $table->timestamp('expires_at')->nullable();  // Optional: Add expiration time for security
         });
 
+
         Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
+            $table->string('id')->primary();  // Unique session ID
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade')->index();  // Foreign key for users
+            $table->string('ip_address', 45)->nullable();  // Store IP addresses with room for IPv6
+            $table->text('user_agent')->nullable();  // User agent string for tracking
+            $table->longText('payload');  // Payload data associated with the session
+            $table->integer('last_activity')->index();  // Timestamp of the last activity in the session
+            $table->timestamps();  // Created_at and updated_at timestamps
         });
     }
 

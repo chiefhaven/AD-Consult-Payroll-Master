@@ -73,11 +73,11 @@
                                 </a>
 
                                 <!-- Delete Payroll Form -->
-                                <form class="dropdown-item nav-main-link" method="POST" action="{{ url('delete-payroll', $payroll) }}" onsubmit="return confirm('Are you sure you want to delete this payroll?');">
+                                <form class="dropdown-item nav-main-link" method="POST" action="{{ url('delete-payroll', $payroll) }}">
                                     @csrf
                                     @method('DELETE')
                                     <i class="nav-main-link-icon fas fa-trash-alt"></i>
-                                    <button class="btn delete-confirm" type="submit">Delete</button>
+                                    <button class="btn delete-payroll-confirm" type="submit">Delete</button>
                                 </form>
                             </div>
                         </div>
@@ -91,13 +91,16 @@
         @include('../payroll/includes/viewPayrollModal')
 
     @else
-        <p class="p-5">No payrolls yet for this client!</p>
+        <p class="p-5">
+            No payrolls yet for this client!
+        </p>
     @endif
-    </div>
-    <div class="modal fade" id="payroll_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <form action="/add-payroll/{{ $client->id }}" method="GET" autocomplete="off">
+</div>
+<div class="modal fade" id="payroll_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @if($client->employees->count()>0)
+                <form action="/add-payroll/{{ $client->id }}" method="GET" autocomplete="off">
                 <div class="modal-body">
                     <x-adminlte-input type="text" name="client" id="client" autocomplete="false" value="{{ $client->id }}" required hidden/>
                     <div class="mb-3 p-4">
@@ -133,8 +136,6 @@
                                             @foreach($client->employees as $employee)
                                                 <option value="{{ $employee->id }}">{{ $employee->fname }} {{ $employee->mname }} {{ $employee->sname }}</option>
                                             @endforeach
-                                        @else
-                                            <option disabled>No employees yet</option>
                                         @endif
                                     </x-adminlte-select2>
                                 </div>
@@ -146,8 +147,16 @@
                     <button type="submit" class="btn btn-primary">Proceed</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
-            </form>
-            </div>
+                </form>
+            @else
+                <div class="modal-body">
+                    You must add employees to this client to add a payroll
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            @endif
         </div>
     </div>
+</div>
 

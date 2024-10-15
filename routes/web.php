@@ -16,31 +16,57 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\PayrollController;
 use App\Livewire\Employees\UpdateEmployee;
+use App\Http\Controllers\BillingController;
+use App\Http\Controllers\Common\BusinessUtil;
+use App\Http\Controllers\ProductController;
 
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['auth']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['auth']);
 
-Route::get('/employees', [EmployeeController::class, 'index'])->name('employees')->middleware(['auth']);
-Route::get('/add-employee/{client}', [EmployeeController::class, 'create'])->middleware(['auth'])->name('add-employee');
-Route::get('/view-employee/{employee}', [EmployeeController::class, 'show'])->name('view-employee')->middleware(['auth']);
-Route::post('/edit-employee/{id}', [EmployeeController::class, 'edit'])->name('edit-employee')->middleware(['auth']);
-Route::get('/update-employee/{id}', UpdateEmployee::class)->name('update-employee')->middleware(['auth']);
+Route::middleware(['auth'])->group(function () {
+    Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
+    Route::get('/add-employee/{client}', [EmployeeController::class, 'create'])->name('add-employee');
+    Route::get('/view-employee/{employee}', [EmployeeController::class, 'show'])->name('view-employee');
+    Route::put('/edit-employee/{employee}', [EmployeeController::class, 'edit'])->name('edit-employee');
+    Route::put('/update-employee/{employee}', [EmployeeController::class, 'update'])->name('update-employee');
+    Route::delete('/delete-employee/{employee}', [EmployeeController::class, 'destroy'])->name('delete-employee');
+    Route::get('/export-employees/{client}/{type}', [EmployeeController::class, 'export'])->name('export-employees');
+});
 
-Route::get('/clients', [ClientController::class, 'index'])->middleware(['auth'])->name('clients');
-Route::get('/addclient', AddClient::class)->middleware(['auth'])->name('addclient');
-Route::get('/client/{client}', [ClientController::class, 'show'])->name('view-client')->middleware(['auth']);
-Route::get('/update-client/{id}', UpdateClient::class)->name('update-employee')->middleware(['auth']);
 
-Route::get('/add-payroll/{client}', [PayrollController::class, 'create'])->name('add-payroll')->middleware(['auth']);
-Route::post('/save-payroll', [PayrollController::class, 'store'])->name('save-payroll')->middleware(['auth']);
-Route::get('/view-payroll/{payroll}', [PayrollController::class, 'show'])->name('show-payroll')->middleware(['auth']);
-Route::get('/edit-payroll/{payroll}', [PayrollController::class, 'edit'])->name('edit-payroll')->middleware(['auth']);
-Route::put('/update-payroll/{payroll}', [PayrollController::class, 'update'])->name('update-payroll')->middleware(['auth']);
-Route::delete('/delete-payroll/{payroll}', [PayrollController::class, 'destroy'])->name('delete-payroll')->middleware(['auth']);
-Route::get('/export-payroll/{payroll}', [PayrollController::class, 'export'])->name('export-payroll')->middleware(['auth']);
-Route::get('/view-employee-payroll/{employee}/{payroll}', [PayrollController::class, 'viewEmployeePayroll'])->name('viewEmployeePayroll')->middleware(['auth']);
+Route::middleware(['auth'])->group(function () {
+    Route::get('/clients', [ClientController::class, 'index'])->name('clients');
+    Route::get('/addclient', AddClient::class)->name('addclient');
+    Route::get('/client/{client}', [ClientController::class, 'show'])->name('view-client');
+    Route::get('/update-client/{id}', UpdateClient::class)->name('update-client');
+    Route::get('/export-clients/{type}', [ClientController::class, 'export'])->name('export-clients');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/products', [ProductController::class, 'index'])->name('products');
+    Route::get('/addproduct', [ProductController::class, 'create'])->name('addproduct');
+    Route::get('/product/{product}', [ProductController::class, 'show'])->name('view-product');
+    Route::get('/update-product/{id}', [ProductController::class, 'update'])->name('update-product');
+    Route::get('/export-products/{type}', [ProductController::class, 'export'])->name('export-products');
+});
+
+
+Route::get('/all-sales', [BillingController::class, 'index'])->middleware(['auth'])->name('billing');
+Route::get('/add-sale', [BillingController::class, 'create'])->middleware(['auth'])->name('add-sale');
+Route::get('/store-sale', [BillingController::class, 'store'])->middleware(['auth'])->name('store-sale');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/add-payroll/{client}', [PayrollController::class, 'create'])->name('add-payroll');
+    Route::post('/save-payroll', [PayrollController::class, 'store'])->name('save-payroll');
+    Route::get('/view-payroll/{payroll}', [PayrollController::class, 'show'])->name('show-payroll');
+    Route::get('/edit-payroll/{payroll}', [PayrollController::class, 'edit'])->name('edit-payroll');
+    Route::put('/update-payroll/{payroll}', [PayrollController::class, 'update'])->name('update-payroll');
+    Route::delete('/delete-payroll/{payroll}', [PayrollController::class, 'destroy'])->name('delete-payroll');
+    Route::get('/export-payroll/{payroll}', [PayrollController::class, 'export'])->name('export-payroll');
+    Route::get('/view-employee-payroll/{employee}/{payroll}', [PayrollController::class, 'viewEmployeePayroll'])->name('viewEmployeePayroll');
+});
 
 Route::get('/leaves', Leaves::class)->middleware(['auth']);
 
@@ -48,6 +74,8 @@ Route::get('/attendances', Attendances::class)->middleware(['auth']);
 
 Route::get('/tax-rates', TaxRateList::class)->middleware(['auth']);
 Route::get('/add-tax-rate', AddTaxRate::class)->middleware(['auth']);
+Route::put('/update-paye-brackets', [BusinessUtil::class, 'updatePayeBrackets'])->name('update-paye-brackets');
+Route::get('/paye-brackets', [BusinessUtil::class, 'getPayeBrackets'])->middleware(['auth']);
 
 Route::get('/notifications', Notifications::class)->middleware(['auth']);
 

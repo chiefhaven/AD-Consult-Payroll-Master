@@ -109,7 +109,7 @@ return [
     */
 
     'preloader' => [
-        'enabled' => true,
+        'enabled' => false,
         'mode' => 'cwrapper',
         'img' => [
             'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
@@ -314,30 +314,6 @@ return [
                     'url' => 'clients',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
-                // [
-                //     'text' => 'level_one',
-                //     'url' => '#',
-                //     'submenu' => [
-                //         [
-                //             'text' => 'level_two',
-                //             'url' => '#',
-                //         ],
-                //         [
-                //             'text' => 'level_two',
-                //             'url' => '#',
-                //             'submenu' => [
-                //                 [
-                //                     'text' => 'level_three',
-                //                     'url' => '#',
-                //                 ],
-                //                 [
-                //                     'text' => 'level_three',
-                //                     'url' => '#',
-                //                 ],
-                //             ],
-                //         ],
-                //     ],
-                // ],
                 [
                     'text' => 'Add client',
                     'url' => 'addclient',
@@ -349,6 +325,37 @@ return [
             'text' => 'Payrolls',
             'url' => 'payroll',
             'icon' => 'fa fa-money-check',
+        ],
+        [
+            'text' => 'Billing',
+            'icon' => 'fa fa-fw fa-file-invoice',
+            'submenu' => [
+                [
+                    'text' => 'Products',
+                    'url' => 'products',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+                [
+                    'text' => 'Add product',
+                    'url' => 'add-products',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+                [
+                    'text' => 'All sales',
+                    'url' => 'all-sales',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+                [
+                    'text' => 'Add sale',
+                    'url' => 'add-sale',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+                [
+                    'text' => 'Add quotation',
+                    'url' => 'add-quotation',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+            ],
         ],
         [
             'text' => 'Leaves',
@@ -546,10 +553,23 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11', // Updated to version 11
                 ],
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css', // Add CSS for the latest version
+                ],
+
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css', // Add fontawesome css
+                ],
+
             ],
         ],
+
         'Pace' => [
             'active' => false,
             'files' => [

@@ -271,7 +271,7 @@
     const state = ref(
         {
             salary: '',
-            paye: {{ $payroll['payee']}},
+            paye: 0,
             deductions: '',
         }
     )

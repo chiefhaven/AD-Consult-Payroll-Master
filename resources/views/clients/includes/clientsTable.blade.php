@@ -4,6 +4,7 @@
         <thead>
             <tr>
                 <th scope="col" style="min-width: 150px;">Name</th>
+                <th scope="col">Employees</th>
                 <th scope="col" style="min-width: 150px;">Phone</th>
                 <th scope="col" style="min-width: 150px;">Email Address</th>
                 <th scope="col" style="min-width: 150px;">Contract Started</th>
@@ -15,11 +16,14 @@
                 <th scope="col" class="text-center" style="width: 100px;">Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="hovabletbody">
             @foreach ($clients as $client)
-                <tr>
+                <tr onclick="location.href='{{ url('/client', $client) }}'" style="cursor: pointer;">
                     <td class="font-w600">
                         {{$client->client_name}}
+                    </td>
+                    <td class="font-w600">
+                        {{ $client->employees->count() }}
                     </td>
                     <td class="font-w600">
                         {{$client->phone}} <br>

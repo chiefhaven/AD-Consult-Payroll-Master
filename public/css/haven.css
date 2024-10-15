@@ -140,6 +140,10 @@
     background-color: #ffffff !important;
 }
 
+.hovabletbody tr:hover {
+    background-color: #f4faff !important; /* Change to your desired highlight color */
+}
+
 @media (min-width: 576px) {
     .modal-lg .modal-dialog {
         max-width: none !important;

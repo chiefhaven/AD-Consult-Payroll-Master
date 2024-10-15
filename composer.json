@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^3.0",
         "havenplus/malawi-disctricts": "^1.0",
         "illuminate/contracts": "*",
         "jantinnerezo/livewire-alert": "^3.0",
@@ -17,7 +18,7 @@
         "maatwebsite/excel": "^3.1",
         "nesbot/carbon": "^3.8",
         "rappasoft/laravel-livewire-tables": "^3.2",
-        "realrashid/sweet-alert": "^7.1",
+        "realrashid/sweet-alert": "^7.2",
         "woodsandwalker/laravel-countries": "^1.0"
     },
     "require-dev": {
