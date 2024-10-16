@@ -11,7 +11,7 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card border border-primary mb-3 p-4">
+                    <div class="border mb-3 p-4">
                         <div class="box-body">
                             <h3>Good Morning</h3>
                             {!! \Illuminate\Foundation\Inspiring::quote() !!}
@@ -49,7 +49,33 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
-                    <p><strong>Upcoming events</strong></p>
+                    <p><strong>Paye Brackets</strong></p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Limit</th>
+                                <th>Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($payeBrackets as $index => $payeBracket)
+                                <tr>
+                                    <td>
+                                        @if ($index === 0)
+                                            The first
+                                        @elseif ($index === count($payeBrackets) - 1)
+                                            In excess of
+                                        @else
+                                            The next
+                                        @endif
+                                        <b>K{{ number_format($payeBracket->limit, 2) }}</b>
+                                    </td>
+                                    <td>{{ $payeBracket->rate * 100 }}%
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
 
                 </div>
             </div>
@@ -63,23 +89,5 @@
 @stop
 
 @section('js')
-    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
 
-    <script type="text/javascript">
-        function showTime() {
-          var date = new Date(),
-              utc = new Date(Date.UTC(
-                date.getFullYear(),
-                date.getMonth(),
-                date.getDate(),
-                date.getUTCHours(),
-                date.getMinutes(),
-                date.getSeconds()
-              ));
-
-          document.getElementById('time').innerHTML = utc.toLocaleString();
-        }
-
-        setInterval(showTime, 1000);
-      </script>
 @stop

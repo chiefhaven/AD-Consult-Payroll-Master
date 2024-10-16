@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Industry;
 use App\Models\PayeBracket;
-use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class BusinessUtil extends Controller
 {
@@ -97,25 +97,37 @@ class BusinessUtil extends Controller
         // Validate the incoming request data
         $request->validate([
             'brackets.*.limit' => 'required|numeric',
-            'brackets.*.rate' => 'required|numeric|min:0|max:1',
+            'brackets.*.rate' => 'required|numeric|min:0|max:1', // Adjust range if necessary
         ]);
 
         // Get the brackets from the request
         $brackets = $request->input('brackets');
 
-        // Clear existing brackets
-        PayeBracket::truncate();
+        // Use a transaction to ensure atomicity
+        DB::beginTransaction();
+        try {
+            // Clear existing brackets
+            PayeBracket::truncate();
 
-        // Store the updated brackets in the database
-        foreach ($brackets as $bracket) {
-            PayeBracket::create([
-                'limit' => $bracket['limit'],
-                'rate' => $bracket['rate'],
-            ]);
+            // Bulk insert the new brackets using Eloquent's insert method
+            PayeBracket::insert($brackets);
+
+            // Commit the transaction
+            DB::commit();
+
+            // Return a success message or redirect
+            return response()->json([], 200);
+
+        } catch (\Exception $e) {
+            // Roll back the transaction in case of an error
+            DB::rollBack();
+
+            // Log the error for debugging purposes
+            Log::error('Failed to update PAYE brackets: ' . $e->getMessage());
+
+            // Return an error message to the user
+            return response()->json([$e->getMessage()], 200);
         }
-
-        // Optionally, you can return a success message or redirect
-        return redirect()->back()->with('success', 'PAYE brackets updated successfully!');
     }
 
     // Method to get PAYE brackets

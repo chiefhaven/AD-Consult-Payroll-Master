@@ -140,8 +140,6 @@
 @stop
 @push('js')
 <script>
-    const { createApp, ref, computed, onMounted } = Vue;
-
     const addSale = createApp({
         setup() {
             // Reactive references

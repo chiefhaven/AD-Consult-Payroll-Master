@@ -75,7 +75,7 @@ Route::get('/attendances', Attendances::class)->middleware(['auth']);
 
 Route::get('/tax-rates', TaxRateList::class)->middleware(['auth']);
 Route::get('/add-tax-rate', AddTaxRate::class)->middleware(['auth']);
-Route::put('/update-paye-brackets', [BusinessUtil::class, 'updatePayeBrackets'])->name('update-paye-brackets');
+Route::put('/update-paye-brackets', [BusinessUtil::class, 'updatePayeBrackets'])->name('update-paye-brackets')->middleware('auth');
 Route::get('/paye-brackets', [BusinessUtil::class, 'getPayeBrackets'])->middleware(['auth']);
 
 Route::get('/notifications', Notifications::class)->middleware(['auth']);

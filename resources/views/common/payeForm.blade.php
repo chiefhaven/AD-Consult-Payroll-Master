@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="payBlacketLabel">Edit PAYE Brackets</h5>
+                <h5 class="modal-title" id="payBlacketLabel">PAYE Brackets</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -13,23 +13,20 @@
                     <x-adminlte-card title="Edit PAYE Tax Brackets" theme="light" icon="fas fa-edit" collapsible>
                         <div v-for="(bracket, index) in brackets" :key="index">
                             <!-- Limit Input Field -->
-                            <x-adminlte-input
-                                name="'limit'"
-                                label="Income Limit"
+                            <label :for="'limit-' + index">
+                                @{{ getLabel(index) }}
+                            </label>
+                            <input
+                                id="'limit-' + index"
+                                name="'limit-' + index"
                                 v-model="bracket.limit"
-                                igroup-size="sm"
+                                class="form-control"
                                 required
-                            >
-                                <x-slot name="appendSlot">
-                                    <div class="input-group-text bg-light">
-                                        <i class="fas fa-lock"></i>
-                                    </div>
-                                </x-slot>
-                            </x-adminlte-input>
+                            />
 
                             <!-- Tax Rate Input Field -->
                             <x-adminlte-input
-                                name="'rate"
+                                name="'rate-' + index"
                                 label="Tax Rate (%)"
                                 v-model="bracket.rate"
                                 igroup-size="sm"
@@ -57,55 +54,111 @@
     </div>
 </div>
 @push('js')
-<script>
-    const payeBracket = createApp({
-        setup() {
-            const brackets = ref([]);
+    <script>
+        const payeBracket = createApp({
+            setup() {
+                const brackets = ref([]);
 
-            const fetchBrackets = async () => {
-                try {
-                    const response = await axios.get('/paye-brackets');
-                    console.log('API Response:', response); // Log the full API response
-                    brackets.value = response.data; // Assign the data to brackets
-                    console.log('Brackets:', brackets.value); // Check if brackets is populated
-                } catch (error) {
-                    console.error('Error fetching PAYE brackets:', error);
+                const fetchBrackets = async () => {
+                    try {
+                        const response = await axios.get('/paye-brackets');
+                        console.log('API Response:', response); // Log the full API response
+                        brackets.value = response.data; // Assign the data to brackets
+                        console.log('Brackets:', brackets.value); // Check if brackets is populated
+                    } catch (error) {
+                        console.error('Error fetching PAYE brackets:', error);
+                    }
+                };
+
+                // Update PAYE brackets
+                const updateBrackets = async () => {
+                    try {
+                        // Validate brackets before making the request
+                        if (!Array.isArray(brackets.value) || brackets.value.length === 0) {
+                            alert('No brackets available to update.');
+                            return;
+                        }
+
+                        // Show a loading indicator (assuming you're using a reactive state for this)
+                        //loadingIndicator.value = true; // Update this according to your state management
+
+                        // Make the PUT request to update PAYE brackets
+                        const response = await axios.put('/update-paye-brackets', { brackets: brackets.value });
+
+                        if (response.status === 200 ) { // Check for any successful status code
+                            notification('PAYE brackets updated successfully', 'success');
+                            closeModal(); // Close modal after update
+                            // Optionally refresh or update the PAYE brackets list to reflect changes in the UI
+                        } else {
+                            notification('Unexpected response from the server', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error updating PAYE brackets:', error);
+
+                        // Check for validation errors from the server response
+                        if (error.response && error.response.data && error.response.data.errors) {
+                            notification(error.response.data.errors.message || 'Failed to update PAYE brackets.', 'error');
+                        } else {
+                            notification('An unexpected error occurred while updating PAYE brackets.', 'error');
+                        }
+                    } finally {
+                        // Hide the loading indicator
+                        //loadingIndicator.value = false; // Reset loading indicator state
+                    }
+                };
+
+                function notification($text, $icon){
+                    Swal.fire({
+                        toast: true,
+                        position: "top-end",
+                        html: $text,
+                        showConfirmButton: false,
+                        timer: 5500,
+                        timerProgressBar: true,
+                        icon: $icon,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                          }
+                      });
                 }
-            };
 
-            // Update PAYE brackets
-            const updateBrackets = async () => {
-                try {
-                    await axios.put('/update-paye-brackets', { brackets: brackets.value });
-                    alert('PAYE brackets updated successfully!');
-                    closeModal(); // Optional: Close modal after update
-                } catch (error) {
-                    console.error('Error updating PAYE brackets:', error);
-                    alert('Failed to update PAYE brackets.');
-                }
-            };
+                const getLabel = (index) => {
+                    if (index === 0) {
+                      return 'The first';
+                    }
+                    else if (index === brackets.value.length - 1) {
+                      return 'In excess of';
+                    }
+                    else {
+                      return 'The next';
+                    }
+                  };
 
-            // Open modal and fetch brackets
-            const openModal = () => {
-                fetchBrackets(); // Fetch brackets when opening the modal
-                $('#payBlacket_modal').modal('show'); // Show the Bootstrap modal
-            };
+                // Open modal and fetch brackets
+                const openModal = () => {
+                    fetchBrackets(); // Fetch brackets when opening the modal
+                    $('#payBlacket_modal').modal('show'); // Show the Bootstrap modal
+                };
 
-            // Close modal
-            const closeModal = () => {
-                $('#payBlacket_modal').modal('hide'); // Hide the Bootstrap modal
-            };
+                // Close modal
+                const closeModal = () => {
+                    $('#payBlacket_modal').modal('hide'); // Hide the Bootstrap modal
+                };
 
-            return {
-                brackets,
-                updateBrackets,
-                openModal,
-                closeModal
-            };
-        },
-    });
+                onMounted(fetchBrackets);
 
-    payeBracket.mount('#payBlacket_modal');
-</script>
+                return {
+                    brackets,
+                    updateBrackets,
+                    openModal,
+                    closeModal,
+                    getLabel
+                };
+            },
+        });
+
+        payeBracket.mount('#payBlacket_modal');
+    </script>
 @endpush
 
