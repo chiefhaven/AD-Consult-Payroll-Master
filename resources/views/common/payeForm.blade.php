@@ -14,7 +14,7 @@
                         <div v-for="(bracket, index) in brackets" :key="index">
                             <!-- Limit Input Field -->
                             <x-adminlte-input
-                                name="'limit_' + index"
+                                name="'limit'"
                                 label="Income Limit"
                                 v-model="bracket.limit"
                                 igroup-size="sm"
@@ -29,7 +29,7 @@
 
                             <!-- Tax Rate Input Field -->
                             <x-adminlte-input
-                                name="'rate_' + index"
+                                name="'rate"
                                 label="Tax Rate (%)"
                                 v-model="bracket.rate"
                                 igroup-size="sm"
@@ -62,11 +62,12 @@
         setup() {
             const brackets = ref([]);
 
-            // Fetch PAYE brackets from the API
             const fetchBrackets = async () => {
                 try {
                     const response = await axios.get('/paye-brackets');
-                    brackets.value = response.data;
+                    console.log('API Response:', response); // Log the full API response
+                    brackets.value = response.data; // Assign the data to brackets
+                    console.log('Brackets:', brackets.value); // Check if brackets is populated
                 } catch (error) {
                     console.error('Error fetching PAYE brackets:', error);
                 }
@@ -94,9 +95,6 @@
             const closeModal = () => {
                 $('#payBlacket_modal').modal('hide'); // Hide the Bootstrap modal
             };
-
-            // Fetch data when the component is mounted (optional for initial load)
-            onMounted(fetchBrackets); // Optional: call this if you want to fetch data immediately
 
             return {
                 brackets,
