@@ -66,37 +66,46 @@
                         </x-adminlte-select>
                     </div>
 
-                    <table class="table mt-3">
-                        <thead>
-                            <tr>
-                                <th style="max-width: 100px;">Product</th>
-                                <th style="max-width: 100px;">Price</th>
-                                <th style="max-width: 100px;">Quantity</th>
-                                <th style="max-width: 100px;">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody id="product-details">
-                            <tr v-for="(detail, index) in productDetails" :key="index">
-                                <td>
-                                    <strong>@{{ detail.name }}</strong>
-                                    <p>@{{ detail.description }}</p>
-                                </td>
-                                <td>K@{{ detail.price.toFixed(2) }}</td>
-                                <td>
-                                    <x-adminlte-input
-                                        type="number"
-                                        name="quantities"
-                                        v-model="quantities[index]"
-                                        min="1"
-                                        @input="updateProductDetails(index)"
-                                    />
-                                </td>
-                                <td>K@{{ detail.total.toFixed(2) }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table mt-3 table-bordered table-striped">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="max-width: 10em; width: 10em;">Product</th>
+                                    <th style="max-width: 50px; width: 50px;">Price</th>
+                                    <th style="max-width: 60px; width: 60px;">Quantity</th>
+                                    <th style="max-width: 100px; width: 100px;">Total</th>
+                                    <th style="max-width: 100px; width: 15px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="product-details">
+                                <tr v-for="(detail, index) in productDetails" :key="index">
+                                    <td>
+                                        <strong>@{{ detail.name }}</strong>
+                                        <p>@{{ detail.description }}</p>
+                                    </td>
+                                    <td>@{{ formatCurrency(detail.price) }}</td>
+                                    <td>
+                                        <x-adminlte-input
+                                            type="number"
+                                            name="quantities[]"
+                                            v-model="quantities[index]"
+                                            min="1"
+                                            class="form-control"
+                                        />
+                                    </td>
+                                    <td>@{{ formatCurrency(detail.price * quantities[index] || 0) }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm" @click="removeProductFromGroup(index)">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                     <div class="text-right">
-                        <strong>Total Sales: K@{{ formatCurrency(totalSales) }}</strong>
+                        <strong>Total Sales: @{{ formatCurrency(totalSales) }}</strong>
                     </div>
                 </div>
             </div>
@@ -171,7 +180,7 @@
 
             // Function to handle adding a new product row
             const addProduct = () => {
-                selectedProductIds.value.push(''); // Add an empty entry for product selection
+                selectedProductIds.value.push('');
                 quantities.value.push(1); // Add a default quantity of 1
             };
 
@@ -184,11 +193,11 @@
                 }
             };
 
-            // Function to simulate fetching products from an API
+            // Function to fetch products from an API
             const fetchProducts = async () => {
                 try {
-                    const response = await axios.get('/products'); // Adjust the API endpoint
-                    products.value = response.data; // Populate the products array
+                    const response = await axios.get('/products');
+                    products.value = response.data;
                 } catch (error) {
                     console.error('Error fetching products:', error);
                 }
@@ -197,6 +206,38 @@
             const formatCurrency = (value) => {
                 return `K ${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
             };
+
+            const addStudentToGroup = () => {
+                if (!products.value) {
+                    notification('Student name must be filled', 'error')
+                    hasError.value = true
+                    return hasError
+                }
+
+                if (!state.value.expenseType) {
+                    notification('Expense Type must be filled', 'error')
+                }
+                else{
+                    notification('Something happened', 'error')
+                    hasError.value = true
+                    return hasError
+                }
+            }
+
+            const searchProduct = () => {
+                var path = "{{ route('search-product') }}";
+                $('#product').typeahead({
+                    source:  function (query, process) {
+                    return $.get(path, { query: query }, function (data) {
+                            return process(data);
+                        });
+                    }
+                });
+            }
+
+            const removeProductFromGroup = (index) => {
+                products.value.splice(index, 1)
+            }
 
             // Fetch products when the component is mounted
             onMounted(fetchProducts);
@@ -209,7 +250,8 @@
                 totalSales,
                 updateProductDetails,
                 products,
-                formatCurrency
+                formatCurrency,
+                removeProductFromGroup
             };
         }
     });

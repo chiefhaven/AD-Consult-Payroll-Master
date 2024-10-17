@@ -62,7 +62,7 @@ class PayrollController extends Controller
 
         // Get the IDs of employees that have payroll records
         $payrollEmployeeIds = $payrolls->flatMap(function ($payroll) {
-        return $payroll->employees->pluck('id'); // Adjust 'id' if your employee ID field is named differently
+            return $payroll->employees->pluck('id'); // Adjust 'id' if your employee ID field is named differently
         })->unique()->toArray();
 
         // Determine which employees do not have payroll records for the specified date
@@ -81,12 +81,16 @@ class PayrollController extends Controller
             $payrolls = [];
             foreach ($employees as $employee) {
                 // Get employee info and populate the payrolls array
+                $tax = new BusinessUtil();
+                $paye = $employee->paye == 1 ? $tax->calculatePaye($employee->salary) : 0;
+
                 $payrolls[$employee->id] = [
                     'employee' => $employee,
                     'salary' => $employee->salary,
+                    'net_salary' => $employee->salary - $paye,
                     'pay_period' => $employee->pay_period,
                     'bonus' => $employee->bonus,
-                    'payee' => $employee->paye,
+                    'paye' =>  $paye,
                 ];
             }
 

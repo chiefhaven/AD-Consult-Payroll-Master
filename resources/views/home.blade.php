@@ -49,7 +49,12 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
-                    <p><strong>Paye Brackets</strong></p>
+                    <div class="d-flex justify-content-between align-items-center mb-3"> <!-- Flexbox for alignment -->
+                        <strong>Paye Brackets</strong>
+                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#payBlacket_modal">
+                            <i class="fas fa-pencil-alt"></i> Edit
+                        </button>
+                    </div>
                     <table class="table">
                         <thead>
                             <tr>
@@ -70,13 +75,11 @@
                                         @endif
                                         <b>K{{ number_format($payeBracket->limit, 2) }}</b>
                                     </td>
-                                    <td>{{ $payeBracket->rate * 100 }}%
+                                    <td>{{ number_format($payeBracket->rate * 100, 2) }}%</td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-
-
                 </div>
             </div>
         </div>

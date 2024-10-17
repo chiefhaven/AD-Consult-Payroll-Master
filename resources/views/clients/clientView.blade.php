@@ -217,7 +217,6 @@
     });
 </script>
 <script>
-    const { createApp, ref, computed, onMounted } = Vue;
 
     const app = createApp({
       setup() {

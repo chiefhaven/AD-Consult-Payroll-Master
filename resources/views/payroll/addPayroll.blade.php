@@ -2,7 +2,7 @@
 
 {{-- Extend and customize the browser title --}}
 
-@section('title', 'View Client')
+@section('title', 'Add Payroll')
 
 {{-- Extend and customize the page content header --}}
 
@@ -64,7 +64,7 @@
                             Employee
                         </th>
                         <th>
-                            Salary
+                            Gross
                         </th>
                         <th>
                             Earnings
@@ -76,7 +76,7 @@
                             Paye
                         </th>
                         <th>
-                            Net amount
+                            Net Salary
                         </th>
                     </thead>
                     <tbody>
@@ -84,7 +84,7 @@
                             <tr>
                                 <td>
                                     <input name="payroll[{{ $key}}][employee]" value="{{ $payroll['employee']->id }}" hidden>
-                                    {{ $payroll['employee']->fname }} {{ $payroll['employee']->mname }} {{ $payroll['employee']->sname }} {{ $payroll['employee']->sname }}
+                                    {{ $payroll['employee']->fname }} {{ $payroll['employee']->mname }} {{ $payroll['employee']->sname }}
                                 </td>
                                 <td>
                                     <x-adminlte-input
@@ -220,12 +220,12 @@
                                 </td>
 
                                 <td>
-                                    <input name="payroll[{{ $key}}][payee]" value="{{ $payroll['payee'] }}" hidden>
-                                    K{{ $payroll['payee'] }}
+                                    <input name="payroll[{{ $key}}][paye]" value="{{ $payroll['paye'] }}" hidden>
+                                    K{{ $payroll['paye'] }}
                                 </td>
                                 <td>
-                                    <input name="payroll[{{ $key}}][net_salary]" value="{{ number_format($payroll['salary'] + $payroll['bonus'] - $payroll['payee'] - $payroll['payee'], 2) }}" hidden>
-                                    K{{ number_format($payroll['salary'] + $payroll['bonus'] - $payroll['payee'] - $payroll['payee'], 2) }}
+                                    <input name="payroll[{{ $key}}][net_salary]" value="{{ $payroll['net_salary'] }}" hidden>
+                                    K{{ number_format($payroll['net_salary'], 2) }}
                                 </td>
                             </tr>
                         @endforeach
@@ -259,9 +259,6 @@
 
 </script>
 <script setup>
-    const { createApp, ref, reactive } = Vue
-
-
     const app = createApp({
       setup() {
 

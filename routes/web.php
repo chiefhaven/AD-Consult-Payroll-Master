@@ -57,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/all-sales', [BillingController::class, 'index'])->middleware(['auth'])->name('billing');
 Route::get('/add-sale', [BillingController::class, 'create'])->middleware(['auth'])->name('add-sale');
 Route::get('/store-sale', [BillingController::class, 'store'])->middleware(['auth'])->name('store-sale');
+Route::get('/search-product', [BusinessUtil::class, 'searchProduct'])->middleware(['auth'])->name('search-product');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/add-payroll/{client}', [PayrollController::class, 'create'])->name('add-payroll');

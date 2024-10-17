@@ -22,11 +22,6 @@
         {{-- Configured right links --}}
         @each('adminlte::partials.navbar.menu-item', $adminlte->menu('navbar-right'), 'item')
 
-
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#payBlacket_modal">
-            PAYE Brackets
-        </button>
-
         {{-- User menu link --}}
         @if(Auth::user())
             @if(config('adminlte.usermenu_enabled'))

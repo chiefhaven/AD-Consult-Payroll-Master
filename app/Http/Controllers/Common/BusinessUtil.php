@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Industry;
 use App\Models\PayeBracket;
+use App\Models\Product;
 use Illuminate\Support\Facades\Log;
 
 class BusinessUtil extends Controller
@@ -156,5 +157,16 @@ class BusinessUtil extends Controller
         }
 
         return $payroll_date;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function searchProduct(Request $request)
+    {
+        $query = $request->input('query');
+        $products = Product::where('name', 'LIKE', "%{$query}%")->orWhere('description', 'LIKE', "%{$query}%")->pluck('name');
+
+        return response()->json($products);
     }
 }
