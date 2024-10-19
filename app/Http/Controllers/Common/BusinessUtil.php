@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Industry;
 use App\Models\PayeBracket;
 use App\Models\Product;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 class BusinessUtil extends Controller
@@ -62,43 +63,50 @@ class BusinessUtil extends Controller
     }
 
     function calculatePaye($salary) {
-        // Get the current tax brackets from the database
+        // Get tax brackets from the database, ordered by limit
         $brackets = PayeBracket::orderBy('limit')->get();
 
         // Initialize the total tax
         $tax = 0;
 
-        // Calculate the taxable income for each bracket
+        // Loop through the tax brackets to calculate the tax
         foreach ($brackets as $index => $bracket) {
-            $limit = $bracket->limit;
-            $rate = $bracket->rate;
+            $limit = (float) $bracket->limit; // Convert limit to float
+            $rate = (float) $bracket->rate;   // Convert rate to float
 
             if ($index === 0) {
-                // First bracket - no tax
+                // Handle the first bracket (0% tax on income up to the first limit)
                 if ($salary <= $limit) {
-                    break;
+                    break; // Stop the loop if salary is less than or equal to the first limit
                 }
             } else {
-                // Calculate taxable income for each bracket
-                $previousLimit = $brackets[$index - 1]->limit;
+                // For subsequent brackets, calculate based on the previous limit
+                $previousLimit = (float) $brackets[$index - 1]->limit; // Get the previous limit
+
                 if ($salary > $previousLimit) {
+                    // Calculate the taxable income within the current bracket
                     $taxableIncome = min($salary - $previousLimit, $limit - $previousLimit);
+
+                    // Calculate the tax for the current bracket
                     $tax += $taxableIncome * $rate;
                 } else {
-                    break;
+                    break; // Stop the loop if salary does not exceed the previous limit
                 }
             }
         }
 
-        return $tax;
+        // Round the total tax to 2 decimal places before returning
+        return round($tax, 2);
     }
+
+
 
     public function updatePayeBrackets(Request $request)
     {
         // Validate the incoming request data
         $request->validate([
             'brackets.*.limit' => 'required|numeric',
-            'brackets.*.rate' => 'required|numeric|min:0|max:1', // Adjust range if necessary
+            'brackets.*.rate' => 'required|numeric|min:0|max:1', // Ensure rate is between 0 and 1
         ]);
 
         // Get the brackets from the request
@@ -110,8 +118,19 @@ class BusinessUtil extends Controller
             // Clear existing brackets
             PayeBracket::truncate();
 
+            // Prepare brackets for insertion, including UUIDs
+            $dataToInsert = array_map(function ($bracket) {
+                return [
+                    'id' => (string) \Illuminate\Support\Str::uuid(), // Generate UUID
+                    'limit' => $bracket['limit'],
+                    'rate' => $bracket['rate'],
+                    'created_at' => now(), // Set current timestamp
+                    'updated_at' => now(), // Set current timestamp
+                ];
+            }, $brackets);
+
             // Bulk insert the new brackets using Eloquent's insert method
-            PayeBracket::insert($brackets);
+            PayeBracket::insert($dataToInsert);
 
             // Commit the transaction
             DB::commit();
@@ -127,9 +146,10 @@ class BusinessUtil extends Controller
             Log::error('Failed to update PAYE brackets: ' . $e->getMessage());
 
             // Return an error message to the user
-            return response()->json([$e->getMessage()], 200);
+            return response()->json(['error' => 'Failed to update PAYE brackets.']);
         }
     }
+
 
     // Method to get PAYE brackets
     public function getPayeBrackets(Request $request)
@@ -160,13 +180,62 @@ class BusinessUtil extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Search products for type ahead.
      */
     public function searchProduct(Request $request)
     {
         $query = $request->input('query');
-        $products = Product::where('name', 'LIKE', "%{$query}%")->orWhere('description', 'LIKE', "%{$query}%")->pluck('name');
+        $products = Product::where('name', 'LIKE', "%{$query}%")->get();
 
         return response()->json($products);
     }
+
+    /**
+     * Search client for type ahead.
+     */
+    public function searchClient(Request $request)
+    {
+        $query = $request->get('query');
+        $clients = Client::where('client_name', 'LIKE', "%{$query}%")->get();
+        return response()->json($clients);
+    }
+
+    public function fetchClient(Request $request)
+    {
+        // Retrieve the client ID from the request
+        $clientId = $request->post('clientId');
+
+        // Fetch the client data from the database
+        $clientData = Client::with('user')->find($clientId);
+
+        // Check if client data is found
+        if ($clientData) {
+            // Return a success response with client data
+            return response()->json([
+                'success' => true,
+                'data' => $clientData
+            ], 200);
+        } else {
+            // Return a not found response
+            return response()->json([
+                'success' => false,
+                'message' => 'Client not found.'
+            ], 404);
+        }
+    }
+
+    public function showProduct($id)
+    {
+        // Find the product by ID
+        $product = Product::find('24ee2cf3-8acc-11ef-9a69-8038fbc90d23');
+
+        // Check if the product exists
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404); // Return a 404 response if not found
+        }
+
+        // Return the product data as JSON
+        return response()->json($product);
+    }
+
 }

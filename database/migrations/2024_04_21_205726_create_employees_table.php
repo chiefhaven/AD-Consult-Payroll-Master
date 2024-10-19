@@ -49,9 +49,8 @@ return new class extends Migration
             $table->date('birthdate')->nullable();
             $table->date('contract_start_date')->nullable();
             $table->date('contract_end_date')->nullable();
-            $table->decimal('salary')->nullable();
+            $table->decimal('salary', 20, 2)->nullable();
             $table->decimal('bonus')->nullable();
-            $table->decimal('basic_pay')->default(00.00);
             $table->enum('pay_period', ['Hourly', 'Daily', 'Weekly', 'Bi Weekly', 'Monthly']);
             $table->enum('status', ['Pending', 'Active', 'Contract terminated', 'Contract ended', 'Suspended', 'On Probation'])->default('Pending');
             $table->char('client_id');

@@ -120,10 +120,10 @@
                                 <div class="h4"><strong>Billing</strong></div>
                             </div>
                             <div class="col-md-6 d-flex justify-content-end">
-                                    <button type="button" class="btn btn-primary pull-right mb-4">
-                                        <i class="fa fa-plus"></i>
-                                        Add Sale
-                                    </button>
+                                <a class="btn btn-primary pull-right mb-4" href="/add-sale?client={{ $client->id }}">
+                                    <i class="fa fa-plus"></i>
+                                    Add Sale
+                                </a>
                             </div>
                         </div>
                         @include('../billing/includes/clientBillingTable')
@@ -291,6 +291,51 @@
             showPayrollModal.value = true;
         };
 
+        const changeStatus = (status, payrollId) => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `You are about to change the status to ${status}. This action cannot be undone.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, change it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Make an API call to change the status
+                    axios.post('/change-payroll-status', { status, payroll: payrollId })
+                        .then(response => {
+                            notification('Payroll status updated successfully, page', 'success');
+                                    // Refresh the page
+                            location.reload(); // Reloads the current page
+                        })
+                        .catch(error => {
+                            // Handle error response
+                            console.error('Error updating payroll status:', error);
+                            notification('Failed to update payroll status.', 'error');
+                        });
+                }
+            });
+        };
+
+        const openStatusDialog = (payrollId, currentStatus) => {
+            Swal.fire({
+                title: 'Change Payroll Status',
+                text: `Current status: ${currentStatus}`,
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Paid',
+                showDenyButton: true,
+                denyButtonText: 'Ask Approval',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    changeStatus('Paid', payrollId);
+                } else if (result.isDenied) {
+                    changeStatus('Pending Approval', payrollId);
+                }
+            });
+        };
+
         // Computed properties for different totals
         const totalGross = computed(() => {
             const total = data.value?.employees?.reduce((sum, emp) => sum + parseFloat(emp.pivot.salary || 0), 0) || 0;
@@ -337,6 +382,22 @@
             console.log("Proceed button clicked");
         };
 
+        const notification = ($text, $icon) =>{
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                html: $text,
+                showConfirmButton: false,
+                timer: 5500,
+                timerProgressBar: true,
+                icon: $icon,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                  }
+              });
+        }
+
         return {
             showPayrollModal,
             data,
@@ -355,7 +416,9 @@
             closeEmployeePayModal,
             showEmployeePayModal,
             employeePayDetails,
-            formatCurrency
+            formatCurrency,
+            changeStatus,
+            openStatusDialog
         };
       },
     });

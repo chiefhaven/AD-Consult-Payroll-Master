@@ -6,6 +6,7 @@ use App\Models\Billing;
 use App\Http\Requests\StoreBillingRequest;
 use App\Http\Requests\UpdateBillingRequest;
 use App\Models\Client;
+use Illuminate\Http\Request;
 use App\Models\Product;
 
 class BillingController extends Controller
@@ -22,11 +23,20 @@ class BillingController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         $clients = Client::all();
         $products = Product::all();
-        return view("billing.add-sale", compact("clients", "products"));
+
+        $post = $request->all();
+
+        // Check if 'clientId' is defined in the request and is not null
+        $client = null; // Default to null
+        if (isset($post['client'])) {
+            $client = Client::find($post['client']); // Find the client
+        }
+
+        return view("billing.add-sale", compact('clients', 'products', 'client'));
     }
 
     /**

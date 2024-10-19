@@ -56,7 +56,7 @@
 
 @section('adminlte_js')
 <script>
-    const { createApp, ref, computed, onMounted } = Vue;
+    const { createApp, ref, computed, onMounted, watch } = Vue;
 </script>
     @stack('js')
     @yield('js')

@@ -45,11 +45,17 @@
                     K{{ number_format($payroll->employees()->sum('payroll_employee.total_paid')) }}
                 </td>
                 <td>
-                    {{ $payroll->status }}
+                    @if ($payroll->status === 'Paid' || $payroll->status === 'Cancelled')
+                        {{ $payroll->status }}
+                    @else
+                        <button class="btn btn-sm btn-warning" @click="openStatusDialog('{{ $payroll->id }}', '{{ $payroll->status }}')">
+                            {{ $payroll->status }}
+                        </button>
+                    @endif
                 </td>
                 <td class="text-center">
                     <div class="dropdown d-inline-block">
-                        <button type="button" class="btn btn-primary" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button type="button" class="btn btn-default" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="d-sm-inline-block">Action</span>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end p-0">
@@ -57,7 +63,7 @@
                                 <!-- View Payroll Link -->
                                 <button class="dropdown-item nav-main-link" @click="fetchPayrollDetails('{{ $payroll->id }}')">
                                     <i class="nav-main-link-icon fas fa-eye"></i>
-                                    <span class="btn">View</span>
+                                    <span class="btn">Genevieve</span>
                                 </button>
 
                                 <!-- Edit Payroll -->

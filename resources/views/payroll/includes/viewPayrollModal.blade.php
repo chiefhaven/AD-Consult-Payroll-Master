@@ -127,7 +127,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-primary" @click="proceed">Edit</button>
+            <button type="button" class="btn btn-success" @click="changeStatus('Approved', data.id)">Approve</button>
             <button type="button" class="btn btn-default" @click="closeModal">Close</button>
             </div>
         </div>

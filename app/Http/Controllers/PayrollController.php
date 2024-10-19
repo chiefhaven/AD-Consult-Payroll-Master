@@ -82,7 +82,12 @@ class PayrollController extends Controller
             foreach ($employees as $employee) {
                 // Get employee info and populate the payrolls array
                 $tax = new BusinessUtil();
-                $paye = $employee->paye == 1 ? $tax->calculatePaye($employee->salary) : 0;
+                if ($employee->paye == 1) {
+                    $calculatedTax = $tax->calculatePaye($employee->salary);
+                    $paye = $calculatedTax;
+                } else {
+                    $paye = 0;
+                }
 
                 $payrolls[$employee->id] = [
                     'employee' => $employee,
@@ -333,5 +338,23 @@ class PayrollController extends Controller
         } else {
             return response()->json(['message' => 'No data found for the provided payroll and employee ID.'], 404);
         }
+    }
+
+    public function status(Request $request)
+    {
+        $post = $request->all();
+
+        // Find the payroll record by its ID
+        $payrollRecord = Payroll::findOrFail($post['payroll']);
+
+        // Update the status
+        $payrollRecord->status = $post['status']; // Adjust this based on your actual field
+        $payrollRecord->save();
+
+        // Return a response
+        return response()->json([
+            'message' => 'Payroll status updated successfully!',
+            'status' => $post['status'],
+        ]);
     }
 }

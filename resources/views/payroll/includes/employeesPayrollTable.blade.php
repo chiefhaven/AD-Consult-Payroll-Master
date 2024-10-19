@@ -42,12 +42,11 @@
                     @{{ formatCurrency(employee.pivot.total_paid) }}
                 </td>
                 <td class="font-w600">
-                    <button type="button"
-                            @click="employeePayDetails(employee.id, '{{ $payroll->id }}')"
+                    <button type="button" @click="employeePayDetails(employee.id, '{{ $payroll->id }}')"
                             class="btn btn-success d-flex align-items-center justify-content-center mb-4 float-end"
                             data-bs-toggle="modal">
                         <i class="fa fa-eye me-2"></i>
-                        View
+                        <span class="ml-1">View</span>
                     </button>
                 </td>
             </tr>

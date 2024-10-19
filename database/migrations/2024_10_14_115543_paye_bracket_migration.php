@@ -14,18 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('paye_brackets', function (Blueprint $table) {
-            $table->uuid('id')->primary(); // Use UUID for the primary key
-            $table->decimal('limit', 15, 2); // Bracket limit, large enough to accommodate large numbers
-            $table->decimal('rate', 5, 2); // Tax rate as a percentage (e.g., 0.25 for 25%)
-            $table->timestamps(); // Timestamps for created_at and updated_at
+            $table->uuid('id')->primary(); // Ensure this is set to UUID
+            $table->bigInteger('limit'); // Handles larger integers
+            $table->decimal('rate', 5, 4); // Adjust the rate precision if necessary
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('paye_brackets');

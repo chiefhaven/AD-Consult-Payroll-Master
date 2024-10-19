@@ -69,13 +69,21 @@
                                         @if ($index === 0)
                                             The first
                                         @elseif ($index === count($payeBrackets) - 1)
-                                            In excess of
+                                            Any excess
                                         @else
                                             The next
                                         @endif
-                                        <b>K{{ number_format($payeBracket->limit, 2) }}</b>
+                                        <b>
+                                            @if ($payeBracket->limit <= 2050000)
+                                                {{ number_format($payeBracket->limit, 2) }}
+                                            @else
+
+                                            @endif
+                                        </b>
                                     </td>
-                                    <td>{{ number_format($payeBracket->rate * 100, 2) }}%</td>
+                                    <td>
+                                        {{ number_format($payeBracket->rate * 100, 2) }}%
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

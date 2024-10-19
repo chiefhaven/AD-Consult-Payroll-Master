@@ -23,7 +23,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-        return view('clients.clientAdd');
+        return view('clients.clientAdd', compact('client'));
     }
 
     /**

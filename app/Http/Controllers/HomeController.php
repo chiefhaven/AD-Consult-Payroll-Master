@@ -24,7 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $payeBrackets = PayeBracket::all();
+        $payeBrackets = PayeBracket::orderBy('limit')->get();
         return view('home', compact('payeBrackets'));
     }
 }
