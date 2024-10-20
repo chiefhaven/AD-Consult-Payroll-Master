@@ -66,6 +66,9 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/hrm', [HRMController::class, 'index'])->name('hrm');
     Route::get('/hrm/designations', [HRMController::class, 'designationIndex'])->name('hrmDesignation');
+    Route::post('/storeDesignation', [HRMController::class, 'storeDesignation'])->name('storeDesignation');
+    Route::delete('/deleteDesignation/{designation}', [HRMController::class, 'deleteDesignation'])->name('deleteDesignation');
+    Route::post('/updateDesignation/{id}', [HRMController::class, 'updateDesignation'])->name('updateDesignation');
     Route::get('/hrm/leave-types', [HRMController::class, 'leaveTypesIndex'])->name('hrmLeaveTypes');
 
 });

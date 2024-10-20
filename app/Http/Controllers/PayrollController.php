@@ -41,12 +41,12 @@ class PayrollController extends Controller
 
         // Validation
         $this->validate($request, [
-            'client'  => 'required',
-            'payroll_month_year' => [
-                'required',
-                'regex:/^(January|February|March|April|May|June|July|August|September|October|November|December) \d{4}$/'
-            ],
-            'employees' => 'required|array|min:1',
+            'name.required' => 'The designation name is required.',
+            'name.string' => 'The designation name must be a string.',
+            'name.max' => 'The designation name may not be greater than 255 characters.',
+            'name.unique' => 'The designation name must be unique.',
+            'description.string' => 'The description must be a string.',
+            'description.max' => 'The description may not be greater than 500 characters.',
         ], $messages);
 
         $employee_ids = request('employees');
@@ -102,7 +102,6 @@ class PayrollController extends Controller
                 ];
             }
 
-            // Action to determine the context of the view (e.g., create or edit)
             $action = 'create';
 
             // Pass the client, payrolls, and action variables to the view

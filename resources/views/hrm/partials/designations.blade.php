@@ -1,4 +1,4 @@
-<div id="designations" v-show="showDesignations" :class="{ show: showDesignations }">
+<div id="designations" v-if="showDesignations" :class="{ show: showDesignations }">
     <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: 200px;" v-if="loading">
         <p class="spinner"></p>
         <p>
@@ -25,7 +25,7 @@
                             @{{ designation.description }}
                         </td>
                         <td>
-                            0
+                            @{{ designation.employees.length }}
                         </td>
                         <td class="text-center">
                             <div class="dropdown d-inline-block">
@@ -35,24 +35,21 @@
                                 <div class="dropdown-menu dropdown-menu-end p-0">
                                     <div class="p-2">
                                         <!-- View Payroll Link -->
-                                        <button class="dropdown-item nav-main-link" @click="fetchProductDetails(designation.id)">
+                                        <button class="dropdown-item nav-main-link" @click="designationDetails(designation.id)">
                                             <i class="nav-main-link-icon fas fa-eye"></i>
                                             <span class="btn">View</span>
                                         </button>
 
                                         <!-- Edit designation -->
-                                        <a class="dropdown-item nav-main-link btn" href="#">
+                                        <button class="dropdown-item nav-main-link btn" @click="editDesignation(designation)">
                                             <i class="nav-main-link-icon fas fa-pencil-alt"></i>
                                             <span class="btn">Edit</span>
-                                        </a>
+                                        </button>
 
-                                        <!-- Delete Designation Form -->
-                                        <form class="dropdown-item nav-main-link" method="POST" :action="'/delete-designation/' + designation.id">
-                                            @csrf
-                                            @method('DELETE')
+                                        <button class="dropdown-item nav-main-link btn delete-designation-confirm" type="submit" @click="deleteDesignation(designation.id)">
                                             <i class="nav-main-link-icon fas fa-trash-alt"></i>
-                                            <button class="btn delete-designation-confirm" type="submit">Delete</button>
-                                        </form>
+                                            <span class="btn">Delete</span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -69,3 +66,53 @@
     </div>
 
 </div>
+
+<div>
+    <!-- Modal Background Overlay -->
+    <div v-if="showAddDesignationModal" class="modal-backdrop fade" :class="{ show: showAddDesignationModal }"></div>
+
+    <!-- Modal Dialog -->
+    <div class="modal fade" :class="{ show: showAddDesignationModal }" v-if="showAddDesignationModal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel" style="display: block;">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>@{{ state.modalTitle }}</h3>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3 p-4">
+                    <div class="box-body">
+                        <x-adminlte-input
+                            type="text"
+                            name="name"
+                            v-model="state.name"
+                            label="Name"
+                            placeholder="Name"
+                            fgroup-class="col-md-12"
+                            class="{{ $errors->has('name') ? 'is-invalid' : '' }}"
+                            id="name"
+                            autocomplete="off"
+                        />
+
+                        <x-adminlte-textarea
+                            type="text"
+                            name="description"
+                            v-model="state.description"
+                            label="Description"
+                            placeholder="Description"
+                            fgroup-class="col-md-12"
+                            class="{{ $errors->has('description') ? 'is-invalid' : '' }}"
+                            autocomplete="off"
+                        ></x-adminlte-textarea>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-default" @click="addDesignation(state.designationId)">@{{ state.buttonName }}</button>
+            <button type="button" class="btn btn-default" @click="closeDesignationForm">Cancel</button>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+

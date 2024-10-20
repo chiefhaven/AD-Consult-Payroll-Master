@@ -1,4 +1,4 @@
-<div id="leaves" v-show="showLeaves" :class="{ show: showAttendances }">
+<div id="leaves" v-if="showLeaves" :class="{ show: showAttendances }">
     <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: 200px;" v-if="loading">
         <p class="spinner"></p>
         <p>

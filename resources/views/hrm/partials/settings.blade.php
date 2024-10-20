@@ -1,4 +1,4 @@
-<div id="settings" v-show="showSettings" :class="{ show: showSettings }">
+<div id="settings" v-if="showSettings" :class="{ show: showSettings }">
     <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: 200px;" v-if="loading">
         <p class="spinner"></p>
         <p>
