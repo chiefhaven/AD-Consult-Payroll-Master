@@ -320,6 +320,21 @@
                 }
             };
 
+            const confirmDelete = async(designationId) => {
+                Swal.fire({
+                    title: 'Delete Designation?',
+                    text: 'Do you want to delete this designation? This action cannot be undone!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Delete!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteDesignation(designationId); // Call your delete method
+                    }
+                });
+            };
+
             const deleteDesignation = async (designation) => {
                 loading.value = true;
 
@@ -418,7 +433,8 @@
                 state,
                 deleteDesignation,
                 editDesignation,
-                designationDetails
+                designationDetails,
+                confirmDelete
             };
 
         }
