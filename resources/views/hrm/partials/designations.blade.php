@@ -46,7 +46,7 @@
                                             <span class="btn">Edit</span>
                                         </button>
 
-                                        <button class="dropdown-item nav-main-link btn delete-designation-confirm" type="submit" @click="deleteDesignation(designation.id)">
+                                        <button class="dropdown-item nav-main-link btn delete-designation-confirm" type="button" @click="confirmDelete(designation.id)">
                                             <i class="nav-main-link-icon fas fa-trash-alt"></i>
                                             <span class="btn">Delete</span>
                                         </button>
