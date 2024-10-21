@@ -96,12 +96,12 @@
                                 </tr>
                             </thead>
                             <tbody id="product-details">
-                                <tr v-for="(detail, index) in productDetails" :key="index">
+                                <tr v-for="(product, index) in selectedProducts" :key="index">
                                     <td>
-                                        <strong>@{{ detail.name }}</strong>
-                                        <p>@{{ detail.description }}</p>
+                                        <strong>@{{ product.name }}</strong>
+                                        <p>@{{ product.description }}</p>
                                     </td>
-                                    <td>@{{ formatCurrency(detail.price) }}</td>
+                                    <td>@{{ formatCurrency(product.price) }}</td>
                                     <td>
                                         <x-adminlte-input
                                             type="number"
@@ -112,7 +112,9 @@
                                             @input="handleQuantityChange(index)"
                                         />
                                     </td>
-                                    <td>@{{ formatCurrency(detail.price * quantities[index] || 0) }}</td>
+                                    <td>
+                                        @{{ formatCurrency(product.price * quantities[index] || 0) }}
+                                    </td>
                                     <td>
                                         <button type="button" class="btn btn-danger btn-sm" @click="removeProduct(index)">
                                             <i class="fas fa-trash-alt"></i>
@@ -125,11 +127,6 @@
                         <div class="text-right">
                             <strong>Total Sales: @{{ formatCurrency(totalSales) }}</strong>
                         </div>
-
-                    </div>
-
-                    <div class="text-right">
-                        <strong>Total Sales: @{{ formatCurrency(totalSales) }}</strong>
                     </div>
                 </div>
             </div>
@@ -164,9 +161,8 @@
                 </div>
             </div>
         </div>
-
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">Create Sale</button>
+            <button type="submit" class="btn btn-primary">Add Sale</button>
         </div>
     </form>
 </div>
@@ -176,8 +172,8 @@
     const addSale = createApp({
         setup() {
             // Reactive references
-            const selectedProductIds = ref([]); // Array to hold selected product IDs
-            const quantities = ref([1]); // Array to hold quantities for each selected product
+            const selectedProducts = ref([]); // Array to hold selected products
+            const quantities = ref([]); // Array to hold quantities for each selected product
             const products = ref([]); // This should be populated with your products array from the API
             const client = ref('');
             const clientData = ref('');
@@ -188,8 +184,6 @@
             const productDetails = ref([]);
 
             onMounted(() => {
-                // Fetch products when the component is mounted
-                fetchProducts();
 
                 // Conditionally fetch client data if the client ID exists
                 if (clientId) {
@@ -197,24 +191,21 @@
                 }
             });
 
-
-
-            // Computed property for total sales amount
             const totalSales = computed(() => {
-                return productDetails.value.reduce((acc, item) => acc + item.total, 0);
+                return selectedProducts.value.reduce((acc, product, index) => {
+                    const total = (product.price || 0) * (quantities.value[index] || 0);
+                    return acc + total;
+                }, 0);
             });
 
             // Function to handle adding a new product row
             const addProduct = () => {
-                selectedProductIds.value.push('');
                 quantities.value.push(1); // Add a default quantity of 1
             };
 
             function onProductChange(event) {
                 addProduct(); // Adds a new product
-                fetchProducts(); // Fetches updated product details
             }
-
 
             // Method to initialize product search with typeahead
             const searchProduct = () => {
@@ -227,30 +218,47 @@
 
                     // Fetch the data from the server when a user types in the input
                     source: function (query, process) {
-                        return $.get(path, { query: query }, function (data) {
-                            return process(data);
-                        });
+                        // Use debounce to limit how frequently search requests are sent
+                        clearTimeout(this.searchTimeout);
+                        this.searchTimeout = setTimeout(() => {
+                            $.get(path, { query: query }, function (data) {
+                                process(data); // Pass data to the typeahead process
+                            }).fail(function () {
+                                console.error('Error fetching products'); // Handle server errors
+                            });
+                        }, 300); // Delay of 300ms before making the request
                     },
 
                     // Define how to display the suggestions in the dropdown
                     displayText: function (item) {
-                        return item.name; // Adjust based on your data structure
+                        return item.name; // Display product name in the dropdown
                     },
 
                     // Handle the event when a suggestion is selected
                     afterSelect: async function (item) {
-                        const product = await fetchProduct(item.id); // Await the fetchProduct call
+                        // Check if the product is already in the list
+                        const existingProduct = selectedProducts.value.find(product => product.id === item.id);
+                        console.log(selectedProducts);
 
-                        if (product) {
-                            selectedProductIds.value.push(product.id); // Add the product ID to selectedProductIds
-                            quantities.value.push(1); // Set default quantity to 1
-                            productSearch.value = ''; // Clear the search input
+                        if (existingProduct) {
+                            // If the product already exists, increase its quantity by 1
+                            existingProduct.quantity += 1;
+
+                            // Update the quantities array to match the updated quantity in selectedProducts
+                            const index = selectedProducts.value.findIndex(product => product.id === item.id);
+                            quantities.value[index] = existingProduct.quantity;
                         } else {
-                            console.error('Product not found'); // Handle case where product is not found
+                            // If the product doesn't exist, add it to the selectedProducts array with a default quantity of 1
+                            selectedProducts.value.push({ ...item, quantity: 1 });
+                            quantities.value.push(1); // Add the default quantity to the quantities array
                         }
-                    }.bind(this), // Ensure proper context within Vue.js
+
+                        // Clear the search input after adding the product
+                        productSearch.value = '';
+                    }.bind(this),
                 });
             };
+
 
             const searchClient = () => {
                 const path = "{{ route('search-client') }}";
@@ -279,62 +287,8 @@
                 });
             };
 
-
-            // Function to handle product selection changes
-            const updateProductDetails = (index) => {
-                if (selectedProductIds.value[index] !== '') {
-                    quantities.value[index] = 1; // Reset to 1 for the selected product
-                } else {
-                    quantities.value[index] = 0; // Set quantity to 0 if no product is selected
-                }
-            };
-
             const formatCurrency = (value) => {
                 return `K ${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            };
-
-            // Function to fetch product details for all selected IDs
-            const fetchProducts = async () => {
-                try {
-                    const productFetchPromises = selectedProductIds.value.map(async (id) => {
-                        const product = await fetchProduct(id); // Await the fetchProduct call
-                        if (product) {
-                            return {
-                                name: product.name,
-                                description: product.description,
-                                price: parseFloat(product.price) || 0,
-                                quantity: quantities.value[selectedProductIds.value.indexOf(id)],
-                                total: (parseFloat(product.price) || 0) * quantities.value[selectedProductIds.value.indexOf(id)],
-                            };
-                        }
-                        return null; // Return null if product is not found
-                    });
-
-                    const fetchedProducts = await Promise.all(productFetchPromises); // Fetch all products concurrently
-
-                    // Filter out any null values (products that couldn't be fetched)
-                    productDetails.value = fetchedProducts.filter(Boolean); // Update the reactive variable with fetched products
-                } catch (error) {
-                    console.error('Error fetching products:', error);
-                }
-            };
-
-            // Watch for changes to selectedProductIds
-            watch(selectedProductIds, fetchProducts);
-
-            watch(quantities, () => {
-                // Optionally recalculate totals or perform any other side effects
-            });
-
-            // Function to fetch product details based on the product ID
-            const fetchProduct = async (id) => {
-                try {
-                    const response = await axios.get(`/show-product/${id}`);
-                    return response.data; // Return the product data
-                } catch (error) {
-                    console.error('Error fetching product:', error);
-                    return null; // Return null if there's an error
-                }
             };
 
             const validateQuantity = (index) => {
@@ -344,17 +298,25 @@
             };
 
             const handleQuantityChange = (index) => {
+                // Validate the quantity to ensure it's not less than the minimum allowed value
                 validateQuantity(index);
-                fetchProducts();
+
+                // Retrieve the product from the selectedProducts array using the index
+                const product = selectedProducts.value[index];
+                if (product) {
+                    // Update the total based on the new quantity
+                    product.total = product.price * product.quantity; // Calculate the new total
+                }
+
+                // Optionally, you can update any computed properties that rely on these quantities
             };
+
+
 
             const removeProduct = (index) => {
                 // Remove the product ID and quantity at the specified index
-                selectedProductIds.value.splice(index, 1);
+                selectedProducts.value.splice(index, 1);
                 quantities.value.splice(index, 1);
-
-                // Fetch the updated product details after removing the product
-                fetchProducts();
             };
 
 
@@ -391,12 +353,11 @@
             }
 
             return {
-                selectedProductIds,
+                selectedProducts,
                 quantities,
                 addProduct,
                 productDetails,
                 totalSales,
-                updateProductDetails,
                 products,
                 formatCurrency,
                 client,

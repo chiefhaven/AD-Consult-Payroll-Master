@@ -12,7 +12,7 @@ use Carbon\Carbon;
 use Auth;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
-
+use PDF;
 class PayrollController extends Controller
 {
     /**
@@ -357,4 +357,80 @@ class PayrollController extends Controller
             'status' => $post['status'],
         ]);
     }
+
+    public function exportPayroll($payroll, $type)
+    {
+        // Fetch payroll records for the specified client
+        $payroll = Payroll::with('employees', 'client')->find($payroll);
+
+        // Check for export type and handle accordingly
+        if ($type === 'csv') {
+            // Define the CSV file path
+            $fileName = $payroll->client->client_name . ' payroll' . '.csv';
+            $filePath = storage_path('app/public/' . $fileName);
+
+            // Open the file for writing
+            $file = fopen($filePath, 'w');
+
+            // Add the header row
+            fputcsv($file, [
+                'Client Name',
+                'Pay period',
+                'Client Contact',
+                'Client Address',
+            ]);
+
+            // Add client information row
+            fputcsv($file, [
+                $payroll->client->client_name,
+                $payroll->group,
+                $payroll->client->contact_number ?? 'N/A',
+                $payroll->client->address ?? 'N/A',
+                '', // Empty cell for spacing
+            ]);
+
+            // Add the header row
+            fputcsv($file, [
+                'Employee No',
+                'Employee Name',
+                'Gross',
+                'PAYE',
+                'Net Pay',
+                'Earnings',
+                'Deductions',
+                'Status',
+            ]);
+
+            // Add payroll data to the CSV
+            foreach ($payroll->employees as $employee) {
+                fputcsv($file, [
+                    $employee->employee_no,
+                    $employee->fname . ' '.$employee->fname .' '. $employee->sname,
+                    number_format($employee->pivot->salary, 2), // Formatting salary
+                    number_format($employee->pivot->payee ?? 0, 2), // PAYE
+                    number_format($employee->pivot->net_salary ?? 0, 2), // Net pay
+                    number_format($employee->pivot->earning_amount ?? 0, 2), // Assuming bonus is in the pivot
+                    number_format($employee->pivot->deduction_amount ?? 0, 2), // Deductions
+                    $payroll->status, // Status of the payroll
+                ]);
+            }
+
+            // Close the file
+            fclose($file);
+
+            // Return the file for download
+            return response()->download($filePath)->deleteFileAfterSend(true);
+        }
+         elseif ($type === 'pdf') {
+           // Implement PDF export logic here (using a package like DomPDF)
+            $pdf = PDF::loadView('pdf.payroll', ['payroll' => $payroll])
+            ->setPaper('A4', 'landscape'); // Set paper size and orientation
+
+            return $pdf->download($payroll->client->client_name . ' payroll.pdf');
+        } else {
+            // Handle unsupported export type
+            return response()->json(['error' => 'Unsupported export type'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
 }

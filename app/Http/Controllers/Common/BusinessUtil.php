@@ -224,8 +224,9 @@ class BusinessUtil extends Controller
         }
     }
 
-    public function showProduct($id)
+    public function showProduct(Request $request)
     {
+        $post = $request->all();
         // Find the product by ID
         $product = Product::find('24ee2cf3-8acc-11ef-9a69-8038fbc90d23');
 

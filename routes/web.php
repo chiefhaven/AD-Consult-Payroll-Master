@@ -53,8 +53,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/update-product/{id}', [ProductController::class, 'update'])->name('update-product');
     Route::get('/export-products/{type}', [ProductController::class, 'export'])->name('export-products');
     Route::get('/search-product', [BusinessUtil::class, 'searchProduct'])->name('search-product');
-    Route::get('/show-product/{id}', [BusinessUtil::class, 'showProduct'])->name('show-product');
+    Route::post('/show-product', [BusinessUtil::class, 'showProduct'])->name('show-product');
+
 });
+
 
 Route::get('/all-sales', [BillingController::class, 'index'])->middleware(['auth'])->name('billing');
 Route::get('/add-sale', [BillingController::class, 'create'])->middleware(['auth'])->name('add-sale');
@@ -67,7 +69,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/edit-payroll/{payroll}', [PayrollController::class, 'edit'])->name('edit-payroll');
     Route::put('/update-payroll/{payroll}', [PayrollController::class, 'update'])->name('update-payroll');
     Route::delete('/delete-payroll/{payroll}', [PayrollController::class, 'destroy'])->name('delete-payroll');
-    Route::get('/export-payroll/{payroll}', [PayrollController::class, 'export'])->name('export-payroll');
+    Route::get('/export-payroll/{client}/{type}', [PayrollController::class, 'exportPayroll'])->name('export-payroll');
     Route::post('/change-payroll-status', [PayrollController::class, 'status'])->name('change-payroll-status');
     Route::get('/view-employee-payroll/{employee}/{payroll}', [PayrollController::class, 'viewEmployeePayroll'])->name('viewEmployeePayroll');
 });

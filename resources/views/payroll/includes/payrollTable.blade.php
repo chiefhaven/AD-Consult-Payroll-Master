@@ -63,7 +63,7 @@
                                 <!-- View Payroll Link -->
                                 <button class="dropdown-item nav-main-link" @click="fetchPayrollDetails('{{ $payroll->id }}')">
                                     <i class="nav-main-link-icon fas fa-eye"></i>
-                                    <span class="btn">Genevieve</span>
+                                    <span class="btn">View</span>
                                 </button>
 
                                 <!-- Edit Payroll -->
@@ -72,10 +72,16 @@
                                     <span class="btn">Edit</span>
                                 </a>
 
-                                <!-- Edit Payroll -->
-                                <a class="dropdown-item nav-main-link btn" href="{{ route('export-payroll', $payroll) }}">
+                                <!-- Export Payroll -->
+                                <a class="dropdown-item nav-main-link btn" href="{{ route('export-payroll', [$payroll->id, 'pdf']) }}">
                                     <i class="nav-main-link-icon fas fa-print"></i>
-                                    <span class="btn">Print payroll</span>
+                                    <span class="btn">Export PDF</span>
+                                </a>
+
+                                <!-- Export Payroll -->
+                                <a class="dropdown-item nav-main-link btn" href="{{ route('export-payroll', [$payroll->id, 'csv']) }}">
+                                    <i class="nav-main-link-icon fas fa-print"></i>
+                                    <span class="btn">Export CSV</span>
                                 </a>
 
                                 <!-- Delete Payroll Form -->

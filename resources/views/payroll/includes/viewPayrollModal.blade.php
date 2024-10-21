@@ -200,11 +200,11 @@
                                     </tr>
                                     <tr>
                                         <th>Paid on</th>
-                                        <td>@{{ employeeData.payroll_date || 'N/A' }}</td>
+                                        <td>@{{ employeeData.payroll_date || '-' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Payment Method</th>
-                                        <td>@{{ employeeData.payment_method || 'N/A' }}</td>
+                                        <td>@{{ employeeData.payment_method || '-' }}</td>
                                     </tr>
                                 </table>
                             </div>

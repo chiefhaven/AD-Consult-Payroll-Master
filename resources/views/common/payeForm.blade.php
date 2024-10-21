@@ -62,9 +62,7 @@
                 const fetchBrackets = async () => {
                     try {
                         const response = await axios.get('/paye-brackets');
-                        console.log('API Response:', response); // Log the full API response
                         brackets.value = response.data; // Assign the data to brackets
-                        console.log('Brackets:', brackets.value); // Check if brackets is populated
                     } catch (error) {
                         console.error('Error fetching PAYE brackets:', error);
                     }

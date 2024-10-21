@@ -248,7 +248,6 @@
                 if (response.data && response.data.length > 0) {
                     data.value = response.data[0];  // Access the first object in the response array
 
-                    console.log(response.data)
                 } else {
                     error.value = "No data found for the provided payroll ID.";
                 }
@@ -274,7 +273,6 @@
                 const response = await axios.get(`/view-employee-payroll/${employee}/${payroll}`);
                 if (response.data && response.data.length > 0) {
                     employeeData.value = response.data[0];  // Access the first object in the response array
-                    console.log(response.data);
                 } else {
                     error.value = "No data found for the provided payroll ID.";
                 }
@@ -309,8 +307,6 @@
                             location.reload(); // Reloads the current page
                         })
                         .catch(error => {
-                            // Handle error response
-                            console.error('Error updating payroll status:', error);
                             notification('Failed to update payroll status.', 'error');
                         });
                 }
@@ -379,7 +375,6 @@
 
         const proceed = () => {
             // Add your logic to proceed here
-            console.log("Proceed button clicked");
         };
 
         const notification = ($text, $icon) =>{
