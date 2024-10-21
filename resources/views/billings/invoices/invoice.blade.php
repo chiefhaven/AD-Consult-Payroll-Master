@@ -2,7 +2,7 @@
 
 {{-- Extend and customize the browser title --}}
 
-@section('title', 'Billing')
+@section('title', 'Invoices')
 
 {{-- Extend and customize the page content header --}}
 
@@ -25,11 +25,12 @@
 
 @section('content')
 <div class="row">
+
     <table>
     <thead>
         <tr>
+            <th>Invoice No.</th>
             <th>Client Name</th>
-            <th>Type</th>
             <th>Amount (MWK)</th>
             <th>Status </th>
             <th>Issue Date</th>
@@ -68,7 +69,6 @@
         @endforeach
     </tbody>
 </table>
-
 </div>
 @stop
 
@@ -86,27 +86,15 @@
     });
 
 </script>
+@endpush
+
+{{-- Add common CSS customizations --}}
+
 @push('css')
 <style type="text/css">
 
-    {{-- Table styles --}}
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
+    {{-- You can add AdminLTE customizations here --}}
 
-    table th, table td {
-        border: 1px solid #dee2e6; /* Border for table cells */
-        padding: 8px; /* Padding for content */
-        text-align: left; /* Align text to the left */
-    }
-
-    table th {
-        background-color: #f8f9fa; /* Light background for table headers */
-        font-weight: bold; /* Bold font for headers */
-    }
-
-    {{-- Custom styles for AdminLTE card component --}}
     .card {
         border-radius: none;
     }
@@ -114,6 +102,6 @@
         font-weight: 600;
     }
 
+
 </style>
 @endpush
-
