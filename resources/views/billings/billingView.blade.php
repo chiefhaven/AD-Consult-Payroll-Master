@@ -61,7 +61,7 @@
                     <div class="row">
                         <div class="col md-6">
                             <div class="title">
-                                <p>Companany Name</p>
+                                <p>{{ $billing->client_name }}</p>
                                 <p>Ginery Corner, street 23, zip code 2356</p>
                                 <p>+265 999 777 2345</p>
                             </div>
@@ -69,7 +69,53 @@
 
                         <div class="col md-6">
                             <div>
-                                
+                                <h4>Logo Here</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Bill To</h4>
+                            <p>{{ $billing->client_name }}</p>
+                            <p>{{ $billing->client->address }}</p>
+                            <p>{{ $billing->client->phone }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p>Invoice No:INV10 </p>
+                            <p>Date:{{ $billing->issue_date }} </p>
+                            <p>Due Date: {{ $billing->due_date }} </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table>
+                            <head>
+                                <th>Product/Service</th>
+                                <th>Discription</th>
+                                <th>Quantity/Hours</th>
+                                <th>Rate</th>
+                                <th>Total</th>
+                            </head>
+                            <tbody>
+                                <tr>
+                                    <td> </td>
+                                    <td> {{ $billing->discription }}</td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>Transaction Terms</h4>
+                                <p>{{ $billing->transaction_terms }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Subtotal:{{ $billing->total_amount }} </p>
+                                <p>Discount:{{ $billing->discount }} </p>
+                                <p>Tax Amount:{{ $billing->tax_amount }}</p>
+                                <p>TOTAL: {{number_format($billing->total_amount-$billing->discount-$billing->tax_amount, 2) }}</p>
                             </div>
                         </div>
                     </div>

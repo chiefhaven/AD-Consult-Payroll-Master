@@ -16,8 +16,7 @@ return new class extends Migration
             $table->id();
             // $table->uuid('id');
             $table->text('client_name');
-            $table->float('quotation_amount');
-            $table->float('invoice_amount');
+            $table->float('total_amount');
             $table->float('discount');
             $table->float('paid_amount');
             $table->enum('bill_type', ['invoice', 'quotation']);
