@@ -66,10 +66,10 @@
                                 <p>+265 999 777 2345</p>
                             </div>
                         </div>
-                        
+
                         <div class="col md-6">
                             <div>
-
+                                
                             </div>
                         </div>
                     </div>
