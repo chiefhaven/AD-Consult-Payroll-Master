@@ -9,7 +9,7 @@ use App\Models\Client;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 
 
 class EmployeeController extends Controller
