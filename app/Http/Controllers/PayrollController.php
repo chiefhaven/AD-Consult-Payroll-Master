@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Common\BusinessUtil;
-use App\Models\payroll;
+use App\Models\Payroll;
 use App\Http\Requests\StorepayrollRequest;
 use App\Http\Requests\UpdatepayrollRequest;
 use App\Models\Client;
