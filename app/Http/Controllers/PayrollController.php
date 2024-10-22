@@ -12,7 +12,7 @@ use Carbon\Carbon;
 use Auth;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 class PayrollController extends Controller
 {
     /**
