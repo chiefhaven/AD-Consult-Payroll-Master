@@ -24,51 +24,62 @@
 {{-- Rename section content to content_body --}}
 
 @section('content')
-<div class="row">
- <table>
-    <thead>
-        <tr>
-            <th>Client Name</th>
-            <th>Type</th>
-            <th>Amount (MWK)</th>
-            <th>Status </th>
-            <th>Issue Date</th>
-            <th>Due Date</th>
-            <th>paid Amount  (MWK)</th>
-            <th>Discount  (MWK)</th>
-            <th>Balance  (MWK)</th>
-            <th>Tax Amount  (MWK)</th>
-            <th>Discount Type</th>
-            <th>Discription</th>
-            <th>Transaction Terms</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>{{ $billing->client_name }}</td>
-            <td>{{ $billing->bill_type }}</td>
-            <td>
-                @if($billing->bill_type == 'invoice')
-                    {{ number_format($billing->invoice_amount, 2) }}
-                @elseif($billing->bill_type == 'quotation')
-                    {{ number_format($billing->quotation_amount, 2) }}
-                @endif
-            </td>
-            <td>{{ $billing->status }}</td>
-            <td>{{ $billing->issue_date }}</td>
-            <td>{{ $billing->due_date }}</td>
-            <td>{{ $billing->paid_amount }}</td>
-            <td>{{ $billing->discount }}</td>
-            <td>{{ $billing->balance }}</td>
-            <td>{{ $billing->tax_amount }}</td>
-            <td>{{ $billing->discount_type }}</td>
-            <td>{{ $billing->discription }}</td>
-            <td>{{ $billing->transaction_terms }}</td>
-        </tr>
-    </tbody>
-</table>
+
+    {{-- <div class="row p-4">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            <a href="{{ route('employees') }}" style="text-decoration: none;">
+                            <x-adminlte-small-box title="Employee Directory" text="{{ App\Models\Employee::get()->count() }}" theme="secondary" />
+                            </a>
+                        </div>
+
+                         <div class="col-md-4">
+                            <a href="{{ route('payrolls') }}" style="text-decoration: none;">
+                            <x-adminlte-small-box title="Payroll" text="{{ App\Models\Payroll::get()->count() }}" theme="secondary" />
+                            </a>
+                        </div>
+
+                         <div class="col-md-4">
+                            <a href="{{ route('billing') }}" style="text-decoration: none;">
+                            <x-adminlte-small-box title="Billings" text="{{ App\Models\Billing::get()->count() }}" theme="secondary" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
+      <div class="row p-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body ">
+                    {{-- <canvas id="salesChart" style="height: 250px;"></canvas> --}}
+                    <div class="row">
+                        <div class="col md-6">
+                            <div class="title">
+                                <p>Companany Name</p>
+                                <p>Ginery Corner, street 23, zip code 2356</p>
+                                <p>+265 999 777 2345</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col md-6">
+                            <div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
+
 @stop
 
 {{-- Create a common footer --}}
