@@ -31,25 +31,25 @@
                                 {{ $employee->fname }} {{ $employee->mname }} {{ $employee->sname }}
                             </td>
                             <td class="invoice-td">
-                                {{ $employee->designation->name }}
+                                {{ $employee->designation->name ?? 'N/A' }} <!-- Check for null designation -->
                             </td>
                             <td class="invoice-td">
-                                {{ number_format($employee->pivot->salary, 2) }}
+                                {{ number_format($employee->pivot->salary ?? 0, 2) }} <!-- Check for null salary -->
                             </td>
                             <td class="invoice-td">
-                                {{ number_format($employee->pivot->payee ?? 0, 2) }}
+                                {{ number_format($employee->pivot->payee ?? 0, 2) }} <!-- Default to 0 if payee is null -->
                             </td>
                             <td class="invoice-td">
-                                {{ number_format($employee->pivot->net_salary ?? 0, 2) }}
+                                {{ number_format($employee->pivot->net_salary ?? 0, 2) }} <!-- Default to 0 if net_salary is null -->
                             </td>
                             <td class="invoice-td">
-                                {{ $employee->pivot->earning_description }}: {{ number_format($employee->pivot->earning_amount ?? 0, 2) }}
+                                {{ $employee->pivot->earning_description ?? 'N/A' }}: {{ number_format($employee->pivot->earning_amount ?? 0, 2) }} <!-- Check for null earning description -->
                             </td>
                             <td class="invoice-td">
-                                {{ $employee->pivot->deduction_description }}: {{ number_format($employee->pivot->deduction_amount ?? 0, 2) }}
+                                {{ $employee->pivot->deduction_description ?? 'N/A' }}: {{ number_format($employee->pivot->deduction_amount ?? 0, 2) }} <!-- Check for null deduction description -->
                             </td>
                             <td class="invoice-td">
-                                {{ number_format($employee->pivot->total_paid ?? 0, 2) }}
+                                {{ number_format($employee->pivot->total_paid ?? 0, 2) }} <!-- Default to 0 if total_paid is null -->
                             </td>
                         </tr>
                     @endforeach
