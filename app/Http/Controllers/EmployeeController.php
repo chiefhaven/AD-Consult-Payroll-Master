@@ -68,6 +68,14 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
+        // Check if the employee has any associated payrolls
+        if ($employee->payrolls()->exists()) {
+            // Show an error and prevent deletion
+            Alert::error('Cannot delete employee', 'Empoyee has existing payrolls.');
+            return back();
+        }
+
+        // If no payrolls are found, proceed with deletion
         $employee->delete();
         Alert::toast('Employee deleted successfully.','success');
         return back();

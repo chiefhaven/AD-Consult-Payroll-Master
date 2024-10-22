@@ -321,24 +321,31 @@ class PayrollController extends Controller
         return back();
     }
 
-    public function viewEmployeePayroll($employee, $payroll)
+    public function viewEmployeePayroll($employee, $payroll, $payslip)
     {
         // Fetch the specific payroll details for a particular employee
         $employeePayroll = Payroll::where('id', $payroll)
-        ->whereHas('employees', function ($query) use ($employee) {
-            $query->where('id', $employee);
-        })
-        ->with(['employees' => function ($query) use ($employee) {
-            $query->where('id', $employee); // Load details for the specific employee
-        }])
-        ->first();
+            ->whereHas('employees', function ($query) use ($employee) {
+                $query->where('id', $employee);
+            })
+            ->with(['employees' => function ($query) use ($employee) {
+                $query->where('id', $employee); // Load details for the specific employee
+            }])
+            ->first();
 
         if ($employeePayroll) {
-            return response()->json([$employeePayroll], 200);
+            if ($payslip == '1') {
+                // Implement PDF export logic here (using a package like DomPDF)
+                $pdf = PDF::loadView('pdf.employeePayroll', ['employeePayroll' => $employeePayroll]);
+                return $pdf->download($employeePayroll->employees[0]->fname . ' ' . $employeePayroll->employees[0]->sname . '.pdf');
+            } else {
+                return response()->json([$employeePayroll], 200);
+            }
         } else {
             return response()->json(['message' => 'No data found for the provided payroll and employee ID.'], 404);
         }
     }
+
 
     public function status(Request $request)
     {

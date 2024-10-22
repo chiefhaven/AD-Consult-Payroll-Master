@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/update-employee/{employee}', [EmployeeController::class, 'update'])->name('update-employee');
     Route::delete('/delete-employee/{employee}', [EmployeeController::class, 'destroy'])->name('delete-employee');
     Route::get('/export-employees/{client}/{type}', [EmployeeController::class, 'export'])->name('export-employees');
+    Route::get('/employee/{employee}/set-inactive', [EmployeeController::class, 'setInactive'])->name('employee.setInactive');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -71,7 +72,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/delete-payroll/{payroll}', [PayrollController::class, 'destroy'])->name('delete-payroll');
     Route::get('/export-payroll/{client}/{type}', [PayrollController::class, 'exportPayroll'])->name('export-payroll');
     Route::post('/change-payroll-status', [PayrollController::class, 'status'])->name('change-payroll-status');
-    Route::get('/view-employee-payroll/{employee}/{payroll}', [PayrollController::class, 'viewEmployeePayroll'])->name('viewEmployeePayroll');
+    Route::get('/view-employee-payroll/{employee}/{payroll}/{payslip}', [PayrollController::class, 'viewEmployeePayroll'])->name('viewEmployeePayroll');
 });
 
 Route::get('/leaves', Leaves::class)->middleware(['auth']);

@@ -41,13 +41,26 @@
                 <td class="font-w600">
                     @{{ formatCurrency(employee.pivot.total_paid) }}
                 </td>
-                <td class="font-w600">
-                    <button type="button" @click="employeePayDetails(employee.id, '{{ $payroll->id }}')"
-                            class="btn btn-success d-flex align-items-center justify-content-center mb-4 float-end"
-                            data-bs-toggle="modal">
-                        <i class="fa fa-eye me-2"></i>
-                        <span class="ml-1">View</span>
-                    </button>
+                <td class="text-center">
+                    <div class="dropdown d-inline-block">
+                        <button type="button" class="btn btn-default" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="d-sm-inline-block">Action</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end p-0">
+                            <div class="p-2">
+                                <button type="button" @click.stop="employeePayDetails(employee.id, '{{ $payroll->id }}', 1)"
+                                        class="dropdown-item nav-main-link">
+                                    <i class="fa fa-eye me-2"></i>
+                                    <span class="ml-1">View</span>
+                                </button>
+                                <button type="button" @click.stop="employeePayslip(employee.id, '{{ $payroll->id }}', 1)"
+                                    class="dropdown-item nav-main-link">
+                                    <i class="fa fa-download me-2"></i>
+                                    <span class="ml-1">Dounload payslip</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
           </tbody>

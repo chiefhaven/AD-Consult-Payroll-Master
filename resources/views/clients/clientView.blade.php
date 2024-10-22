@@ -265,21 +265,43 @@
             fetchEmployeePayDetails(employee, payroll);  // Fetch data when the modal opens
         };
 
+        // Open the payroll details modal and fetch payroll data
+        const employeePayslip = (employee, payroll, payslip) => {
+            loading.value = true;
+            fetchEmployeePayDetails(employee, payroll, payslip);
+        };
+
         // Fetch Employee Payroll details
-        const fetchEmployeePayDetails = async (employee, payroll) => {
+        const fetchEmployeePayDetails = async (employee, payroll, payslip) => {
             loading.value = true;
             error.value = null;
+
             try {
-                const response = await axios.get(`/view-employee-payroll/${employee}/${payroll}`);
-                if (response.data && response.data.length > 0) {
-                    employeeData.value = response.data[0];  // Access the first object in the response array
+                // Check if payslip is equal to 1 and open in a new window for PDF download
+                if (payslip == '1') {
+                    // Open the download route in a new window
+                    window.open(`/view-employee-payroll/${employee}/${payroll}/${payslip}`, '_blank');
+                    return; // Exit the function after opening the new window
+                }
+
+                const response = await axios.get(`/view-employee-payroll/${employee}/${payroll}/${payslip}`);
+
+                // Check if the response data is an object and contains the expected properties
+                if (response.data) {
+                    // Ensure that data is in the expected format
+                    if (Array.isArray(response.data) && response.data.length > 0) {
+                        employeeData.value = response.data[0];  // Access the first object in the response array
+                    } else {
+                        loading.value = false;
+                    }
                 } else {
                     error.value = "No data found for the provided payroll ID.";
                 }
             } catch (err) {
                 error.value = "Failed to fetch payroll data";
+                console.error(err); // Log the error for debugging purposes
             } finally {
-                loading.value = false;
+                loading.value = false; // Ensure loading is false after the request completes
             }
         };
 
@@ -413,7 +435,8 @@
             employeePayDetails,
             formatCurrency,
             changeStatus,
-            openStatusDialog
+            openStatusDialog,
+            employeePayslip
         };
       },
     });

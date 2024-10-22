@@ -127,8 +127,19 @@
                 </div>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-success" @click="changeStatus('Approved', data.id)">Approve</button>
-            <button type="button" class="btn btn-default" @click="closeModal">Close</button>
+                <!-- Display Payroll Status or Button based on Status -->
+                <span v-if="data.status === 'Paid' || data.status === 'Cancelled'">
+                    @{{ data.status }}
+                </span>
+                <button v-else class="btn btn-sm btn-warning" @click="changeStatus(data.status, payroll.id)">
+                    @{{ data.status }}
+                </button>
+
+                <!-- Approve Button -->
+                <button type="button" class="btn btn-default" v-if="data.status !== 'Paid'" @click="changeStatus('Approved', payroll.id)">
+                    Approve
+                </button>
+                <button type="button" class="btn btn-default" @click="closeModal">Close</button>
             </div>
         </div>
         </div>
@@ -214,7 +225,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-default" @click="">Print</button>
+            <button type="button" class="btn btn-default" @click="employeePayslip(employeeData.employees[0].id, employeeData.employees[0].pivot.payroll_id, 1)">Dowload Payslip</button>
             <button type="button" class="btn btn-default" @click="closeEmployeePayModal">Close</button>
             </div>
         </div>

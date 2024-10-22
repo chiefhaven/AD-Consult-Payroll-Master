@@ -21,28 +21,29 @@
                         <th class="invoice-td">Contract end</th>
                     </thead>
                     <tbody>
-                        @foreach ($employees as $employee)
-                            <tr class="py-1" style="padding-top: 0px; padding-bottom: 0px; ">
-                                <td class="invoice-td">
-                                    {{$employee->fname}} {{$employee->mname}} {{$employee->sname}}
-                                </td>
-                                <td class="invoice-td">
-                                    {{$employee->designation->name}}
-                                </td>
-                                <td class="invoice-td">
-                                    {{$employee->salary}}
-                                </td>
-                                <td class="invoice-td">
-                                    {{$employee->pay_period}}
-                                </td>
-                                <td class="invoice-td">
-                                    {{$employee->contract_start_date}}
-                                </td>
-                                <td class="invoice-td">
-                                    {{$employee->contract_end_date}}
-                                </td>
-                            </tr>
-                            @endforeach
+                    @foreach ($employees as $employee)
+                        <tr class="py-1" style="padding-top: 0px; padding-bottom: 0px;">
+                            <td class="invoice-td">
+                                {{$employee->fname ?? ' '}} {{$employee->mname ?? ' '}} {{$employee->sname ?? ' '}}
+                            </td>
+                            <td class="invoice-td">
+                                {{$employee->designation->name ?? ' '}}
+                            </td>
+                            <td class="invoice-td">
+                                {{$employee->salary ?? ' '}}
+                            </td>
+                            <td class="invoice-td">
+                                {{$employee->pay_period ?? ' '}}
+                            </td>
+                            <td class="invoice-td">
+                                {{$employee->contract_start_date ?? ' '}}
+                            </td>
+                            <td class="invoice-td">
+                                {{$employee->contract_end_date ?? ' '}}
+                            </td>
+                        </tr>
+
+                    @endforeach
                     </tbody>
             </table>
         </div>
