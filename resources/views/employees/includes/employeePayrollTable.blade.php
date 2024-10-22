@@ -1,6 +1,6 @@
 <div class="table-responsive">
     @if( !$employee->payrolls->isEmpty())
-      <table id="payrollTable" class="table table-bordered table-striped table-vcenter display nowrap">
+      <table id="payrollsTable" class="table table-bordered table-striped table-vcenter display nowrap">
           <thead>
               <tr>
                   <th style="min-width: 250px;">Group</th>

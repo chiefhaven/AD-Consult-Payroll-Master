@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'AD Consult',
+    'title' => 'AD Consult - ',
     'title_prefix' => '',
     'title_postfix' => 'EOR',
 

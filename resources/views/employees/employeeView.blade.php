@@ -56,7 +56,7 @@
                 <div class="col-md-1"><p>&nbsp;</p></div>
                 <div class="col-md-8">
                     <h2 class="fw-bold">{{ $employee->fname }} {{ $employee->mname }} {{ $employee->sname }}</h2>
-                    <div class="text-bold">{{ $employee->designation->name }}</div>
+                    <div class="text-bold">{{ $employee->designation->name ?? 'N/A' }}</div>
                     <table class="mt-4">
                         <thead>
                             <th></th>
@@ -216,7 +216,10 @@
 <script>
 
     $(document).ready(function() {
-        // Add your common script logic here...
+        $('#payrollsTable').DataTable({
+            scrollX: true,
+            scrollY: true,
+        });
     });
 
 </script>

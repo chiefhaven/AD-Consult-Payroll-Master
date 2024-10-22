@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Common\BusinessUtil;
 use App\Models\Employee;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
@@ -10,7 +11,8 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use HavenPlus\Districts\Models\District;
+use WW\Countries\Models\Country;
 
 class EmployeeController extends Controller
 {
@@ -19,7 +21,8 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        return view('employees.employeeList');
+        $employees = Employee::all();
+        return view('employees.employeeList', compact('employees'));
     }
 
     /**
@@ -52,7 +55,29 @@ class EmployeeController extends Controller
      */
     public function edit(Employee $employee)
     {
-        return view('employees.employeeUpdate');
+        $countries = Country::all();
+        $districts = District::orderBy('name', 'ASC')->get();
+        $maritalStatusEnums = BusinessUtil::get_enum_values('employees', 'marital_status');
+        $genderEnums = BusinessUtil::get_enum_values('employees', 'gender');
+        $idTypes = BusinessUtil::get_enum_values('employees', 'id_type');
+        $educationLevels = BusinessUtil::get_enum_values('employees', 'education_level');
+        $payPeriods = BusinessUtil::get_enum_values('employees', 'pay_period');
+        $terminationPeriodTypes = BusinessUtil::get_enum_values('employees', 'termination_notice_period_type');
+
+        $employee = Employee::find($employee->id);
+
+        return view('employees.employeeUpdate', compact(
+            'employee',
+            'countries',
+            'districts',
+            'maritalStatusEnums',
+            'genderEnums',
+            'idTypes',
+            'educationLevels',
+            'payPeriods',
+            'terminationPeriodTypes'
+        ));
+
     }
 
     /**
