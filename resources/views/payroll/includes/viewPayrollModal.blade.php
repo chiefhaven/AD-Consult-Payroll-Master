@@ -127,19 +127,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <!-- Display Payroll Status or Button based on Status -->
-                <span v-if="data.status === 'Paid' || data.status === 'Cancelled'">
-                    @{{ data.status }}
-                </span>
-                <button v-else class="btn btn-sm btn-warning" @click="changeStatus(data.status, payroll.id)">
-                    @{{ data.status }}
-                </button>
-
-                <!-- Approve Button -->
-                <button type="button" class="btn btn-default" v-if="data.status !== 'Paid'" @click="changeStatus('Approved', payroll.id)">
-                    Approve
-                </button>
-                <button type="button" class="btn btn-default" @click="closeModal">Close</button>
+            <button type="button" class="btn btn-default" @click="changeStatus('Approved', data.id)">Approve</button>
+            <button type="button" class="btn btn-default" @click="closeModal">Close</button>
             </div>
         </div>
         </div>
