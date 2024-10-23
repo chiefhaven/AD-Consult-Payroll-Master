@@ -49,7 +49,7 @@
                             <a class="dropdown-item nav-main-link" href="{{ url('/view-employee', $employee) }}">
                             <i class="nav-main-link-icon fa fa-eye"></i><div class="btn">Profile</div>
                             </a>
-                            <form method="POST" class="dropdown-item nav-main-link" action="{{ url('/edit-employee', $employee) }}">
+                            <form method="GET" class="dropdown-item nav-main-link" action="{{ url('/edit-employee', $employee) }}">
                                 {{ csrf_field() }}
                                 <i class="nav-main-link-icon fa fa-pencil-alt"></i>
                                 <button class="btn" type="submit">Edit</button>

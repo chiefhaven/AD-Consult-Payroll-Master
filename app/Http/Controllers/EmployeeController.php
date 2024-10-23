@@ -8,6 +8,7 @@ use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Client;
 use App\Models\Designation;
+use App\Models\Projects;
 use App\Models\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Response;
@@ -88,25 +89,30 @@ class EmployeeController extends Controller
      */
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
+        // Check if the employee has an associated user
+        $userExists = isset($employee->user);
+
         $messages = [
-            'employee_no.required' => 'Employee number is required.',
-            'employee_no.unique' => 'This employee number already exists.',
+            'employee_number.required' => 'Employee number is required.',
+            'employee_number.unique' => 'This employee number already exists.',
             'prefix.required' => 'Prefix is required.',
-            'fname.required' => 'First name is required.',
-            'mname.required' => 'Middle name is required.',
-            'sname.required' => 'Surname is required.',
+            'firstname.required' => 'First name is required.',
+            'middlename.required' => 'Middle name is required.',
+            'lastname.required' => 'Surname is required.',
             'phone.required' => 'Phone number is required.',
-            'phone.regex' => 'Phone number format is invalid.',
-            'employee_alt_number.regex' => 'Alternate phone number format is invalid.',
-            'nationality_id.required' => 'Nationality is required.',
-            'client_id.exists' => 'The selected client does not exist.',
-            'designation_id.exists' => 'The selected designation does not exist.',
+            'phone.regex' => 'Phone number format is invalid. It must be between 10 and 15 digits.',
+            'employee_alt_number.regex' => 'Alternate phone number format is invalid. It must be between 10 and 15 digits.',
+            'nationality.required' => 'Nationality is required.',
+            'client.exists' => 'The selected client does not exist.',
+            'designation.exists' => 'The selected designation does not exist.',
+            'project.exists' => 'The selected project does not exist.',
             'hiredate.required' => 'Hire date is required.',
             'hiredate.date' => 'Hire date must be a valid date.',
             'education_level.required' => 'Education level is required.',
             'id_type.required' => 'ID type is required.',
             'id_number.required' => 'ID number is required.',
             'marital_status.required' => 'Marital status is required.',
+            'marital_status.in' => 'Marital status must be one of the following: Married, Divorced, Single, Widow, Other.',
             'gender.required' => 'Gender is required.',
             'birthdate.required' => 'Birth date is required.',
             'birthdate.date' => 'Birth date must be a valid date.',
@@ -114,6 +120,7 @@ class EmployeeController extends Controller
             'basic_pay.numeric' => 'Basic pay must be a valid number.',
             'probation_period.required' => 'Probation period is required.',
             'pay_period.required' => 'Pay period is required.',
+            'pay_period.in' => 'Pay period must be one of the following: Monthly, Weekly, Bi Weekly, Daily, Hourly.',
             'permanent_city.required' => 'Permanent city is required.',
             'permanent_street.required' => 'Permanent street is required.',
             'permanent_state.required' => 'Permanent state is required.',
@@ -124,66 +131,84 @@ class EmployeeController extends Controller
             'resident_country.required' => 'Resident country is required.',
             'family_contact_name.required' => 'Family contact name is required.',
             'family_contact_number.required' => 'Family contact number is required.',
-            'family_contact_number.regex' => 'Family contact number format is invalid.',
-            'family_contact_alt_number.regex' => 'Family alternate contact number format is invalid.',
+            'family_contact_number.regex' => 'Family contact number format is invalid. It must be between 10 and 15 digits.',
+            'family_contact_alt_number.regex' => 'Family alternate contact number format is invalid. It must be between 10 and 15 digits.',
         ];
 
-        $this->validate($request, [
-            'employee_no' => 'required|unique:employees,employee_no',
-            'prefix' => 'required',
-            'fname' => 'required|string|max:255',
-            'mname' => 'nullable|string|max:255',
-            'sname' => 'required|string|max:255',
-            'phone' => 'required|regex:/^\+?[0-9]{10,15}$/',
-            'employee_alt_number' => 'nullable|regex:/^\+?[0-9]{10,15}$/',
-            'nationality_id' => 'required|exists:nationalities,id',
-            'client_id' => 'required|exists:clients,id',
-            'designation_id' => 'required|exists:designations,id',
+        // Define validation rules
+        $rules = [
+            'employee_number' => 'required|string',
+            'prefix' => 'required|string',
+            'firstname' => 'required|string',
+            'mname' => 'nullable|string',
+            'lastname' => 'required|string',
+            'phone' => 'required|string',
+            'employee_alt_number' => 'nullable|string',
+            'nationality' => 'required|string',
+            'client' => 'required|exists:clients,id',
+            'contract_type' => 'required|string|in:Permanent,Partime,Contract',
+            'designation' => 'required|exists:designations,id',
+            'project' => 'nullable|exists:projects,id',
             'hiredate' => 'required|date',
-            'education_level' => 'required|string',
+            'education_level' => 'nullable|string',
+            'designated_location' => 'nullable|string',
             'id_type' => 'required|string',
             'id_number' => 'required|string',
-            'marital_status' => 'required|string',
+            'marital_status' => 'required|string|in:Married,Divorced,Single,Widow,Other',
             'gender' => 'required|string',
             'birthdate' => 'required|date',
-            'basic_pay' => 'required|numeric|min:0',
-            'probation_period' => 'required|integer|min:0',
-            'pay_period' => 'required|string',
-            'permanent_city' => 'required|string|max:255',
-            'permanent_street' => 'required|string|max:255',
-            'permanent_state' => 'required|string|max:255',
-            'permanent_country' => 'required|string|max:255',
-            'resident_city' => 'required|string|max:255',
-            'resident_street' => 'required|string|max:255',
-            'resident_state' => 'required|string|max:255',
-            'resident_country' => 'required|string|max:255',
-            'family_contact_name' => 'required|string|max:255',
-            'family_contact_number' => 'required|regex:/^\+?[0-9]{10,15}$/',
-            'family_contact_alt_number' => 'nullable|regex:/^\+?[0-9]{10,15}$/',
-        ], $messages);
+            'basic_pay' => 'required|numeric',
+            'bonus' => 'nullable|numeric',
+            'status' => 'required|string',
+            'probation_period' => 'required|integer',
+            'pay_period' => 'required|string|in:Monthly,Weekly,Bi Weekly,Daily,Hourly',
+            'permanent_city' => 'nullable|string',
+            'permanent_street' => 'nullable|string',
+            'permanent_state' => 'nullable|string',
+            'permanent_country' => 'required|string',
+            'resident_city' => 'nullable|string',
+            'resident_street' => 'nullable|string',
+            'resident_state' => 'nullable|string',
+            'resident_country' => 'required|string',
+            'family_contact_name' => 'nullable|string',
+            'family_contact_number' => 'nullable|string',
+            'family_contact_alt_number' => 'nullable|string',
+        ];
+
+        // Add conditional validation for email and username if the user exists
+        if ($userExists) {
+            $rules['email'] = 'required|email|unique:users,email,' . $employee->user->id;
+            $rules['username'] = 'required|string|unique:users,username,' . $employee->user->id;
+        }
+        else {
+            // If user does not exist, you can make these fields optional or handle as needed
+            $rules['email'] = 'required|email|unique:users,email';
+            $rules['username'] = 'required|string|unique:users,username';
+        }
+
+        // Validation
+        $this->validate($request, $rules, $messages);
 
         $data = $request->all();
 
         // Use a transaction to ensure atomicity
         DB::beginTransaction();
 
-        dd($data);
-
         try {
             // Update employee details
             $employee->update([
-                'employee_no' => $data['employee_no'] ?? null,
+                'employee_no' => $data['employee_number'] ?? null,
                 'prefix' => $data['prefix'],
-                'fname' => $data['fname'],
-                'mname' => $data['mname'],
-                'sname' => $data['sname'],
+                'fname' => $data['firstname'],
+                'mname' => $data['middlename'],
+                'sname' => $data['lastname'],
                 'phone' => $data['phone'],
                 'employee_alt_number' => $data['employee_alt_number'],
-                'nationality_id' => $data['nationality'],
-                'client_id' => Client::where('client_name', $data['client'])->firstOrFail()->id,
-                'contract_type' => 1,
-                'designation_id' => Designation::where('name', $data['designation'])->firstOrFail()->id,
-                'project_id' => $data['project'],
+                'nationality' => $data['nationality'],
+                'client_id' => $data['client'],
+                'contract_type' => $data['contract_type'],
+                'designation_id' => $data['designation'],
+                'project_id' => $data['project'] ?? '',
                 'hiredate' => $data['hiredate'],
                 'education_level' => $data['education_level'],
                 'workdept_id' => '',
@@ -192,7 +217,7 @@ class EmployeeController extends Controller
                 'id_number' => $data['id_number'],
                 'marital_status' => $data['marital_status'],
                 'gender' => $data['gender'],
-                'birthdate' => $data['date_of_birth'],
+                'birthdate' => $data['birthdate'],
                 'basic_pay' => $data['basic_pay'],
                 'bonus' => 0,
                 'status' => 'Active',
@@ -214,22 +239,23 @@ class EmployeeController extends Controller
             // Check for updating the user account linked to the employee
             if (isset($employee->user)) {
                 $employee->user->update([
-                    'email' => $post['email'],
-                    'username' => $post['username'],
+                    'email' => $data['email'],
+                    'username' => $data['username'],
                 ]);
             } else {
                 // Create new user if not already linked
                 User::create([
-                    'username' => $post['username'],
-                    'email' => $post['email'],
-                    'password' => bcrypt($post['password']),
+                    'username' => $data['username'],
+                    'email' => $data['email'],
+                    'password' => bcrypt($data['password']),
                     'employee_id' => $employee->id,
                 ]);
             }
             // Commit the transaction
             DB::commit();
 
-            return redirect()->route('employees.index')->with('success', 'Employee updated successfully.');
+            Alert::toast('Employee updated successfully.', 'success');
+            return redirect()->route('view-client', ['client' => $data['client']])->with('success', 'Employee updated successfully.');
 
         } catch (\Illuminate\Database\QueryException $exception) {
             DB::rollback();
@@ -237,7 +263,7 @@ class EmployeeController extends Controller
             // Log the error for debugging (you can also use Log::error for more control)
             \Log::error('Error updating employee: ', ['error' => $exception->getMessage()]);
 
-            return redirect()->back()->withErrors('An error occurred while updating the employee.');
+            return redirect()->back()->withErrors('An error occurred while updating the employee.'.$exception->getMessage());
         }
     }
 

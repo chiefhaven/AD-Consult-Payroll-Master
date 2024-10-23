@@ -55,7 +55,7 @@
                                     {{$employee->mname}}
                                 </td>
                                 <td>
-                                    {{$employee->client->client_name}}
+                                    {{ $employee->client ? $employee->client->client_name : 'Not assigned yet' }}
                                 </td>
                                 <td>
                                     <div class="text-bold">{{ $employee->designation->name ?? 'N/A' }}</div>
@@ -92,7 +92,7 @@
                                             <a class="dropdown-item nav-main-link" href="{{ url('/view-employee', $employee) }}">
                                             <i class="nav-main-link-icon fa fa-eye"></i><div class="btn">Profile</div>
                                             </a>
-                                            <form method="POST" class="dropdown-item nav-main-link" action="{{ url('/edit-employee', $employee) }}">
+                                            <form method="GET" class="dropdown-item nav-main-link" action="{{ url('/edit-employee', $employee) }}">
                                                 {{ csrf_field() }}
                                                 <i class="nav-main-link-icon fa fa-pencil-alt"></i>
                                                 <button class="btn" type="submit">Edit</button>

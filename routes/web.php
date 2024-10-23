@@ -30,7 +30,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
     Route::get('/add-employee/{client}', [EmployeeController::class, 'create'])->name('add-employee');
     Route::get('/view-employee/{employee}', [EmployeeController::class, 'show'])->name('view-employee');
-    Route::post('/edit-employee/{employee}', [EmployeeController::class, 'edit'])->name('edit-employee');
+    Route::get('/edit-employee/{employee}', [EmployeeController::class, 'edit'])->name('edit-employee');
     Route::put('/update-employee/{employee}', [EmployeeController::class, 'update'])->name('update-employee');
     Route::delete('/delete-employee/{employee}', [EmployeeController::class, 'destroy'])->name('delete-employee');
     Route::get('/export-employees/{client}/{type}', [EmployeeController::class, 'export'])->name('export-employees');

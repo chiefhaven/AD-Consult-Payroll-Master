@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(ProjectsTableSeeder::class);
+
         Employee::factory()->count(50)->create([
             'status' => 'Active',
             ]);
@@ -46,5 +48,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'Accountant',
             'description' => 'For all field officers'
         ]);
+
     }
 }
