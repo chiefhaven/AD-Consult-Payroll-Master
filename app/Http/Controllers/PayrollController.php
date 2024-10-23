@@ -49,6 +49,7 @@ class PayrollController extends Controller
         ], $messages);
 
         $employee_ids = request('employees');
+
         // Get the month-year string from the request
         $payroll_month_year = request('payroll_month_year');
 
@@ -62,7 +63,7 @@ class PayrollController extends Controller
 
         // Get the IDs of employees that have payroll records
         $payrollEmployeeIds = $payrolls->flatMap(function ($payroll) {
-            return $payroll->employees->pluck('id'); // Adjust 'id' if your employee ID field is named differently
+            return $payroll->employees->pluck('id');
         })->unique()->toArray();
 
         // Determine which employees do not have payroll records for the specified date
@@ -75,13 +76,14 @@ class PayrollController extends Controller
             $end_date = Carbon::parse($start_date)->lastOfMonth();
             $month_name = $end_date->format('F');
 
-            $employees = Employee::where('client_id', $client->id)
+            $employees = Employee::where('client_id', $client->id)->where('status', 'Active')
             ->find($add_payroll_for);
 
             $payrolls = [];
             foreach ($employees as $employee) {
                 // Get employee info and populate the payrolls array
                 $tax = new BusinessUtil();
+
                 if ($employee->paye == 1) {
                     $calculatedTax = $tax->calculatePaye($employee->salary);
                     $paye = $calculatedTax;

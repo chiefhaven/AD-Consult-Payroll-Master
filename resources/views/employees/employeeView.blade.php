@@ -40,10 +40,24 @@
         $hireDate = Carbon::parse($employee->hiredate);
         $endDate = Carbon::parse($employee->contract_end_date);
 
-        // Calculate the difference in years, months, and days
-        $contractYears = $hireDate->diffInYears($endDate);
-        $contractMonths = $hireDate->diffInMonths($endDate) % 12; // remaining months after full years
-        $contractDays = $hireDate->diffInDays($endDate) % 30; // remaining days after full months
+        // Calculate the difference
+        $diff = $hireDate->diff($endDate);
+
+        $contractYears = $diff->y;
+        $contractMonths = $diff->m;
+        $contractDays = $diff->d;
+
+        // Optional: Format the output string
+        $contractDuration = '';
+        if ($contractYears > 0) {
+            $contractDuration .= $contractYears . ' year' . ($contractYears > 1 ? 's' : '') . ' ';
+        }
+        if ($contractMonths > 0) {
+            $contractDuration .= $contractMonths . ' month' . ($contractMonths > 1 ? 's' : '') . ' ';
+        }
+        if ($contractDays > 0) {
+            $contractDuration .= $contractDays . ' day' . ($contractDays > 1 ? 's' : '') . ' ';
+        }
     }
 @endphp
 <div class="row">
@@ -112,20 +126,18 @@
                             <td>{{ $employee->hiredate ? $employee->hiredate->format('j F, Y') : 'Not available' }}</td>
                         </tr>
                         <tr>
+                            <th>Contract End Date</th>
+                            <td>{{ $employee->contract_end_date ? $employee->contract_end_date->format('j F, Y') : 'Not available' }}</td>
+                        </tr>
+                        <tr>
                             <th>Contract Period</th>
                             <td>
-                                @if(isset($contractYears) || isset($contractMonths) || isset($contractDays))
-                                    {{ $contractYears > 0 ? $contractYears . ' years' : '' }}
-                                    {{ $contractMonths > 0 ? $contractMonths . ' months' : '' }}
-                                    {{ $contractDays > 0 ? $contractDays . ' days' : '' }}
+                                @if(isset($contractDuration))
+                                    {{ $contractDuration}}
                                 @else
                                     Not available
                                 @endif
                             </td>
-                        </tr>
-                        <tr>
-                            <th>Contract End Date</th>
-                            <td>{{ $employee->contract_end_date ? $employee->contract_end_date->format('j F, Y') : 'Not available' }}</td>
                         </tr>
                         <tr>
                             <th>Birthdate (Age)</th>

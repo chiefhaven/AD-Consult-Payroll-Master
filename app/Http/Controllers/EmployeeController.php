@@ -159,7 +159,7 @@ class EmployeeController extends Controller
             'birthdate' => 'required|date',
             'basic_pay' => 'required|numeric',
             'bonus' => 'nullable|numeric',
-            'status' => 'required|string',
+            'status' => 'required|string|in:Pending,Active,Contract terminated,Contract ended,Suspended,On Probation',
             'probation_period' => 'required|integer',
             'pay_period' => 'required|string|in:Monthly,Weekly,Bi Weekly,Daily,Hourly',
             'permanent_city' => 'nullable|string',
@@ -234,6 +234,7 @@ class EmployeeController extends Controller
                 'family_contact_name' => $data['family_contact_name'],
                 'family_contact_number' => $data['family_contact_number'],
                 'family_contact_alt_number' => $data['family_contact_alt_number'],
+                'contract_end_date' => $data['contract_end_date'],
             ]);
 
             // Check for updating the user account linked to the employee

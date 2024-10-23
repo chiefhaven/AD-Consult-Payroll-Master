@@ -70,14 +70,16 @@
                             fgroup-class="col-md-3" class="{{ $errors->has('employee_number') ? 'is-invalid' : '' }}"
                             id="employee_number" value="{{ old('employee_no', $employee->employee_no) }}" autocomplete="off" required/>
 
-                        <x-adminlte-select name="status" label="Status:*" data-placeholder="Select an option..."
+                        <x-adminlte-select2 name="status" label="Status:*" data-placeholder="Select an option..."
                             fgroup-class="col-md-3" class="{{ $errors->has('status') ? 'is-invalid' : '' }}" autocomplete="off" required>
                             <option value="" selected disabled>Please select an option...</option>
+                            <option value="Pending" {{ (old('status', optional($employee)->status) == 'Pending') ? 'selected' : '' }}>Pending</option>
                             <option value="Active" {{ (old('status', optional($employee)->status) == 'Active') ? 'selected' : '' }}>Active</option>
+                            <option value="Contract terminated" {{ (old('status', optional($employee)->status) == 'Contract terminated') ? 'selected' : '' }}>Contract terminated</option>
                             <option value="Contract ended" {{ (old('status', optional($employee)->status) == 'Contract ended') ? 'selected' : '' }}>Contract ended</option>
                             <option value="Suspended" {{ (old('status', optional($employee)->status) == 'Suspended') ? 'selected' : '' }}>Suspended</option>
-                            <option value="Pending" {{ (old('status', optional($employee)->status) == 'Pending') ? 'selected' : '' }}>Pending</option>
-                        </x-adminlte-select>
+                            <option value="On Probation" {{ (old('status', optional($employee)->status) == 'On Probation') ? 'selected' : '' }}>On Probation</option>
+                        </x-adminlte-select2>
                     </div>
                 </div>
             </div>
@@ -89,15 +91,15 @@
                             fgroup-class="col-md-2" class="{{ $errors->has('birthdate') ? 'is-invalid' : '' }}"
                             id="birthdate" value="{{ old('birthdate', optional($employee)->birthdate) }}" autocomplete="off" required/>
 
-                        <x-adminlte-select name="gender" label="Gender:*" data-placeholder="Select an option..."
+                        <x-adminlte-select2 name="gender" label="Gender:*" data-placeholder="Select an option..."
                             fgroup-class="col-md-2" class="{{ $errors->has('gender') ? 'is-invalid' : '' }}" autocomplete="off" required>
                             <option value="" selected disabled>Please select an option...</option>
                             <option value="Male" {{ (old('gender', optional($employee)->gender) == 'Male') ? 'selected' : '' }}>Male</option>
                             <option value="Female" {{ (old('gender', optional($employee)->gender) == 'Female') ? 'selected' : '' }}>Female</option>
                             <option value="Other" {{ (old('gender', optional($employee)->gender) == 'Other') ? 'selected' : '' }}>Other</option>
-                        </x-adminlte-select>
+                        </x-adminlte-select2>
 
-                        <x-adminlte-select name="marital_status" label="Marital status:*" data-placeholder="Select an option..."
+                        <x-adminlte-select2 name="marital_status" label="Marital status:*" data-placeholder="Select an option..."
                             fgroup-class="col-md-2" class="{{ $errors->has('marital_status') ? 'is-invalid' : '' }}" autocomplete="off" required>
                             <option value="" selected disabled>Please select an option...</option>
                             <option value="Married" {{ (old('marital_status', optional($employee)->marital_status) == 'Married') ? 'selected' : '' }}>Married</option>
@@ -105,13 +107,13 @@
                             <option value="Divorced" {{ (old('marital_status', optional($employee)->marital_status) == 'Divorced') ? 'selected' : '' }}>Divorced</option>
                             <option value="Other" {{ (old('marital_status', optional($employee)->marital_status) == 'Other') ? 'selected' : '' }}>Other</option>
                             <option value="Widow" {{ (old('marital_status', optional($employee)->marital_status) == 'Widow') ? 'selected' : '' }}>Widow</option>
-                        </x-adminlte-select>
+                        </x-adminlte-select2>
 
                         <x-adminlte-input name="employee_alt_number" label="Alternate phone number:"
                             placeholder="Alternate phone number" fgroup-class="col-md-3" class="{{ $errors->has('employee_alt_number') ? 'is-invalid' : '' }}"
                             id="employee_alt_number" value="{{ old('employee_alt_number', optional($employee)->employee_alt_number) }}" autocomplete="off"/>
 
-                        <x-adminlte-select name="nationality" label="Nationality:*" data-placeholder="Select an option..."
+                        <x-adminlte-select2 name="nationality" label="Nationality:*" data-placeholder="Select an option..."
                             fgroup-class="col-md-3" class="{{ $errors->has('nationality') ? 'is-invalid' : '' }}" autocomplete="off" required>
                             <option value="" selected disabled>Please select an option...</option>
                             @foreach ($countries as $country)
@@ -119,9 +121,9 @@
                                     {{ $country->name }}
                                 </option>
                             @endforeach
-                        </x-adminlte-select>
+                        </x-adminlte-select2>
 
-                        <x-adminlte-select name="id_type" label="ID Type:*" data-placeholder="Select an option..."
+                        <x-adminlte-select2 name="id_type" label="ID Type:*" data-placeholder="Select an option..."
                             fgroup-class="col-md-2" class="{{ $errors->has('id_type') ? 'is-invalid' : '' }}" autocomplete="off" required>
                             <option value="" selected disabled>Please select an option...</option>
                             @foreach ($idTypes as $idType)
@@ -129,7 +131,7 @@
                                     {{ $idType }}
                                 </option>
                             @endforeach
-                        </x-adminlte-select>
+                        </x-adminlte-select2>
 
                         <x-adminlte-input name="id_number" label="ID number:*" placeholder="ID number"
                             fgroup-class="col-md-2" class="{{ $errors->has('id_number') ? 'is-invalid' : '' }}"
@@ -147,7 +149,7 @@
                             fgroup-class="col-md-2" class="{{ $errors->has('resident_state') ? 'is-invalid' : '' }}"
                             id="resident_state" value="{{ old('resident_state', optional($employee)->resident_state) }}" autocomplete="off" required/>
 
-                        <x-adminlte-select name="resident_country" label="Resident country:*" data-placeholder="Select an option..."
+                        <x-adminlte-select2 name="resident_country" label="Resident country:*" data-placeholder="Select an option..."
                             fgroup-class="col-md-2" class="{{ $errors->has('resident_country') ? 'is-invalid' : '' }}" autocomplete="off" required>
                             <option value="" selected disabled>Please select an option...</option>
                             @foreach ($countries as $country)
@@ -155,7 +157,7 @@
                                     {{ $country->name }}
                                 </option>
                             @endforeach
-                        </x-adminlte-select>
+                        </x-adminlte-select2>
 
                         <x-adminlte-input name="permanent_street" label="Permanent street:" placeholder="Permanent street"
                             fgroup-class="col-md-3" class="{{ $errors->has('permanent_street') ? 'is-invalid' : '' }}"
@@ -169,7 +171,7 @@
                             fgroup-class="col-md-3" class="{{ $errors->has('permanent_state') ? 'is-invalid' : '' }}"
                             id="permanent_state" value="{{ old('permanent_state', optional($employee)->permanent_state) }}" autocomplete="off"/>
 
-                        <x-adminlte-select name="permanent_country" label="Permanent country:" data-placeholder="Select an option..."
+                        <x-adminlte-select2 name="permanent_country" label="Permanent country:" data-placeholder="Select an option..."
                             fgroup-class="col-md-3" class="{{ $errors->has('permanent_country') ? 'is-invalid' : '' }}" autocomplete="off">
                             <option value="" selected disabled>Please select an option...</option>
                             @foreach ($countries as $country)
@@ -177,7 +179,7 @@
                                     {{ $country->name }}
                                 </option>
                             @endforeach
-                        </x-adminlte-select>
+                        </x-adminlte-select2>
 
                         <x-adminlte-input name="family_contact_name" label="Family contact name:" placeholder="Family contact name"
                             fgroup-class="col-md-4" class="{{ $errors->has('family_contact_name') ? 'is-invalid' : '' }}"
@@ -198,14 +200,16 @@
                 <div class="box-body">
                     <p>Employment details</p>
                         <div class="row">
-                            <x-adminlte-input type="text" name="hiredate" label="Date Hired:" placeholder="Date hired"
-                                fgroup-class="col-md-4"
+                            <x-adminlte-input type="text" name="hiredate" label="Date Hired:" placeholder="Date hired" fgroup-class="col-md-4"
                                 class="{{ $errors->has('hiredate') ? 'is-invalid' : '' }}"
                                 id="hiredate"
                                 autocomplete="off"
                                 value="{{ old('hiredate', optional($employee)->hiredate) }}" />
 
-                            <x-adminlte-select name="education_level" label="Education Level:"
+                            <x-adminlte-input type="text" name="contract_end_date" label="Contract end date:"
+                                placeholder="Contract end date" fgroup-class="col-md-4" class="{{ $errors->has('contract_end_date') ? 'is-invalid' : '' }}" id="contract_end_date" value="{{ old('hiredate', optional($employee)->contract_end_date) }}" autocomplete="off" required/>
+
+                            <x-adminlte-select2 name="education_level" label="Education Level:"
                                 data-placeholder="Select an option..."
                                 fgroup-class="col-md-4"
                                 class="{{ $errors->has('education_level') ? 'is-invalid' : '' }}"
@@ -216,7 +220,7 @@
                                         {{ $educationLevel }}
                                     </option>
                                 @endforeach
-                            </x-adminlte-select>
+                            </x-adminlte-select2>
 
                             <x-adminlte-select2 name="project" id="project" label="Project:" data-placeholder="Select an option..." fgroup-class="col-md-4" class="{{ $errors->has('project') ? 'is-invalid' : '' }}" autocomplete="off">
                                 <option value="" selected disabled>Please select an option...</option>
@@ -227,7 +231,7 @@
                                 @endforeach
                             </x-adminlte-select2>
 
-                            <x-adminlte-select name="designation" id="designation" label="Designation:"
+                            <x-adminlte-select2 name="designation" id="designation" label="Designation:"
                                 data-placeholder="Select an option..."
                                 fgroup-class="col-md-4"
                                 class="{{ $errors->has('designation') ? 'is-invalid' : '' }}"
@@ -238,9 +242,9 @@
                                         {{ $designation->name }}
                                     </option>
                                 @endforeach
-                            </x-adminlte-select>
+                            </x-adminlte-select2>
 
-                            <x-adminlte-select name="contract_type" label="Contract type:"
+                            <x-adminlte-select2 name="contract_type" label="Contract type:"
                                 data-placeholder="Select an option..."
                                 fgroup-class="col-md-4"
                                 class="{{ $errors->has('contract_type') ? 'is-invalid' : '' }}"
@@ -249,7 +253,7 @@
                                 <option value="Permanent" {{ (old('contract_type', optional($employee)->contract_type) == 'Permanent') ? 'selected' : '' }}>Permanent</option>
                                 <option value="Part time" {{ (old('contract_type', optional($employee)->contract_type) == 'Part time') ? 'selected' : '' }}>Part time</option>
                                 <option value="Contract" {{ (old('contract_type', optional($employee)->contract_type) == 'Contract') ? 'selected' : '' }}>Contract</option>
-                            </x-adminlte-select>
+                            </x-adminlte-select2>
 
                             <div class="col-md-4">
                                 <div class="row input-group form-group-lg group-side-padding">
@@ -262,7 +266,7 @@
                                         autocomplete="off"
                                         required/>
 
-                                    <x-adminlte-select name="probation_period_type" label="Period type"
+                                    <x-adminlte-select2 name="probation_period_type" label="Period type"
                                         fgroup-class="col-md-4 px-0"
                                         class="{{ $errors->has('probation_period_type') ? 'is-invalid' : '' }}"
                                         data-placeholder="Select an option..."
@@ -274,7 +278,7 @@
                                                 {{ $terminationPeriodType }}
                                             </option>
                                         @endforeach
-                                    </x-adminlte-select>
+                                    </x-adminlte-select2>
                                 </div>
                             </div>
 
@@ -287,7 +291,7 @@
                                         value="{{ old('termination_notice_period', optional($employee)->termination_notice_period) }}"
                                         autocomplete="off" required/>
 
-                                    <x-adminlte-select name="termination_notice_period_type" label="Period type"
+                                    <x-adminlte-select2 name="termination_notice_period_type" label="Period type"
                                         fgroup-class="col-md-4 pl-0"
                                         class="{{ $errors->has('termination_notice_period_type') ? 'is-invalid' : '' }}"
                                         data-placeholder="Select an option..."
@@ -299,22 +303,18 @@
                                                 {{ $terminationPeriodType }}
                                             </option>
                                         @endforeach
-                                    </x-adminlte-select>
+                                    </x-adminlte-select2>
                                 </div>
                             </div>
 
-                            <x-adminlte-input type="text" name="contract_end_date" label="Contract end date:"
-                                placeholder="Contract end date" fgroup-class="col-md-4" class="{{ $errors->has('contract_end_date') ? 'is-invalid' : '' }}" id="contract_end_date" autocomplete="off" required/>
-
-
-                            <x-adminlte-select id="designated_location" name="designated_location" label="Designated Location" data-placeholder="Select an option..." fgroup-class="col-md-4" class="{{ $errors->has('designated_location') ? 'is-invalid' : '' }}" autocomplete="off">
+                            <x-adminlte-select2 id="designated_location" name="designated_location" label="Designated Location" data-placeholder="Select an option..." fgroup-class="col-md-4" class="{{ $errors->has('designated_location') ? 'is-invalid' : '' }}" autocomplete="off">
                                 <option value="" selected disabled>Please select an option...</option>
                                 @foreach (HavenPlus\Districts\Models\District::orderBy('name', 'ASC')->get() as $district)
                                     <option value="{{ $district->iso_code }}" {{ $district->iso_code === $employee->designated_location ? 'selected' : '' }}>
                                         {{ $district->name }}
                                     </option>
                                 @endforeach
-                            </x-adminlte-select>
+                            </x-adminlte-select2>
 
                             <x-adminlte-input name="designated_location_specifics" label="Designated location other specifics:" placeholder="Designated location other specifics" fgroup-class="col-md-4" class="{{ $errors->has('designated_location_specifics') ? 'is-invalid' : '' }}" id="designated_location_specific" autocomplete="off"/>
                         </div>
@@ -336,7 +336,7 @@
                             required
                         />
 
-                        <x-adminlte-select
+                        <x-adminlte-select2
                             name="pay_period"
                             label="Pay period:"
                             fgroup-class="col-md-2 pl-0"
@@ -349,7 +349,7 @@
                                     {{ $payPeriod }}
                                 </option>
                             @endforeach
-                        </x-adminlte-select>
+                        </x-adminlte-select2>
 
                         <x-adminlte-input
                             type="checkbox"
