@@ -34,7 +34,9 @@
                 <h3>For Client: <strong>{{ $employee->client->client_name }}</strong></h3>
             </div>
         </div>
-        <form wire:submit="save" autocomplete="off">
+        <form action="{{ route('update-employee', $employee) }}" method="POST" autocomplete="off">
+            @csrf
+            @method('PUT')
             <x-adminlte-input type="text" name="client" id="client" value="{{ $employee->client->id }}" autocomplete="false" hidden/>
             <div class="card mb-3 p-4">
                 <div class="box-body">
@@ -72,7 +74,7 @@
                     <div class="row">
                         <x-adminlte-input type="text" name="date_of_birth" label="Date of birth:*" placeholder="Date of birth"
                             fgroup-class="col-md-2" class="{{ $errors->has('date_of_birth') ? 'is-invalid' : '' }}"
-                            id="date_of_birth" value="{{ old('date_of_birth', optional($employee)->date_of_birth) }}" autocomplete="false" required/>
+                            id="date_of_birth" value="{{ old('date_of_birth', optional($employee)->birthdate) }}" autocomplete="false" required/>
 
                         <x-adminlte-select name="gender" label="Gender:*" data-placeholder="Select an option..."
                             fgroup-class="col-md-2" class="{{ $errors->has('gender') ? 'is-invalid' : '' }}" autocomplete="off" required>
@@ -391,7 +393,6 @@
     $(document).ready(function() {
         $("#hiredate, #contract_end_date, #date_of_birth").datepicker({
             format: "dd MM yyyy", // Format to display day, month, and year
-            autoclose: true // Automatically close the datepicker when a date is selected
         });
     });
 

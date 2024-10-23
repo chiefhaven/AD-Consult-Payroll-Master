@@ -7,12 +7,15 @@ use App\Models\Employee;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Client;
+use App\Models\Designation;
+use App\Models\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use HavenPlus\Districts\Models\District;
 use WW\Countries\Models\Country;
+use DB;
 
 class EmployeeController extends Controller
 {
@@ -85,8 +88,159 @@ class EmployeeController extends Controller
      */
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
-        //
+        $messages = [
+            'employee_no.required' => 'Employee number is required.',
+            'employee_no.unique' => 'This employee number already exists.',
+            'prefix.required' => 'Prefix is required.',
+            'fname.required' => 'First name is required.',
+            'mname.required' => 'Middle name is required.',
+            'sname.required' => 'Surname is required.',
+            'phone.required' => 'Phone number is required.',
+            'phone.regex' => 'Phone number format is invalid.',
+            'employee_alt_number.regex' => 'Alternate phone number format is invalid.',
+            'nationality_id.required' => 'Nationality is required.',
+            'client_id.exists' => 'The selected client does not exist.',
+            'designation_id.exists' => 'The selected designation does not exist.',
+            'hiredate.required' => 'Hire date is required.',
+            'hiredate.date' => 'Hire date must be a valid date.',
+            'education_level.required' => 'Education level is required.',
+            'id_type.required' => 'ID type is required.',
+            'id_number.required' => 'ID number is required.',
+            'marital_status.required' => 'Marital status is required.',
+            'gender.required' => 'Gender is required.',
+            'birthdate.required' => 'Birth date is required.',
+            'birthdate.date' => 'Birth date must be a valid date.',
+            'basic_pay.required' => 'Basic pay is required.',
+            'basic_pay.numeric' => 'Basic pay must be a valid number.',
+            'probation_period.required' => 'Probation period is required.',
+            'pay_period.required' => 'Pay period is required.',
+            'permanent_city.required' => 'Permanent city is required.',
+            'permanent_street.required' => 'Permanent street is required.',
+            'permanent_state.required' => 'Permanent state is required.',
+            'permanent_country.required' => 'Permanent country is required.',
+            'resident_city.required' => 'Resident city is required.',
+            'resident_street.required' => 'Resident street is required.',
+            'resident_state.required' => 'Resident state is required.',
+            'resident_country.required' => 'Resident country is required.',
+            'family_contact_name.required' => 'Family contact name is required.',
+            'family_contact_number.required' => 'Family contact number is required.',
+            'family_contact_number.regex' => 'Family contact number format is invalid.',
+            'family_contact_alt_number.regex' => 'Family alternate contact number format is invalid.',
+        ];
+
+        $this->validate($request, [
+            'employee_no' => 'required|unique:employees,employee_no',
+            'prefix' => 'required',
+            'fname' => 'required|string|max:255',
+            'mname' => 'nullable|string|max:255',
+            'sname' => 'required|string|max:255',
+            'phone' => 'required|regex:/^\+?[0-9]{10,15}$/',
+            'employee_alt_number' => 'nullable|regex:/^\+?[0-9]{10,15}$/',
+            'nationality_id' => 'required|exists:nationalities,id',
+            'client_id' => 'required|exists:clients,id',
+            'designation_id' => 'required|exists:designations,id',
+            'hiredate' => 'required|date',
+            'education_level' => 'required|string',
+            'id_type' => 'required|string',
+            'id_number' => 'required|string',
+            'marital_status' => 'required|string',
+            'gender' => 'required|string',
+            'birthdate' => 'required|date',
+            'basic_pay' => 'required|numeric|min:0',
+            'probation_period' => 'required|integer|min:0',
+            'pay_period' => 'required|string',
+            'permanent_city' => 'required|string|max:255',
+            'permanent_street' => 'required|string|max:255',
+            'permanent_state' => 'required|string|max:255',
+            'permanent_country' => 'required|string|max:255',
+            'resident_city' => 'required|string|max:255',
+            'resident_street' => 'required|string|max:255',
+            'resident_state' => 'required|string|max:255',
+            'resident_country' => 'required|string|max:255',
+            'family_contact_name' => 'required|string|max:255',
+            'family_contact_number' => 'required|regex:/^\+?[0-9]{10,15}$/',
+            'family_contact_alt_number' => 'nullable|regex:/^\+?[0-9]{10,15}$/',
+        ], $messages);
+
+        $data = $request->all();
+
+        // Use a transaction to ensure atomicity
+        DB::beginTransaction();
+
+        dd($data);
+
+        try {
+            // Update employee details
+            $employee->update([
+                'employee_no' => $data['employee_no'] ?? null,
+                'prefix' => $data['prefix'],
+                'fname' => $data['fname'],
+                'mname' => $data['mname'],
+                'sname' => $data['sname'],
+                'phone' => $data['phone'],
+                'employee_alt_number' => $data['employee_alt_number'],
+                'nationality_id' => $data['nationality'],
+                'client_id' => Client::where('client_name', $data['client'])->firstOrFail()->id,
+                'contract_type' => 1,
+                'designation_id' => Designation::where('name', $data['designation'])->firstOrFail()->id,
+                'project_id' => $data['project'],
+                'hiredate' => $data['hiredate'],
+                'education_level' => $data['education_level'],
+                'workdept_id' => '',
+                'designated_location' => $data['designated_location'],
+                'id_type' => $data['id_type'],
+                'id_number' => $data['id_number'],
+                'marital_status' => $data['marital_status'],
+                'gender' => $data['gender'],
+                'birthdate' => $data['date_of_birth'],
+                'basic_pay' => $data['basic_pay'],
+                'bonus' => 0,
+                'status' => 'Active',
+                'probation_period' => $data['probation_period'],
+                'pay_period' => $data['pay_period'],
+                'permanent_city' => $data['permanent_city'],
+                'permanent_street' => $data['permanent_street'],
+                'permanent_state' => $data['permanent_state'],
+                'permanent_country' => $data['permanent_country'],
+                'resident_city' => $data['resident_city'],
+                'resident_street' => $data['resident_street'],
+                'resident_state' => $data['resident_state'],
+                'resident_country' => $data['resident_country'],
+                'family_contact_name' => $data['family_contact_name'],
+                'family_contact_number' => $data['family_contact_number'],
+                'family_contact_alt_number' => $data['family_contact_alt_number'],
+            ]);
+
+            // Check for updating the user account linked to the employee
+            if (isset($employee->user)) {
+                $employee->user->update([
+                    'email' => $post['email'],
+                    'username' => $post['username'],
+                ]);
+            } else {
+                // Create new user if not already linked
+                User::create([
+                    'username' => $post['username'],
+                    'email' => $post['email'],
+                    'password' => bcrypt($post['password']),
+                    'employee_id' => $employee->id,
+                ]);
+            }
+            // Commit the transaction
+            DB::commit();
+
+            return redirect()->route('employees.index')->with('success', 'Employee updated successfully.');
+
+        } catch (\Illuminate\Database\QueryException $exception) {
+            DB::rollback();
+
+            // Log the error for debugging (you can also use Log::error for more control)
+            \Log::error('Error updating employee: ', ['error' => $exception->getMessage()]);
+
+            return redirect()->back()->withErrors('An error occurred while updating the employee.');
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -230,6 +384,25 @@ class EmployeeController extends Controller
             // Handle unsupported export type
             return response()->json(['error' => 'Unsupported export type'], Response::HTTP_BAD_REQUEST);
         }
+    }
+
+    public function registerUser($username, $email, $password, $relationshipColumn, $recentActivity){
+        $registerUser = new User();
+                $registerUser->create([
+                    'username' => $username,
+                    'email' => $email,
+                    'password' => $password,
+                    $relationshipColumn => Employee::orderBy($recentActivity,'DESC')->first()->id,
+                ]);
+    }
+
+    public function updateUser($username, $email, $relationshipColumn, $recentActivity){
+        $updateUser = new User();
+                $updateUser->update([
+                    'email' => $email,
+                    'username' => $username,
+                    $relationshipColumn => Employee::orderBy($recentActivity,'DESC')->first()->id,
+                ]);
     }
 
 }

@@ -337,11 +337,9 @@ class EmployeeForm extends Form
         }
         catch (\Illuminate\Database\QueryException $exception){
 
-
             DB::rollback();
             $errorInfo = $exception->errorInfo;
             dd($errorInfo);
-
 
         }
     }
