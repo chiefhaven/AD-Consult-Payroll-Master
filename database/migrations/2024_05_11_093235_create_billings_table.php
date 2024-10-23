@@ -15,6 +15,8 @@ return new class extends Migration
         Schema::create('billings', function (Blueprint $table) {
             $table->id();
             // $table->uuid('id');
+            $table->unsignedBigInteger('client_id');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->text('client_name');
             $table->float('total_amount');
             $table->float('discount');
@@ -24,11 +26,13 @@ return new class extends Migration
             $table->enum('discount_type', ['loyalty', 'trade', 'no discount'])->default('no discount');
             $table->float('balance');
             $table->float('tax_amount');
+            $table->string('product');
+            $table->integer('quantity');
+            $table->float('rate');
             $table->string('discription')->nullable();
             $table->string('transaction_terms');
             $table->date('issue_date');
             $table->date('due_date')->nullable();
-            $table->unsignedBigInteger('client_id');
             $table->timestamps();
         });
     }
@@ -38,6 +42,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('billings');
+       Schema::table('billings', function (Blueprint $table) {
+        $table->dropForeign(['client_id']);
+        $table->dropColumn('client_id');
+    });
     }
 };

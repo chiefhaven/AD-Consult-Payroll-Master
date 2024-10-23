@@ -58,32 +58,42 @@
             <div class="card">
                 <div class="card-body ">
                     {{-- <canvas id="salesChart" style="height: 250px;"></canvas> --}}
+
                     <div class="row">
-                        <div class="col md-6">
-                            <div class="title">
+                        <div class="col md-5">
+
+
+                            <div>
+                                <h4>INVOICE TO</h4>
                                 <p>{{ $billing->client_name }}</p>
-                                <p>Ginery Corner, street 23, zip code 2356</p>
-                                <p>+265 999 777 2345</p>
+                                <p>{{ $billing->client->address }}</p>
+                                <p>{{ $billing->client->phone }}</p>
                             </div>
+
+
                         </div>
 
-                        <div class="col md-6">
+                        <div class="col md-5">
                             <div>
                                 <h4>Logo Here</h4>
                             </div>
                         </div>
+
+                        <div class="col-md-2">
+                            <a href="{{ route('download', ['id' => $billing->id]) }}" class="btn btn-secondary">Download Invoice</a>
+                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
-                            <h4>Bill To</h4>
-                            <p>{{ $billing->client_name }}</p>
-                            <p>{{ $billing->client->address }}</p>
-                            <p>{{ $billing->client->phone }}</p>
+                        <div class="col-md-5">
+
                         </div>
-                        <div class="col-md-6">
-                            <p>Invoice No:INV10 </p>
+                        <div class="col-md-5">
+                            <p>Invoice No:INV00{{ $billing->id }} </p>
                             <p>Date:{{ $billing->issue_date }} </p>
                             <p>Due Date: {{ $billing->due_date }} </p>
+                        </div>
+                        <div class="col-md-2">
+
                         </div>
                     </div>
                     <div class="row">
@@ -97,25 +107,29 @@
                             </head>
                             <tbody>
                                 <tr>
-                                    <td> </td>
-                                    <td> {{ $billing->discription }}</td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
+                                    <td>{{ $billing->product }} </td>
+                                    <td>{{ $billing->discription }}</td>
+                                    <td>{{ $billing->quantity }} </td>
+                                    <td>MWK {{ $billing->rate }} /(Qty/Service) </td>
+                                    <td>{{number_format($billing->quantity * $billing->rate, 2)  }}  </td>
                                 </tr>
                             </tbody>
 
                         </table>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <h4>Transaction Terms</h4>
                                 <p>{{ $billing->transaction_terms }}</p>
                             </div>
-                            <div class="col-md-6">
+                        <div class="col-md-4">
+
+                        </div>
+
+                            <div class="col-md-4">
                                 <p>Subtotal:{{ $billing->total_amount }} </p>
                                 <p>Discount:{{ $billing->discount }} </p>
                                 <p>Tax Amount:{{ $billing->tax_amount }}</p>
-                                <p>TOTAL: {{number_format($billing->total_amount-$billing->discount-$billing->tax_amount, 2) }}</p>
+                                <div class="card">TOTAL: {{number_format($billing->total_amount-$billing->discount-$billing->tax_amount, 2) }}</div>
                             </div>
                         </div>
                     </div>

@@ -26,10 +26,13 @@ class Billing extends Model
             'discription',
             'issue_date',
             'due_date',
+            'product',
+            'quantity',
+            'rate',
 
     ];
         public function Client()
     {
-        return $this->hasMany(Client::class);
+        return $this->belongsTo(Client::class,);
     }
 }

@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Billing;
 use Illuminate\Http\Request;
-use PDF;
 
-class BillingController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $billings = Billing::all();
-
-        return view('Billings.billing', compact('billings'));
+        //
     }
 
     /**
@@ -39,10 +35,7 @@ class BillingController extends Controller
      */
     public function show(string $id)
     {
-
-        $billing = Billing::with('client')->findOrFail($id);
-        return view('billings.billingView', compact('billing'));
-
+        //
     }
 
     /**
@@ -59,7 +52,6 @@ class BillingController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        return view('Billings.billingEdit');
     }
 
     /**
@@ -69,20 +61,4 @@ class BillingController extends Controller
     {
         //
     }
-
-    public function downloadInvoice($id)
-    {
-    // Get the billing data for the invoice
-    $billing = Billing::findOrFail($id);
-
-    // Load the view and pass the billing data
-    $pdf = PDF::loadView('billings.invoice_pdf', compact('billing'));
-
-    // Set the filename
-    $filename = 'Invoice_' . $billing->id . '.pdf';
-
-    // Return the PDF download response
-    return $pdf->download($filename);
-    }
-
 }

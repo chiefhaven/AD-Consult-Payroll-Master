@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Billing;
+use App\Models\Client;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -14,10 +16,13 @@ class BillingFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
+    protected $model = Billing::class;
+    
     public function definition(): array
     {
         return [
-            'client_id' => $this->faker->randomNumber(),
+            'client_id' => client::factory(),
             'client_name' => $this->faker->sentence(2),
             'status' => $this->faker->randomElement(['pending', 'completed', 'failed']),
             'bill_type' => $this->faker->randomElement(['invoice', 'quotation']),
@@ -31,6 +36,9 @@ class BillingFactory extends Factory
             'due_date' => $this->faker->date(),
             'discription' => $this->faker->sentence(7),
             'transaction_terms' => $this->faker->sentence(10),
+            'product' => $this->faker->sentence(1),
+            'quantity' => $this->faker->randomNumber(1),
+            'rate' => $this->faker->randomNumber(1),
 
         ];
     }

@@ -48,11 +48,12 @@ Route::get('/leaves', [LeaveController::class, 'index'])->name('leave');
 //Billing routes
 Route::get('/billings', [BillingController::class, 'index'])->name('billing');
 Route::get('/billings/view/{id}', [BillingController::class, 'show'])->name('billingView');
+Route::get('/billings/invoice/download{id}', [BillingController::class, 'downloadInvoice'])->name('download');
 // Route::get('/billings/{id}', [BillingController::class, 'show'])->name('billing_view');
 // Route::get('/billings/{id}', [BillingController::class, 'update'])->name('billing_edit');
 
 
- 
+
 // //Leave routes
 // Route::get('/leaves', [LeaveController::class, 'index'])->name('leaves');
 
