@@ -65,6 +65,7 @@ Route::get('/add-sale', [BillingController::class, 'create'])->middleware(['auth
 Route::get('/store-sale', [BillingController::class, 'store'])->middleware(['auth'])->name('store-sale');
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/payroll', [PayrollController::class, 'index'])->name('payrolls');
     Route::get('/add-payroll/{client}', [PayrollController::class, 'create'])->name('add-payroll');
     Route::post('/save-payroll', [PayrollController::class, 'store'])->name('save-payroll');
     Route::get('/view-payroll/{payroll}', [PayrollController::class, 'show'])->name('show-payroll');

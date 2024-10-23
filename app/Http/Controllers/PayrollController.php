@@ -20,7 +20,8 @@ class PayrollController extends Controller
      */
     public function index()
     {
-        //
+        $payrolls = Payroll::all();
+        return view("payroll.payrolls", compact("payrolls"));
     }
 
     /**
