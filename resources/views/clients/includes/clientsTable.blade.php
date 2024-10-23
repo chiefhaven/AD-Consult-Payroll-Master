@@ -18,7 +18,7 @@
         </thead>
         <tbody class="hovabletbody">
             @foreach ($clients as $client)
-                <tr onclick="location.href='{{ url('/client', $client) }}'" style="cursor: pointer;">
+                <tr>
                     <td class="font-w600">
                         {{$client->client_name}}
                     </td>
@@ -65,7 +65,7 @@
                                         <i class="nav-main-link-icon fa fa-eye"></i>
                                         <button class="btn">View</button>
                                     </a>
-                                    <form method="POST" class="dropdown-item nav-main-link" action="{{ url('/edit-clinent', $client) }}">
+                                    <form method="GET" class="dropdown-item nav-main-link" action="{{ url('/edit-client', $client) }}">
                                         {{ csrf_field() }}
                                         <i class="nav-main-link-icon fa fa-pencil-alt"></i>
                                         <button class="btn" type="submit">Edit</button>

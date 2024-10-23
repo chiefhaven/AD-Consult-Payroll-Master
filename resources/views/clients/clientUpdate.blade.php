@@ -2,15 +2,13 @@
 
 {{-- Extend and customize the browser title --}}
 
-@section('title', 'Employees')
+@section('title', 'Edit client')
 
 {{-- Extend and customize the page content header --}}
 
 @section('content_header')
     @hasSection('content_header_title')
         <h1 class="text-muted">
-            @yield('content_header_title', 'adminlte')
-
             @hasSection('content_header_subtitle')
                 <small class="text-dark">
                     <i class="fas fa-xs fa-angle-right text-muted"></i>
@@ -25,8 +23,8 @@
 
 @section('content')
 <div class="row">
-    <livewire:common.page-header pageTitle="Update employee"/>
-    <livewire:clients.updateClient :client_id='30' />
+    <livewire:common.page-header pageTitle="Update client"/>
+    <livewire:clients.update-client :client_id="$client" />
 </div>
 @stop
 

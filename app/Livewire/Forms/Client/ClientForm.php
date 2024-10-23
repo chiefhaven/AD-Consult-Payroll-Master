@@ -121,7 +121,7 @@ class ClientForm extends Form
         $this->state = $this->client->state;
         $this->city = $this->client->city;
         $this->country = Country::find($this->client->country_id)->name;
-        $this->industry = Industry::find($this->client->industry_id)->name;
+        $this->industry = Industry::find($this->client->industry_id)->name ?? '';
         $this->tax_number = $this->client->tax_number_1;
         $this->tax_label = $this->client->tax_label_1;
         $this->tax_number_2 = $this->client->tax_number_2;

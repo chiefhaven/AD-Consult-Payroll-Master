@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/clients', [ClientController::class, 'index'])->name('clients');
     Route::get('/addclient', AddClient::class)->name('addclient');
     Route::get('/client/{client}', [ClientController::class, 'show'])->name('view-client');
+    Route::get('/edit-client/{client}', [ClientController::class, 'edit'])->name('edit-client');
     Route::get('/update-client/{id}', UpdateClient::class)->name('update-client');
     Route::get('/export-clients/{type}', [ClientController::class, 'export'])->name('export-clients');
     Route::post('/fetch-client', [BusinessUtil::class, 'fetchClient'])->name('fetch-client');

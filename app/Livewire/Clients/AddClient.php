@@ -14,7 +14,6 @@ class AddClient extends Component
     use LivewireAlert;
     public $countries =[];
     public $industries =[];
-    public $pageTitle = 'Add Client';
 
     public function mount()
     {

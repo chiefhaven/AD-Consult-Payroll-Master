@@ -1,5 +1,5 @@
 <div>
-<livewire:common.page-header pageTitle="{{ $pageTitle }}"/>
+<livewire:common.page-header/>
 <div class="col-lg-12">
     @include('includes/error')
     @section('plugins.Select2', true)

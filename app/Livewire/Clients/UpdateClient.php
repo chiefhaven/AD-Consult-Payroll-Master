@@ -17,11 +17,9 @@ class UpdateClient extends Component
     use LivewireAlert;
     public $countries, $industries =[];
 
-    public $pageTitle = 'Update Client';
-
-    public function mount($id)
+    public function mount($client_id)
     {
-        $this->form->setClient($id);
+        $this->form->setClient($client_id);
 
         $this->countries = Country::all();
         $this->industries = BusinessUtil::get_industry();
