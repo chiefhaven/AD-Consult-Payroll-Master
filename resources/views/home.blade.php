@@ -27,7 +27,7 @@
                                 <x-adminlte-small-box
                                     title="{{ App\Models\Client::get()->count() }}"
                                     text="Clients"
-                                    icon="fas fa-file-invoice"
+                                    icon="fas fa-file-invoice small-icon"
                                     theme="light"
                                 />
                             </a>
@@ -37,7 +37,7 @@
                                 <x-adminlte-small-box
                                     title="{{ App\Models\Product::get()->count() }}"
                                     text="Products/Services"
-                                    icon="fas fa-shopping-cart"
+                                    icon="fas fa-shopping-cart small-icon"
                                     theme="light"
                                 />
                             </a>
@@ -47,11 +47,12 @@
                                 <x-adminlte-small-box
                                     title="{{ App\Models\Employee::get()->count() }}"
                                     text="Employees"
-                                    icon="fas fa-users"
+                                    icon="fas fa-users small-icon"
                                     theme="light"
                                 />
                             </a>
                         </div>
+
                     </div>
                 </div>
             </div>

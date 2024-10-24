@@ -73,7 +73,6 @@ class BusinessUtil extends Controller
         foreach ($brackets as $index => $bracket) {
             $limit = (float) $bracket->limit; // Convert limit to float
             $rate = (float) $bracket->rate;   // Convert rate to float
-
             if ($index === 0) {
                 // Handle the first bracket (0% tax on income up to the first limit)
                 if ($salary <= $limit) {
@@ -85,10 +84,13 @@ class BusinessUtil extends Controller
 
                 if ($salary > $previousLimit) {
                     // Calculate the taxable income within the current bracket
-                    $taxableIncome = min($salary - $previousLimit, $limit - $previousLimit);
+                    $salary = $salary - $previousLimit;
+
+                    $taxableIncome = min($salary, $limit);
 
                     // Calculate the tax for the current bracket
                     $tax += $taxableIncome * $rate;
+
                 } else {
                     break; // Stop the loop if salary does not exceed the previous limit
                 }

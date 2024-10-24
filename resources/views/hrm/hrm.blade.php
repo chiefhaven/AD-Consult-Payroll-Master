@@ -85,14 +85,7 @@
 <script>
 
     $(document).ready(function() {
-        $('#clientsTable').DataTable({
-            dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'excel', 'pdf', 'print'
-                ],
-            scrollX: true,
-            scrollY: true,
-        });
+
     });
 
     const hrm = createApp({
@@ -165,6 +158,7 @@
                 try {
                     const response = await axios.get(`/hrm/designations`);
                     designations.value = response.data.length > 0 ? response.data : [];
+                    initializeDataTable();
                 } catch (err) {
                     error.value = "Failed to fetch designations.";
                 } finally {
@@ -184,9 +178,6 @@
                     loading.value = false;
                 }
             };
-
-            // Additional fetch functions for holidays, attendances, leaves, and settings...
-
 
             const fetchHolidays = async () => {
                 loading.value = true;
@@ -238,6 +229,18 @@
                 } finally {
                     loading.value = false;
                 }
+            };
+
+            // Function to initialize DataTable after Vue has rendered the table
+            const initializeDataTable = () => {
+                setTimeout(() => {
+                    $('#designationsTable').DataTable({
+                        dom: 'Bfrtip',
+                        buttons: ['copy', 'excel', 'pdf', 'print'],
+                        scrollX: true,
+                        scrollY: true,
+                    });
+                }, 0); // Timeout ensures the DOM is ready
             };
 
             return {

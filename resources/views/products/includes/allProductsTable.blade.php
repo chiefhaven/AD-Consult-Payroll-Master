@@ -1,13 +1,12 @@
 <div class="table-responsive">
     @if( !$products->isEmpty())
-      <table id="allPayrollsTable" class="table table-bordered table-striped table-vcenter display nowrap">
+      <table id="allPayrollsTable" class="table table-bordered table-striped table-vcenter w-100 display nowrap">
           <thead>
               <tr>
                   <th style="min-width: 150px;">Name</th>
                   <th style="min-width: 50px;">Unit price</th>
                   <th style="min-width: 150px;">VAT</th>
                   <th style="min-width: 150px;">Category</th>
-                  <th style="min-width: 150px;">SKU</th>
                   <th class="text-center" style="width: 100px;">Actions</th>
               </tr>
           </thead>
@@ -25,9 +24,6 @@
                 </td>
                 <td>
                     {{ $product->category }}
-                </td>
-                <td>
-                    {{ $product->sku }}
                 </td>
                 <td class="text-center">
                     <div class="dropdown d-inline-block">

@@ -86,7 +86,7 @@ class PayrollController extends Controller
                 $tax = new BusinessUtil();
 
                 if ($employee->paye == 1) {
-                    $calculatedTax = $tax->calculatePaye($employee->salary);
+                    $calculatedTax = $tax->calculatePaye($employee->basic_pay);
                     $paye = $calculatedTax;
                 } else {
                     $paye = 0;
@@ -94,8 +94,8 @@ class PayrollController extends Controller
 
                 $payrolls[$employee->id] = [
                     'employee' => $employee,
-                    'salary' => $employee->salary,
-                    'net_salary' => $employee->salary - $paye,
+                    'salary' => $employee->basic_pay,
+                    'net_salary' => $employee->basic_pay - $paye,
                     'pay_period' => $employee->pay_period,
                     'bonus' => $employee->bonus,
                     'paye' =>  $paye,

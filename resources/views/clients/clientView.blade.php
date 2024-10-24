@@ -73,7 +73,7 @@
                             </div>
                             <div class="col-md-6 d-flex justify-content-end">
                                 <div class="dropdown d-inline-block">
-                                    <button type="button" class="btn btn-primary" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button" class="btn btn-default" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="d-sm-inline-block">Action</span>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end p-0">

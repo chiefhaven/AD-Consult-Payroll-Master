@@ -6,12 +6,13 @@
         </p>
     </div>
     <div v-if="!loading && designations.length > 0">
-        <div class="table-responsive">
-            <table id="designationsTable" class="table table-bordered table-striped table-vcenter display nowrap">
+        <div class="table-responsive container-fluid">
+            <table id="designationsTable" class="table table-bordered table-striped table-vcenter w-100 display nowrap">
                 <thead>
                     <tr>
                         <th style="min-width: 150px;">Name</th>
                         <th style="min-width: 50px;">Description</th>
+                        <th style="min-width: 50px;">Employees</th>
                         <th class="text-center" style="width: 100px;">Actions</th>
                     </tr>
                 </thead>
@@ -22,6 +23,9 @@
                         </td>
                         <td>
                             @{{ designation.description }}
+                        </td>
+                        <td>
+                            0
                         </td>
                         <td class="text-center">
                             <div class="dropdown d-inline-block">
