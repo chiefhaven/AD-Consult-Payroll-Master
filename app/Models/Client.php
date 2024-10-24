@@ -35,21 +35,21 @@ class Client extends Model
         'website',
     ];
 
-    public function User()
+    public function user()
     {
         return $this->hasOne(User::class);
     }
 
-    public function Industry()
+    public function industry()
     {
         return $this->belongsTo(Industry::class);
     }
 
-    public function Employee()
+    public function employee()
     {
         return $this->hasMany(Employee::class);
     }
-    public function Billing()
+    public function billing()
     {
         return $this->hasMany(Billing::class);
     }

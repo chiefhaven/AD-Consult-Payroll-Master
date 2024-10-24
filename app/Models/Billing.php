@@ -26,13 +26,22 @@ class Billing extends Model
             'discription',
             'issue_date',
             'due_date',
-            'product',
-            'quantity',
-            'rate',
+            // 'product',
+            // 'quantity',
+            // 'rate',
 
     ];
-        public function Client()
+        public function client()
     {
         return $this->belongsTo(Client::class,);
     }
+
+     public function products()
+    {
+        return $this->belongsToMany(Product::class, 'orders')
+                    ->withPivot('quantity', 'price')
+                    ->withTimestamps();
+    }
+
+
 }

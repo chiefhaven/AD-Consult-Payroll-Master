@@ -18,7 +18,7 @@ class BillingFactory extends Factory
      */
 
     protected $model = Billing::class;
-    
+
     public function definition(): array
     {
         return [
@@ -36,9 +36,9 @@ class BillingFactory extends Factory
             'due_date' => $this->faker->date(),
             'discription' => $this->faker->sentence(7),
             'transaction_terms' => $this->faker->sentence(10),
-            'product' => $this->faker->sentence(1),
-            'quantity' => $this->faker->randomNumber(1),
-            'rate' => $this->faker->randomNumber(1),
+            // 'product' => $this->faker->sentence(1),
+            // 'quantity' => $this->faker->randomNumber(1),
+            // 'rate' => $this->faker->randomNumber(1),
 
         ];
     }

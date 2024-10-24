@@ -16,4 +16,16 @@ class Product extends Model
         'category',
         'status'
     ];
+
+        public function billings()
+    {
+        return $this->belongsToMany(Billing::class, 'orders')
+                    ->withPivot('quantity', 'price')
+                    ->withTimestamps();
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

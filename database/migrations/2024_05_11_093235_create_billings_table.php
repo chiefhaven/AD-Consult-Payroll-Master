@@ -26,9 +26,9 @@ return new class extends Migration
             $table->enum('discount_type', ['loyalty', 'trade', 'no discount'])->default('no discount');
             $table->float('balance');
             $table->float('tax_amount');
-            $table->string('product');
-            $table->integer('quantity');
-            $table->float('rate');
+            // $table->string('product');
+            // $table->integer('quantity');
+            // $table->float('rate');
             $table->string('discription')->nullable();
             $table->string('transaction_terms');
             $table->date('issue_date');
