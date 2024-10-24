@@ -1,4 +1,4 @@
-<div id="designations" v-show="showLeaveTypes">
+<div id="leavesTypes" v-show="showLeaveTypes">
     <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: 200px;" v-if="loading">
         <p class="spinner"></p>
         <p>
@@ -7,7 +7,7 @@
     </div>
     <div v-if="!loading && leaveTypes.length > 0">
         <div class="table-responsive">
-            <table id="designationsTable" class="table table-bordered table-striped table-vcenter display nowrap">
+            <table id="leaveTypesTable" class="table table-bordered table-striped table-vcenter display nowrap">
                 <thead>
                     <tr>
                         <th style="min-width: 150px;">Name</th>

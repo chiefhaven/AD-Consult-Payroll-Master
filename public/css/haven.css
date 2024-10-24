@@ -52,17 +52,17 @@
     padding-left: 50px;
 }
 
-.havenloader {
+.spinner {
     width: 88px;
     height: 88px;
     border-radius: 50%;
     border: 2px solid;
     border-color: #0a276a;
     border-right-color: #ffffff;
-    animation: havenloader-d3wgkg 1.4s infinite linear;
+    animation: spinner-d3wgkg 1.4s infinite linear;
  }
 
- @keyframes havenloader-d3wgkg {
+ @keyframes spinner-d3wgkg {
     to {
        transform: rotate(1turn);
     }

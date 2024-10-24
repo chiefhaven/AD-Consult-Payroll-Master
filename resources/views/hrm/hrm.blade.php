@@ -40,7 +40,7 @@
                             <button class="nav-link btn btn-link" @click="getLeaveTypes()">Leave Types</button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link btn btn-link" @click="getLeave()">Leaves</button>
+                            <button class="nav-link btn btn-link" @click="getLeaves()">Leaves</button> <!-- Corrected from getLeave -->
                         </li>
                         <li class="nav-item">
                             <button class="nav-link btn btn-link" @click="getHolidays()">Holidays</button>
@@ -61,8 +61,12 @@
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12">
-                        @include('hrm.leaveTypes')
-                        @include('hrm.designations')
+                        @include('hrm.partials.leaveTypes')
+                        @include('hrm.partials.designations')
+                        @include('hrm.partials.holidays')
+                        @include('hrm.partials.leaves')
+                        @include('hrm.partials.settings')
+                        @include('hrm.partials.attendances')
                     </div>
                 </div>
             </div>
@@ -94,45 +98,75 @@
     const hrm = createApp({
         setup() {
             const showDesignations = ref(false);
+            const showLeaves = ref(false);
+            const showSettings = ref(false);
+            const showAttendances = ref(false);
+            const showHolidays = ref(false);
             const showLeaveTypes = ref(false);
             const designations = ref([]);
             const leaveTypes = ref([]);
+            const leaves = ref([]);
+            const holidays = ref([]);
+            const attendances = ref([]);
+            const settings = ref([]);
             const loading = ref(false);
             const error = ref(null);
 
             onMounted(() => {
-                showLeaveTypes.value = false;
-                showDesignations.value = false;
-                getDesignations();
+                getDesignations(); // Default behavior on mount
             });
 
-            // Toggle function to show designations
-            const getDesignations = () => {
+            // Generic toggle function to handle showing sections
+            const toggleView = (fetchFunction, showVar) => {
+                // Reset visibility for all sections
                 showLeaveTypes.value = false;
-                showDesignations.value = true;
-                fetchDesignations()
-            };
-
-            // Toggle function to show leave types (if needed)
-            const getLeaveTypes = () => {
                 showDesignations.value = false;
-                showLeaveTypes.value = true;
-                fetchLeaveTypes()
+                showLeaves.value = false;
+                showSettings.value = false;
+                showAttendances.value = false;
+                showHolidays.value = false;
+
+                // Set the current view
+                showVar.value = true;
+
+                // Fetch data
+                fetchFunction();
             };
 
+            // Example usage for fetching and displaying different sections
+            const getDesignations = () => {
+                toggleView(fetchDesignations, showDesignations);
+            };
+
+            const getLeaveTypes = () => {
+                toggleView(fetchLeaveTypes, showLeaveTypes);
+            };
+
+            const getHolidays = () => {
+                toggleView(fetchHolidays, showHolidays);
+            };
+
+            const getAttendances = () => {
+                toggleView(fetchAttendances, showAttendances);
+            };
+
+            const getLeaves = () => {
+                toggleView(fetchLeaves, showLeaves);
+            };
+
+            const getSettings = () => {
+                toggleView(fetchSettings, showSettings);
+            };
+
+            // Fetch functions (already implemented)
             const fetchDesignations = async () => {
                 loading.value = true;
                 error.value = null;
                 try {
                     const response = await axios.get(`/hrm/designations`);
-                    if (response.data && response.data.length > 0) {
-                        designations.value = response.data;
-
-                    } else {
-                        error.value = "No data found.";
-                    }
+                    designations.value = response.data.length > 0 ? response.data : [];
                 } catch (err) {
-                    error.value = "Failed to fetch payroll data";
+                    error.value = "Failed to fetch designations.";
                 } finally {
                     loading.value = false;
                 }
@@ -143,14 +177,38 @@
                 error.value = null;
                 try {
                     const response = await axios.get(`/hrm/leave-types`);
-                    if (response.data && response.data.length > 0) {
-                        leaveTypes.value = response.data;
-
-                    } else {
-                        error.value = "No data found.";
-                    }
+                    leaveTypes.value = response.data.length > 0 ? response.data : [];
                 } catch (err) {
-                    error.value = "Failed to fetch data";
+                    error.value = "Failed to fetch leave types.";
+                } finally {
+                    loading.value = false;
+                }
+            };
+
+            // Additional fetch functions for holidays, attendances, leaves, and settings...
+
+
+            const fetchHolidays = async () => {
+                loading.value = true;
+                error.value = null;
+                try {
+                    const response = await axios.get(`/hrm/holidays`);
+                    holidays.value = response.data.length > 0 ? response.data : [];
+                } catch (err) {
+                    error.value = "Failed to fetch holidays.";
+                } finally {
+                    loading.value = false;
+                }
+            };
+
+            const fetchAttendances = async () => {
+                loading.value = true;
+                error.value = null;
+                try {
+                    const response = await axios.get(`/hrm/attendances`);
+                    attendances.value = response.data.length > 0 ? response.data : [];
+                } catch (err) {
+                    error.value = "Failed to fetch attendances.";
                 } finally {
                     loading.value = false;
                 }
@@ -160,15 +218,23 @@
                 loading.value = true;
                 error.value = null;
                 try {
-                    const response = await axios.get(`/hrm/leave`);
-                    if (response.data && response.data.length > 0) {
-                        leave.value = response.data;
-
-                    } else {
-                        error.value = "No data found.";
-                    }
+                    const response = await axios.get(`/hrm/leaves`);
+                    leaves.value = response.data.length > 0 ? response.data : [];
                 } catch (err) {
-                    error.value = "Failed to fetch data";
+                    error.value = "Failed to fetch leaves.";
+                } finally {
+                    loading.value = false;
+                }
+            };
+
+            const fetchSettings = async () => {
+                loading.value = true;
+                error.value = null;
+                try {
+                    const response = await axios.get(`/hrm/settings`);
+                    settings.value = response.data.length > 0 ? response.data : [];
+                } catch (err) {
+                    error.value = "Failed to fetch settings.";
                 } finally {
                     loading.value = false;
                 }
@@ -177,14 +243,28 @@
             return {
                 showDesignations,
                 showLeaveTypes,
+                showLeaves,
+                showHolidays,
+                showAttendances,
+                showSettings,
                 designations,
-                getDesignations,
                 leaveTypes,
-                getLeaveTypes,
+                leaves,
+                holidays,
+                attendances,
+                settings,
                 loading,
-                error
+                error,
+                getDesignations,
+                getLeaveTypes,
+                getLeaves,
+                getHolidays,
+                getAttendances,
+                getSettings
             };
+
         }
+
     });
 
     hrm.mount('#hrm')
