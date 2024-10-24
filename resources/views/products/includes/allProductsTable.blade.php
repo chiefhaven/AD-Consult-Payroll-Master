@@ -18,7 +18,7 @@
                    {{ $product->name }}
                 </td>
                 <td>
-                    {{ $product->price }}
+                    K{{ number_format($product->price, 2) }}
                 </td>
                 <td>
                     {{ $product->vat }}
