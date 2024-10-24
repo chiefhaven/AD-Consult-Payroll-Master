@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="row p-4">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="border mb-3 p-4">
@@ -22,17 +22,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row mt-5">
-                        <div class="col-md-6">
-                            <a href="{{ route('employees') }}" class="text-decoration-none">
-                                <x-adminlte-small-box
-                                    title="{{ App\Models\Employee::get()->count() }}"
-                                    text="Employees"
-                                    icon="fas fa-users"
-                                    theme="light"
-                                />
-                            </a>
-                        </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <a href="{{ route('clients') }}" class="text-decoration-none">
                                 <x-adminlte-small-box
                                     title="{{ App\Models\Client::get()->count() }}"
@@ -42,11 +32,31 @@
                                 />
                             </a>
                         </div>
+                        <div class="col-md-4">
+                            <a href="{{ route('products') }}" class="text-decoration-none">
+                                <x-adminlte-small-box
+                                    title="{{ App\Models\Product::get()->count() }}"
+                                    text="Products/Services"
+                                    icon="fas fa-shopping-cart"
+                                    theme="light"
+                                />
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ route('employees') }}" class="text-decoration-none">
+                                <x-adminlte-small-box
+                                    title="{{ App\Models\Employee::get()->count() }}"
+                                    text="Employees"
+                                    icon="fas fa-users"
+                                    theme="light"
+                                />
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3"> <!-- Flexbox for alignment -->
