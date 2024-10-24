@@ -327,6 +327,11 @@ return [
             'icon' => 'fa fa-money-check',
         ],
         [
+            'text' => 'HRM',
+            'url' => 'hrm',
+            'icon' => 'fa fa-users',
+        ],
+        [
             'text' => 'Billing',
             'icon' => 'fa fa-fw fa-file-invoice',
             'submenu' => [
@@ -353,32 +358,6 @@ return [
                 [
                     'text' => 'Add quotation',
                     'url' => 'add-quotation',
-                    'icon' => 'fa fa-fas fa-arrow-right ',
-                ],
-            ],
-        ],
-        [
-            'text' => 'Leaves',
-            'url' => '#',
-            'icon' => 'fa fa-fw fa-clock',
-        ],
-        [
-            'text' => 'Attendances',
-            'url' => 'attendances',
-            'icon' => 'fa fa-fw fa-clock',
-        ],
-        [
-            'text' => 'Tax Rates',
-            'icon' => 'fa fa-percent',
-            'submenu' => [
-                [
-                    'text' => 'List tax rates',
-                    'url' => 'tax-rates',
-                    'icon' => 'fa fa-fas fa-arrow-right ',
-                ],
-                [
-                    'text' => 'Add tax rate',
-                    'url' => 'add-tax-rate',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
             ],

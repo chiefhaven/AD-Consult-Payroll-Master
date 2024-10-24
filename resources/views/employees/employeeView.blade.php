@@ -234,6 +234,12 @@
         });
     });
 
+    const app = createApp({
+        setup() {
+
+        }
+    });
+
 </script>
 @endpush
 

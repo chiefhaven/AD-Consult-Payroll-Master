@@ -18,6 +18,7 @@ use App\Http\Controllers\PayrollController;
 use App\Livewire\Employees\UpdateEmployee;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\Common\BusinessUtil;
+use App\Http\Controllers\HRMController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Artisan;
 
@@ -59,6 +60,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/view-product/{product}', [ProductController::class, 'show'])->name('view-product');
     Route::get('/search-product', [BusinessUtil::class, 'searchProduct'])->name('search-product');
     Route::post('/show-product', [BusinessUtil::class, 'showProduct'])->name('show-product');
+
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/hrm', [HRMController::class, 'index'])->name('hrm');
+    Route::get('/hrm/designations', [HRMController::class, 'designationIndex'])->name('hrmDesignation');
+    Route::get('/hrm/leave-types', [HRMController::class, 'leaveTypesIndex'])->name('hrmLeaveTypes');
 
 });
 
