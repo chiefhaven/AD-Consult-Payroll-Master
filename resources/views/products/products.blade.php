@@ -25,7 +25,7 @@
 
 @section('content')
 <div class="row" id="products">
-    <livewire:common.page-header pageTitle="Payrolls" buttonName="Add Product" link="/add-product"/>
+    <livewire:common.page-header pageTitle="All Products" buttonName="Add Product" link="/add-product"/>
     <div class="col-lg-12">
         <div class="card mb-3 p-4">
             <div class="box-body">
