@@ -50,10 +50,13 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/products', [ProductController::class, 'index'])->name('products');
-    Route::get('/addproduct', [ProductController::class, 'create'])->name('addproduct');
-    Route::get('/product/{product}', [ProductController::class, 'show'])->name('view-product');
-    Route::get('/update-product/{id}', [ProductController::class, 'update'])->name('update-product');
+    Route::get('/add-product', [ProductController::class, 'create'])->name('add-product');
+    Route::post('/store-product', [ProductController::class, 'store'])->name('store-product');
+    Route::get('/edit-product/{product}', [ProductController::class, 'edit'])->name('edit-product');
+    Route::delete('/delete-product/{product}', [ProductController::class, 'destroy'])->name('delete-product');
+    Route::put('/update-product/{product}', [ProductController::class, 'update'])->name('update-product');
     Route::get('/export-products/{type}', [ProductController::class, 'export'])->name('export-products');
+    Route::get('/view-product/{product}', [ProductController::class, 'show'])->name('view-product');
     Route::get('/search-product', [BusinessUtil::class, 'searchProduct'])->name('search-product');
     Route::post('/show-product', [BusinessUtil::class, 'showProduct'])->name('show-product');
 

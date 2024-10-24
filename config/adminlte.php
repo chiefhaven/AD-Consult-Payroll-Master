@@ -337,7 +337,7 @@ return [
                 ],
                 [
                     'text' => 'Add product',
-                    'url' => 'add-products',
+                    'url' => 'add-product',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
                 [

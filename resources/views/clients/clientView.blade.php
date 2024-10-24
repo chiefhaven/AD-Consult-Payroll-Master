@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 
 {{-- Extend and customize the browser title --}}
-@section('title', 'View Client')
+@section('title', 'View client')
 
 @section('plugins.Datatables', true)
 @section('plugins.DatatablesPlugin', true)

@@ -13,6 +13,11 @@ class Product extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
+    public function getRouteKeyName()
+    {
+        return 'id'; // or whatever column holds the UUID
+    }
+
     public function billings()
     {
         return $this->belongsToMany(Billing::class, 'bill_product')
