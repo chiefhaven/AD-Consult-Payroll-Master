@@ -104,7 +104,7 @@
           </tbody>
       </table>
 
-        {{--  @include('../payroll/includes/viewPayrollModal')  --}}
+        @include('../payroll/includes/viewPayrollModal')
 
     @else
         <p class="p-5">

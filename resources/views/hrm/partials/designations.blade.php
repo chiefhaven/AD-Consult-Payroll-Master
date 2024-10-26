@@ -1,4 +1,4 @@
-<div id="designations" v-show="showDesignations">
+<div id="designations" v-show="showDesignations" :class="{ show: showDesignations }">
     <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: 200px;" v-if="loading">
         <p class="spinner"></p>
         <p>

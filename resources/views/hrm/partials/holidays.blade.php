@@ -1,4 +1,4 @@
-<div id="holidays" v-show="showHolidays">
+<div id="holidays" v-show="showHolidays" :class="{ show: showHolidays  }">
     <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: 200px;" v-if="loading">
         <p class="spinner"></p>
         <p>

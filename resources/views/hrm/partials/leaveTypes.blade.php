@@ -1,4 +1,4 @@
-<div id="leavesTypes" v-show="showLeaveTypes">
+<div id="leavesTypes" v-show="showLeaveTypes" :class="{ show: showLeaveTypes }">
     <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: 200px;" v-if="loading">
         <p class="spinner"></p>
         <p>

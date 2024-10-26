@@ -114,11 +114,27 @@
             @if($client->employees->count()>0)
                 <form action="/add-payroll/{{ $client->id }}" method="GET" autocomplete="off">
                 <div class="modal-body">
-                    <x-adminlte-input type="text" name="client" id="client" autocomplete="false" value="{{ $client->id }}" required hidden/>
+                    <x-adminlte-input type="text"
+                        name="client"
+                        id="client"
+                        autocomplete="false"
+                        value="{{ $client->id }}"
+                        v-model="client"
+                        required hidden/>
                     <div class="mb-3 p-4">
                         <div class="box-body">
                             <div class="row">
-                                <x-adminlte-input type="text" name="payroll_month_year" label="Month/Year:*" placeholder="Month/Year" fgroup-class="col-12" class="{{ $errors->has('payroll_month_year') ? 'is-invalid' : '' }}" id="payroll_month_year" required autocomplete="off"/>
+                                <x-adminlte-input
+                                    type="text"
+                                    name="payroll_month_year"
+                                    label="Month/Year:*"
+                                    placeholder="Month/Year"
+                                    fgroup-class="col-12"
+                                    class="{{ $errors->has('payroll_month_year') ? 'is-invalid' : '' }}"
+                                    id="payroll_month_year"
+                                    v-model="payroll_month_year"
+                                    required
+                                    autocomplete="off"/>
 
                                 <div class="form-group col-12">
                                     <label for="employees" class="form-label">Select employees:*</label>
@@ -141,6 +157,7 @@
                                         class="{{ $errors->has('employees') ? 'is-invalid' : '' }} no-rounded-corners"
                                         id="employees"
                                         required
+                                        v-model="employees[]"
                                         autocomplete="off"
                                     >
 
@@ -156,7 +173,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Proceed</button>
+                    <button type="submit" class="btn btn-primary" @click="openAddPayrollModal">Proceed</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
                 </form>

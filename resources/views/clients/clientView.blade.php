@@ -180,6 +180,10 @@
         });
 
         $('#employeeTable').DataTable({
+            dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'excel', 'pdf', 'print'
+                ],
             scrollX: true,
             scrollY: true,
         });
@@ -226,6 +230,36 @@
         const employeeData = ref(null);        // Store employee payroll data
         const loading = ref(false);    // Manage loading state
         const error = ref(null);       // Store error messages
+        const showAddPayrollModal = ref(false);
+
+        const openAddPayrollModal = (client) =>{
+            showAddPayrollModal.value = true;
+            fetchAddPayrollDetails(client);
+        }
+
+        // Close the modal
+        const closeAddPayrollModal = () => {
+            data.value = null
+            showAddPayrollModal.value = false;
+        };
+
+        const fetchAddPayrollDetails = async (client) =>{
+            loading.value = true;
+            error.value = null;
+            try {
+                const response = await axios.get(`/add-payroll/${client}`);
+                if (response.data && response.data.length > 0) {
+                    data.value = response.data[0];  // Access the first object in the response array
+
+                } else {
+                    error.value = "No data found for the provided payroll ID.";
+                }
+            } catch (err) {
+                error.value = "Failed to fetch payroll data";
+            } finally {
+                loading.value = false;
+            }
+        }
 
         // Open the payroll details modal and fetch payroll data
         const fetchPayrollDetails = (payroll) => {
@@ -436,7 +470,10 @@
             formatCurrency,
             changeStatus,
             openStatusDialog,
-            employeePayslip
+            employeePayslip,
+            closeAddPayrollModal,
+            openAddPayrollModal,
+            showAddPayrollModal,
         };
       },
     });

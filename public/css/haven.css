@@ -154,3 +154,7 @@
         margin: 1.75rem;
     }
 }
+
+[v-cloak] {
+    display: none;
+}

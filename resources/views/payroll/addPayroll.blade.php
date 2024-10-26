@@ -26,20 +26,34 @@
 {{-- Rename section content to content_body --}}
 
 @section('content')
-<div class="row" id="payroll">
+<div class="row" id="payroll" v-cloak>
     <livewire:common.page-header pageTitle="Add payroll" buttonName="Go back" link="/client/{{ $client->id }}" buttonClass="btn btn-warning"/>
     <div class="col-lg-12">
         @include('includes/error')
         @section('plugins.Select2', true)
-        <form action="/save-payroll" method="post">
+        <form @submit.prevent="submitPayroll"> <!-- Prevent default submission -->
             @csrf
             <div class="card mb-3 p-4">
                 <div class="box-body">
-                    <h3>For Client: <strong>{{ $client->client_name }}</strong></h3>
+                    <h3>For Client: <strong>@{{ client.client_name }}</strong></h3>
                     <div class="row">
-                        <x-adminlte-input type="text" name="payrollMonthYear" label="Payroll month year" placeholder="Payroll Month/Year" value="{{ $payroll_month_year }}" fgroup-class="col-md-4" class="{{ $errors->has('payroll_group_name') ? 'is-invalid' : '' }}" id="payroll_month_year" autocomplete="off"/>
-                        <x-adminlte-input name="client" value="{{ $client->id }}" hidden />
-
+                        <x-adminlte-input
+                            type="text"
+                            name="payrollMonthYear"
+                            label="Payroll month year"
+                            placeholder="Payroll Month/Year"
+                            value="{{ $payroll_month_year }}"
+                            fgroup-class="col-md-4"
+                            class="{{ $errors->has('payroll_group_name') ? 'is-invalid' : '' }}"
+                            id="payroll_month_year"
+                            autocomplete="off"
+                        />
+                        <x-adminlte-input
+                            name="client"
+                            v-model="clientId"
+                            value=""
+                            hidden
+                        />
                         <x-adminlte-select
                             name="payrollStatus"
                             label="Status"
@@ -48,6 +62,7 @@
                             class="{{ $errors->has('status') ? 'is-invalid' : '' }}"
                             autocomplete="off"
                             required
+                            v-model="payrollStatus"
                         >
                             <option value="Draft">Draft</option>
                             <option value="Cancelled">Cancelled</option>
@@ -58,182 +73,170 @@
                 </div>
             </div>
             <div class="card">
-                <table class="table" id="payroll_table">
+                <table class="table table-responsive" id="payroll_table">
                     <thead>
-                        <th>
-                            Employee
-                        </th>
-                        <th>
-                            Gross
-                        </th>
-                        <th>
-                            Earnings
-                        </th>
-                        <th>
-                            Deductions
-                        </th>
-                        <th>
-                            Paye
-                        </th>
-                        <th>
-                            Net Salary
-                        </th>
+                        <tr>
+                            <th class="text-nowrap" style="width: auto;">Employee</th>
+            <th class="text-nowrap" style="width: auto; min-width: 70px;">Gross</th>
+            <th class="text-nowrap" style="width: auto;">Earnings</th>
+            <th class="text-nowrap" style="width: auto;">Deductions</th>
+            <th class="text-nowrap" style="width: auto;">Paye</th>
+            <th class="text-nowrap" style="width: auto;">Net Salary</th>
+            <th class="text-nowrap" style="width: auto;">Total Pay</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        @foreach($payrolls as $key => $payroll)
-                            <tr>
-                                <td>
-                                    <input name="payroll[{{ $key}}][employee]" value="{{ $payroll['employee']->id }}" hidden>
-                                    {{ $payroll['employee']->fname }} {{ $payroll['employee']->mname }} {{ $payroll['employee']->sname }}
-                                </td>
-                                <td>
-                                    <x-adminlte-input
-                                        type="text"
-                                        name="payroll[{{ $key}}][salary]"
-                                        value="{{ $payroll['salary'] }}"
-                                        autocomplete="off"
-                                    />
-                                    <p>
-                                        <x-adminlte-select2
-                                            name="payroll[{{ $key }}][pay_period]" label="Pay Period:">
-                                            <option>{{ $payroll['pay_period'] }}</option>
-                                        </x-adminlte-select2>
-                                    </p>
-                                </td>
+                        <tr v-for="(payroll, index) in payrollStates" :key="payroll.employeeId">
+                            <td>
+                                <input v-model="payroll.employeeId" hidden>
+                                @{{ payroll.employeeName }}
+                            </td>
+                            <td style="min-width: 70px !important">
+                                <x-adminlte-input
+                                    type="text"
+                                    name="gross_salary"
+                                    v-model="payrollStates[index].salary"
+                                    autocomplete="off"
+                                />
+                                <p>
+                                    <x-adminlte-select2
+                                        name="pay_period"
+                                        v-model="payrollStates[index].payPeriod"
+                                        data-placeholder="Select Pay Period"
+                                    >
+                                        <option value="Hourly">Hourly</option>
+                                        <option value="Daily">Daily</option>
+                                        <option value="Weekly">Weekly</option>
+                                        <option value="Bi weekly">Bi weekly</option>
+                                        <option value="Monthly">Monthly</option>
+                                    </x-adminlte-select2>
 
-                                <!-- Earnings Section -->
-                                <td>
-                                    <div class="p-2 mb-3 shadow-sm border-primary">
-                                        <table class="table" style="border: none;">
-                                            <thead style="border-bottom: none;">
-                                                <tr>
-                                                    <th>Description</th>
-                                                    <th>Amount</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="(row, index) in earningsRows[{{ $loop->index }}]" :key="index">
-                                                    <td>
-                                                        <!-- Description Input -->
-                                                        <x-adminlte-input
-                                                            type="text"
-                                                            name="payroll[{{ $key }}][earning_description]"
-                                                            v-model="row.description"
-                                                            placeholder="Earning Description"
-                                                            autocomplete="off"
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <!-- Amount Input -->
-                                                        <x-adminlte-input
-                                                            type="text"
-                                                            name="payroll[{{ $key }}][earning_amount]"
-                                                            v-model="row.amount"
-                                                            placeholder="Earnings Amount"
-                                                            autocomplete="off"
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <!-- Remove Button or Add Button for First Row -->
-                                                        <div>
-                                                            <button v-if="index > 0" type="button" class="btn btn-danger" @click="removeEarningRow({{ $loop->index }}, index)">
-                                                                <i class="fa fa-minus"></i>
-                                                            </button>
-                                                            <button v-else type="button" class="btn btn-primary" @click="addEarningRow({{ $loop->index }})">
-                                                                <i class="fa fa-plus"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <td>Total Earnings:</td>
-                                                    <td>
-                                                        <!-- <strong>K @{{ calculateEarningsTotal({{ $loop->index }}) }}</strong> -->
-                                                    </td>
-                                                    <td></td>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </td>
-
-                                <!-- Deductions Section -->
-                                <td>
-                                    <div class="p-2 mb-3 shadow-sm border-danger">
-                                        <table class="table" style="border: none;">
-                                            <thead style="border-bottom: none;">
-                                                <tr>
-                                                    <th>Description</th>
-                                                    <th>Amount</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="(row, index) in deductionsRows[{{ $loop->index }}]" :key="index">
-                                                    <td>
-                                                        <!-- Description Input -->
-                                                        <x-adminlte-input
-                                                            type="text"
-                                                            name="payroll[{{ $key }}][deduction_description]"
-                                                            v-model="row.description"
-                                                            placeholder="Deduction Description"
-                                                            autocomplete="off"
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <!-- Amount Input -->
-                                                        <x-adminlte-input
-                                                            type="text"
-                                                            name="payroll[{{ $key }}][deduction_amount]"
-                                                            v-model="row.amount"
-                                                            placeholder="Deduction Amount"
-                                                            autocomplete="off"
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <!-- Remove Button or Add Button for First Row -->
-                                                        <div>
-                                                            <button v-if="index > 0" type="button" class="btn btn-danger" @click="removeDeductionRow({{ $loop->index }}, index)">
-                                                                <i class="fa fa-minus"></i>
-                                                            </button>
-                                                            <button v-else type="button" class="btn btn-primary" @click="addDeductionRow({{ $loop->index }})">
-                                                                <i class="fa fa-plus"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <td>Total Deductions:</td>
-                                                    <td>
-                                                        <!-- <strong>K @{{ calculateDeductionsTotal({{ $loop->index }}) }}</strong> -->
-                                                    </td>
-                                                    <td></td>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <input name="payroll[{{ $key}}][paye]" value="{{ $payroll['paye'] }}" hidden>
-                                    K{{ $payroll['paye'] }}
-                                </td>
-                                <td>
-                                    <input name="payroll[{{ $key}}][net_salary]" value="{{ $payroll['net_salary'] }}" hidden>
-                                    K{{ number_format($payroll['net_salary'], 2) }}
-                                </td>
-                            </tr>
-                        @endforeach
+                                </p>
+                            </td>
+                            <!-- Earnings Section -->
+                            <td>
+                                <div class="p-2 mb-3 shadow-sm border-primary">
+                                    <table class="table" style="border: none;">
+                                        <thead style="border-bottom: none;">
+                                            <tr>
+                                                <th>Description</th>
+                                                <th>Amount</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(row, rowIndex) in earningsRows[index]" :key="rowIndex">
+                                                <td>
+                                                    <x-adminlte-input
+                                                        type="text"
+                                                        name="earning_description"
+                                                        v-model="row.description"
+                                                        placeholder="Earning Description"
+                                                        autocomplete="off"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <x-adminlte-input
+                                                        type="text"
+                                                        name="earning_amount"
+                                                        v-model="row.amount"
+                                                        placeholder="Earnings Amount"
+                                                        autocomplete="off"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <button v-if="rowIndex > 0" type="button" class="btn btn-danger" @click="removeEarningRow(index, rowIndex)">
+                                                            <i class="fa fa-minus"></i>
+                                                        </button>
+                                                        <button v-else type="button" class="btn btn-primary" @click="addEarningRow(index)">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td>Total Earnings:</td>
+                                                <td>
+                                                    <strong>K @{{ calculateEarningsTotal(index) }}</strong>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </td>
+                            <!-- Deductions Section -->
+                            <td>
+                                <div class="p-2 mb-3 shadow-sm border-danger">
+                                    <table class="table" style="border: none;">
+                                        <thead style="border-bottom: none;">
+                                            <tr>
+                                                <th>Description</th>
+                                                <th>Amount</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(row, rowIndex) in deductionsRows[index]" :key="rowIndex">
+                                                <td>
+                                                    <x-adminlte-input
+                                                        type="text"
+                                                        name="deduction_description"
+                                                        v-model="row.description"
+                                                        placeholder="Deduction Description"
+                                                        autocomplete="off"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <x-adminlte-input
+                                                        type="text"
+                                                        name="deduction_amount"
+                                                        v-model="row.amount"
+                                                        placeholder="Deduction Amount"
+                                                        autocomplete="off"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <button v-if="rowIndex > 0" type="button" class="btn btn-danger" @click="removeDeductionRow(index, rowIndex)">
+                                                            <i class="fa fa-minus"></i>
+                                                        </button>
+                                                        <button v-else type="button" class="btn btn-primary" @click="addDeductionRow(index)">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td>Total Deductions:</td>
+                                                <td>
+                                                    <strong>K @{{ calculateDeductionsTotal(index) }}</strong>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </td>
+                            <td>
+                                <input name="paye" v-model="payrollStates[index].paye" hidden>
+                                @{{ formatCurrency(payroll.paye) }}
+                            </td>
+                            <td>
+                                <input name="net_salary" v-model="payrollStates[index].net_salary" hidden>
+                                @{{ formatCurrency(payroll.net_salary) }}
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
             <div class="mt-3">
-                <button type="submit" class="btn btn-primary btn-lg" @click="handleSubmit">
+                <button type="submit" class="btn btn-primary btn-lg">
                     Add
                 </button>
             </div>
@@ -262,95 +265,151 @@
     const app = createApp({
       setup() {
 
-        // Define reactive data for earnings and deductions
-    const earningsRows = ref({});
-    const deductionsRows = ref({});
-    const state = ref(
-        {
-            salary: '',
-            paye: 0,
-            deductions: '',
-        }
-    )
+        const payrolls = ref([]);
 
-    // Initialize earnings and deductions for each payroll
-    @foreach($payrolls as $payroll)
-        earningsRows.value[{{ $loop->index }}] = [{ description: 'Bonus', amount: {{ $payroll['bonus']}} }];
-        deductionsRows.value[{{ $loop->index }}] = [{ description: '', amount: '' }];
-        state.value.salary[{{ $loop->index }}] = {{ $payroll['salary'] }};
-    @endforeach
+        payrolls.value = @json($payrolls);
+        payrolls.value = Object.values(payrolls.value);
 
-    // Add a new earnings row for a specific payroll
-    const addEarningRow = (payrollIndex) => {
-        earningsRows.value[payrollIndex].push({ description: '', amount: '' });
-    };
+        const payrollMonthYear = ref('');
+        const client = ref('');
+        const clientId = ref('');
+        const action = ref('');
+        const payrollStatus = ref('Draft');
+        const earningsRows = ref({});
+        const deductionsRows = ref({});
+        const payrollStates = ref([]);
 
-    // Remove an earnings row for a specific payroll
-    const removeEarningRow = (payrollIndex, rowIndex) => {
-        if (earningsRows.value[payrollIndex].length > 1) {
-            earningsRows.value[payrollIndex].splice(rowIndex, 1);
-        }
-    };
+        onMounted(() => {
+            payrolls.value.forEach((payroll) => {
+                // Initialize state for each payroll
+                const state = {
+                    salary: payroll.salary || 0, // Ensure basic_pay is set correctly
+                    paye: payroll.paye || 0, // Default to 0 if paye is not defined
+                    deductions: payroll.deductions || '', // Default to empty string if deductions not defined
+                    net_salary: payroll.net_salary || 0, // Default to 0 if net_salary is not defined
+                    employeeId: payroll.employee.id,
+                    employeeName: `${payroll.employee.fname || ''} ${payroll.employee.mname || ''} ${payroll.employee.sname || ''}`.trim(), // Combine names
+                    payPeriod: payroll.pay_period || '' // Default to empty string if pay_period is not defined
+                };
 
-    // Add a new deduction row for a specific payroll
-    const addDeductionRow = (payrollIndex) => {
-        deductionsRows.value[payrollIndex].push({ description: '', amount: '' });
-    };
-
-    // Remove a deduction row for a specific payroll
-    const removeDeductionRow = (payrollIndex, rowIndex) => {
-        if (deductionsRows.value[payrollIndex].length > 1) {
-            deductionsRows.value[payrollIndex].splice(rowIndex, 1);
-        }
-    };
-
-    // Compute total earnings for a specific payroll
-    const calculateEarningsTotal = (payrollIndex) => {
-        return earningsRows.value[payrollIndex].reduce((sum, row) => {
-            return sum + parseFloat(row.amount || 0);
-        }, 0).toFixed(2);
-    };
-
-    // Compute total deductions for a specific payroll
-    const calculateDeductionsTotal = (payrollIndex) => {
-        return deductionsRows.value[payrollIndex].reduce((sum, row) => {
-            return sum + parseFloat(row.amount || 0);
-        }, 0).toFixed(2);
-    };
-
-    // Handle form submission
-    const handleSubmit = () => {
-        // Log form data to the console
-        console.log('Form submitted:', {
-            earningsRows: earningsRows.value,
-            deductionsRows: deductionsRows.value
+                payrollStates.value.push(state); // Push the initialized state to payrollStates
+            });
         });
 
-        // Here, you can perform form validation or submit data to the server via API call
-        // For example:
-        // axios.post('/api/submit-payroll', { earnings: earningsRows.value, deductions: deductionsRows.value })
-        // .then(response => {
-        //     // handle success
-        // })
-        // .catch(error => {
-        //     // handle error
-        // });
-    };
 
-    return {
-        earningsRows,
-        deductionsRows,
-        addEarningRow,
-        removeEarningRow,
-        addDeductionRow,
-        removeDeductionRow,
-        calculateDeductionsTotal,
-        calculateEarningsTotal,
-        handleSubmit,
-        state
-    };
-    }
-    })
+
+        const state = ref(
+            {
+                salary: 0,
+                paye: 0,
+                deductions: 0,
+                paye: 0,
+                net_salary: 0,
+                employeeId:'',
+                basic_pay: 0,
+                payPeriod:'',
+            }
+        )
+
+        // Initialize earnings and deductions for each payroll
+        @foreach($payrolls as $payroll)
+            earningsRows.value[{{ $loop->index }}] = [{ description: 'Bonus', amount: {{ $payroll['bonus']}} }];
+            deductionsRows.value[{{ $loop->index }}] = [{ description: '', amount: '' }];
+            state.value.salary[{{ $loop->index }}] = {{ $payroll['salary'] }};
+        @endforeach
+
+        // Add a new earnings row for a specific payroll
+        const addEarningRow = (payrollIndex) => {
+            earningsRows.value[payrollIndex].push({ description: '', amount: '' });
+        };
+
+        // Remove an earnings row for a specific payroll
+        const removeEarningRow = (payrollIndex, rowIndex) => {
+            if (earningsRows.value[payrollIndex].length > 1) {
+                earningsRows.value[payrollIndex].splice(rowIndex, 1);
+            }
+        };
+
+        // Add a new deduction row for a specific payroll
+        const addDeductionRow = (payrollIndex) => {
+            deductionsRows.value[payrollIndex].push({ description: '', amount: '' });
+        };
+
+        // Remove a deduction row for a specific payroll
+        const removeDeductionRow = (payrollIndex, rowIndex) => {
+            if (deductionsRows.value[payrollIndex].length > 1) {
+                deductionsRows.value[payrollIndex].splice(rowIndex, 1);
+            }
+        };
+
+        // Compute total earnings for a specific payroll
+        const calculateEarningsTotal = (payrollIndex) => {
+            return earningsRows.value[payrollIndex].reduce((sum, row) => {
+                return sum + parseFloat(row.amount || 0);
+            }, 0).toFixed(2);
+        };
+
+        // Compute total deductions for a specific payroll
+        const calculateDeductionsTotal = (payrollIndex) => {
+            return deductionsRows.value[payrollIndex].reduce((sum, row) => {
+                return sum + parseFloat(row.amount || 0);
+            }, 0).toFixed(2);
+        };
+
+        // Handle form submission
+        const handleSubmit = () => {
+            // Log form data to the console
+            console.log('Form submitted:', {
+                earningsRows: earningsRows.value,
+                deductionsRows: deductionsRows.value
+            });
+        };
+
+        const formatCurrency = (value) => {
+            return `K ${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        };
+
+        const submitPayroll = async () => {
+            console.log(payrollStates.value, clientId.value, payrollStatus.value, payrollMonthYear.value, status.value);
+            try {
+                const response = await axios.post('/save-payroll', {
+                    payrolls: payrollStates.value,
+                    clientId: clientId.value,
+                    payrollStatus: payrollStatus.value,
+                    payrollMonthYear: payrollMonthYear.value,
+                    status: status.value
+                });
+                console.log('Payroll saved successfully:', response.data);
+                // Handle success response
+            } catch (error) {
+                console.error('Error saving payroll:', error);
+                // Handle error response
+            }
+        };
+
+        return {
+            earningsRows,
+            deductionsRows,
+            addEarningRow,
+            removeEarningRow,
+            addDeductionRow,
+            removeDeductionRow,
+            calculateDeductionsTotal,
+            calculateEarningsTotal,
+            handleSubmit,
+            client,
+            payrolls,
+            payrollMonthYear,
+            action,
+            clientId,
+            payrollStatus,
+            formatCurrency,
+            payrollStates,
+            state,
+            submitPayroll
+
+        };
+    }})
     app.mount('#payroll')
 </script>
 @endpush
