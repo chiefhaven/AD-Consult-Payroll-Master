@@ -31,7 +31,7 @@ class BillingController extends Controller
      */
     public function store(Request $request)
     {
-    
+
 
         $billing = Billing::create([
         'client_id' => $request->client_id,
@@ -54,7 +54,7 @@ class BillingController extends Controller
         $billing->orders()->create([
             'product_id' => $product['id'],
             'quantity' => $product['quantity'],
-            'price' => $product['price'],
+            'rate' => $product['rate'],
             'total' => $product['quantity'] * $product['price'],
         ]);
     }
@@ -69,8 +69,16 @@ class BillingController extends Controller
     public function show(string $id)
     {
 
-        $billing = Billing::with('client')->findOrFail($id);
-        return view('billings.billingView', compact('billing'));
+        $billing = Billing::with(['orders', 'client'])->findOrFail($id);
+        //dd($billing);
+
+           // Calculate the subtotal by summing each order's total
+        $subtotal = $billing->orders->sum(function ($order) {
+        return $order->quantity * $order->rate;
+            });
+
+        // Pass both $billing and $subtotal to the view
+        return view('billings.billingView', compact('billing', 'subtotal'));
 
     }
 

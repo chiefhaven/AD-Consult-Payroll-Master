@@ -20,7 +20,7 @@ class ProductFactory extends Factory
             //
             'name' => $this->faker->sentence(2),
             'description' => $this->faker->sentence(4),
-            'price' => $this->faker->float(),
+            'rate' => $this->faker->randomFloat(2, 1, 1999),
             'category' => $this->faker->randomElement(['Recruitment','Payroll','Training','Consulting']),
             'status' => $this->faker->randomElement(['Available','Not Available']),
         ];

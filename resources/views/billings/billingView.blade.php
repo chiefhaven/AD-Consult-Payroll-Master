@@ -102,17 +102,20 @@
                                 <th>Product/Service</th>
                                 <th>Discription</th>
                                 <th>Quantity/Hours</th>
-                                <th>Rate</th>
-                                <th>Total</th>
+                                <th>Rate   (MWK)</th>
+                                <th>Total  (MWK)</th>
                             </head>
                             <tbody>
+                                 @foreach ($billing->orders as $order)
                                 <tr>
-                                    <td>{{ $billing->product }} </td>
-                                    <td>{{ $billing->discription }}</td>
-                                    <td>{{ $billing->quantity }} </td>
-                                    <td>MWK {{ $billing->rate }} /(Qty/Service) </td>
-                                    <td>{{number_format($billing->quantity * $billing->rate, 2)  }}  </td>
+                                    <td>{{ $order->product->name ?? 'N/A' }}</td>
+                                    <td>{{ $order->product->description ?? 'N/A' }}</td>
+                                    <td>{{ $order->quantity }}</td>
+                                    <td>{{ number_format($order->rate, 2) }}</td>
+                                    <td>{{ number_format($order->quantity * $order->rate, 2) }}</td>
+
                                 </tr>
+                                @endforeach
                             </tbody>
 
                         </table>
@@ -126,7 +129,7 @@
                         </div>
 
                             <div class="col-md-4">
-                                <p>Subtotal:{{ $billing->total_amount }} </p>
+                                <p>Subtotal:{{ number_format($subtotal,2) }} </p>
                                 <p>Discount:{{ $billing->discount }} </p>
                                 <p>Tax Amount:{{ $billing->tax_amount }}</p>
                                 <div class="card">TOTAL: {{number_format($billing->total_amount-$billing->discount-$billing->tax_amount, 2) }}</div>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Invoice #{{ $billing->id }}</title>
+    <title>Quote #{{ $billing->id }}</title>
 </head>
 <body>
 
@@ -13,9 +13,15 @@
             <div class="card">
                 <div class="card-body ">
                     <div class="row">
+                        <p>AD Consult </p>
+                        <P>Private Bag 23, </P>
+                        <p>Limbe Blantyre</p>
+                        <p>info@adconsult.com</p>
+                    </div>
+                    <div class="row">
                         <div class="col md-6">
                             <div>
-                                <h4>INVOICE TO</h4>
+                                <h4>Quote</h4>
                                 <p>{{ $billing->client_name }}</p>
                                 <p>{{ $billing->client->address }}</p>
                                 <p>{{ $billing->client->phone }}</p>

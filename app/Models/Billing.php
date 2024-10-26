@@ -36,12 +36,18 @@ class Billing extends Model
         return $this->belongsTo(Client::class,);
     }
 
-     public function products()
+    //  public function products()
+    // {
+    //     return $this->belongsToMany(Product::class, 'orders')
+    //                 ->withPivot('quantity', 'rate', 'total');
+    //                 // ->withTimestamps();
+    // }
+
+    public function orders()
     {
-        return $this->belongsToMany(Product::class, 'orders')
-                    ->withPivot('quantity', 'price')
-                    ->withTimestamps();
+        return $this->hasMany(Order::class);
     }
+
 
 
 }

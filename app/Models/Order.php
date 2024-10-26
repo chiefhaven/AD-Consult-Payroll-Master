@@ -13,7 +13,7 @@ class Order extends Model
         'billing_id',
         'product_id',
         'quantity',
-        'price',
+        'rate',
         'total'
     ];
 

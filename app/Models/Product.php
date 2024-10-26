@@ -20,12 +20,12 @@ class Product extends Model
         public function billings()
     {
         return $this->belongsToMany(Billing::class, 'orders')
-                    ->withPivot('quantity', 'price')
+                    ->withPivot('quantity', 'rate','total')
                     ->withTimestamps();
     }
 
     public function orders()
     {
-        return $this->hasMany(Order::class);
+        return $this->belongsToMany(Order::class);
     }
 }
