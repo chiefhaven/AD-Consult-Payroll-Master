@@ -21,7 +21,7 @@
                     <div class="row">
                         <div class="col md-6">
                             <div>
-                                <h4>Quote</h4>
+                                <h4>Quote To</h4>
                                 <p>{{ $billing->client_name }}</p>
                                 <p>{{ $billing->client->address }}</p>
                                 <p>{{ $billing->client->phone }}</p>
@@ -39,7 +39,7 @@
 
                         </div>
                         <div class="col-md-6">
-                            <p>Invoice No:INV00{{ $billing->id }} </p>
+                            <p>Quote No:QT00{{ $billing->id }} </p>
                             <p>Date:{{ $billing->issue_date }} </p>
                             <p>Due Date: {{ $billing->due_date }} </p>
                         </div>

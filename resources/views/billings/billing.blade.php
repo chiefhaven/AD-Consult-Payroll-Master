@@ -43,26 +43,18 @@
             <td>{{ $billing->client_name }}</td>
             <td>{{ $billing->bill_type }}</td>
             <td>
-                @if($billing->bill_type == 'invoice')
+                {{-- @if($billing->bill_type == 'invoice')
                     {{ number_format($billing->invoice_amount, 2) }}
                 @elseif($billing->bill_type == 'quotation')
                     {{ number_format($billing->quotation_amount, 2) }}
-                @endif
+                @endif --}}
+                {{ number_format($total, 2)}}
             </td>
             <td>{{ $billing->status }}</td>
             <td>{{ $billing->issue_date }}</td>
             <td>{{ $billing->due_date }}</td>
             <td>
-                <!-- Actions like edit, delete, etc. -->
-                {{-- <a href="{{ route('billingView') }}">View</a> --}}
-                <a href="{{ route('billingView', ['id'=> $billing->id]) }}">View</a>
-                {{-- <a href="{{ route('billingEdit', ['id'=> $billing->id]) }}">Edit</a> --}}
-                {{-- <a href="{{ route('billingEdit') }}">Edit</a> --}}
-                {{-- <form action="{{ route('billings.destroy') }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit">Delete</button>
-                </form> --}}
+                <a href="{{ route('billingView', ['id' => $billing->id]) }}">View</a>
             </td>
         </tr>
         @endforeach

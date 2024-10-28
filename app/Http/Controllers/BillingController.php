@@ -15,7 +15,27 @@ class BillingController extends Controller
     {
         $billings = Billing::all();
 
-        return view('Billings.billing', compact('billings'));
+         $billings = Billing::with(['orders'])->get();
+
+    // Calculate totals for each billing record
+    foreach ($billings as $billing) {
+        $subtotal = $billing->orders->sum(function ($order) {
+            $itemTotal = $order->quantity * $order->rate;
+
+            // Apply tax if available
+            if (isset($order->tax)) {
+                $itemTotal += ($itemTotal * ($order->tax / 100));
+            }
+
+            return $itemTotal;
+        });
+
+        // Calculate total by applying discount
+        $billing->total = $subtotal - ($subtotal * ($billing->discount / 100));
+    }
+
+    return view('Billings.billing', compact('billings'));
+
     }
 
     /**
@@ -66,21 +86,35 @@ class BillingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
+   public function show(string $id)
+{
+    // Fetch the billing record along with related orders and client
+    $billing = Billing::with(['orders', 'client'])->findOrFail($id);
 
-        $billing = Billing::with(['orders', 'client'])->findOrFail($id);
-        //dd($billing);
+    // Calculate subtotal: only quantity * rate with tax included
+    $subtotal = $billing->orders->sum(function ($order) {
+        $itemTotal = $order->quantity * $order->rate;
 
-           // Calculate the subtotal by summing each order's total
-        $subtotal = $billing->orders->sum(function ($order) {
-        return $order->quantity * $order->rate;
-            });
+        // Apply tax if available
+        $itemTotal += ($itemTotal * (($order->tax ?? 0) / 100));
 
-        // Pass both $billing and $subtotal to the view
-        return view('billings.billingView', compact('billing', 'subtotal'));
+        return $itemTotal;
+    });
 
+    // Calculate total: subtotal with discount applied
+    $total = $subtotal;
+    $total -= ($total * (($billing->discount ?? 0) / 100)); // Apply discount if available
+
+    // Determine which view to return based on billing type
+    if ($billing->bill_type === 'invoice') {
+        return view('billings.billingView', compact('billing', 'subtotal', 'total'));
+    } elseif ($billing->bill_type === 'quotation') {
+        return view('billings.billingViewQuotation', compact('billing', 'subtotal', 'total'));
     }
+
+    return redirect()->back()->with('error', 'Billing type not recognized.');
+}
+
 
     /**
      * Show the form for editing the specified resource.
@@ -109,17 +143,32 @@ class BillingController extends Controller
 
     public function downloadInvoice($id)
     {
-    // Get the billing data for the invoice
-    $billing = Billing::findOrFail($id);
+        // Get the billing data for the invoice
+        $billing = Billing::findOrFail($id);
 
-    // Load the view and pass the billing data
-    $pdf = PDF::loadView('billings.invoice_pdf', compact('billing'));
+        // Load the view and pass the billing data
+        $pdf = PDF::loadView('billings.invoice_pdf', compact('billing'));
 
-    // Set the filename
-    $filename = 'Invoice_' . $billing->id . '.pdf';
+        // Set the filename
+        $filename = 'Invoice_' . $billing->id . '.pdf';
 
-    // Return the PDF download response
-    return $pdf->download($filename);
+        // Return the PDF download response
+        return $pdf->download($filename);
+    }
+
+    public function downloadQuotation($id)
+    {
+        // Get the billing data for the invoice
+        $billing = Billing::findOrFail($id);
+
+        // Load the view and pass the billing data
+        $pdf = PDF::loadView('billings.quotation_pdf', compact('billing'));
+
+        // Set the filename
+        $filename = 'Quotation_' . $billing->id . '.pdf';
+
+        // Return the PDF download response
+        return $pdf->download($filename);
     }
 
 }
