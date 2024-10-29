@@ -11,11 +11,13 @@ class BillingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $billings = Billing::all();
+   public function index()
+{
+    // Fetch all billings with their related orders
+    $billings = Billing::with(['orders'])->get();
 
-         $billings = Billing::with(['orders'])->get();
+    // Initialize the total amount
+    $total = 0;
 
     // Calculate totals for each billing record
     foreach ($billings as $billing) {
@@ -32,11 +34,15 @@ class BillingController extends Controller
 
         // Calculate total by applying discount
         $billing->total = $subtotal - ($subtotal * ($billing->discount / 100));
+
+        // Add the current billing's total to the overall total
+        $total += $billing->total;  // Calculate the overall total
     }
 
-    return view('Billings.billing', compact('billings'));
+    // Pass both billings and total to the view
+    return view('Billings.billing', compact('billings', 'total'));
+}
 
-    }
 
     /**
      * Show the form for creating a new resource.

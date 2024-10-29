@@ -25,7 +25,7 @@
 
 @section('content')
 <div class="row">
-    <table>
+    <table class="datatable">
     <thead>
         <tr>
             <th>Client Name</th>
@@ -48,7 +48,7 @@
                 @elseif($billing->bill_type == 'quotation')
                     {{ number_format($billing->quotation_amount, 2) }}
                 @endif --}}
-                {{ number_format($total, 2)}}
+                {{ number_format($billing->total, 2)}}
             </td>
             <td>{{ $billing->status }}</td>
             <td>{{ $billing->issue_date }}</td>
@@ -64,48 +64,4 @@
 </div>
 @stop
 
-{{-- Create a common footer --}}
-
-@include('/components/layouts/footer_bottom')
-
-{{-- Add common Javascript/Jquery code --}}
-
-@push('js')
-<script>
-
-    $(document).ready(function() {
-        // Add your common script logic here...
-    });
-
-</script>
-@push('css')
-<style type="text/css">
-
-    {{-- Table styles --}}
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    table th, table td {
-        border: 1px solid #dee2e6; /* Border for table cells */
-        padding: 8px; /* Padding for content */
-        text-align: left; /* Align text to the left */
-    }
-
-    table th {
-        background-color: #f8f9fa; /* Light background for table headers */
-        font-weight: bold; /* Bold font for headers */
-    }
-
-    {{-- Custom styles for AdminLTE card component --}}
-    .card {
-        border-radius: none;
-    }
-    .card-title {
-        font-weight: 600;
-    }
-
-</style>
-@endpush
 

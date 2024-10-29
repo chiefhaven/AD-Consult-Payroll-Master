@@ -97,7 +97,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <table>
+                        <table class="datatable">
                             <head>
                                 <th>Product/Service</th>
                                 <th>Discription</th>
@@ -146,69 +146,3 @@
 
 </div>
 
-@stop
-
-{{-- Create a common footer --}}
-
-@include('/components/layouts/footer_bottom')
-
-{{-- Add common Javascript/Jquery code --}}
-
-@push('js')
-<script>
-
-    $(document).ready(function() {
-        // Add your common script logic here...
-    });
-
-</script>
-@endpush
-
-{{-- Add common CSS customizations --}}
-
-{{-- @push('css')
-<style type="text/css">
-
-    {{-- You can add AdminLTE customizations here --}}
-
-    {{-- .card {
-        border-radius: none;
-    }
-    .card-title {
-        font-weight: 600;
-    }
-
-
-</style>
-@endpush --}}
-
-@push('css')
-<style type="text/css">
-
-    {{-- Table styles --}}
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    table th, table td {
-        border: 1px solid #dee2e6; /* Border for table cells */
-        padding: 8px; /* Padding for content */
-        text-align: left; /* Align text to the left */
-    }
-
-    table th {
-        background-color: #f8f9fa; /* Light background for table headers */
-        font-weight: bold; /* Bold font for headers */
-    }
-
-    {{-- Custom styles for AdminLTE card component --}}
-    .card {
-        border-radius: none;
-    }
-    .card-title {
-        font-weight: 600;
-    }
-
-</style>
-@endpush

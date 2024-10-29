@@ -3,6 +3,13 @@
 
 <head>
 
+    @push('css')
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    {{-- DataTables CSS --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    @endpush
+
+
     {{-- Base Meta Tags --}}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -105,6 +112,13 @@
 
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
+
+    @push('js')
+    {{-- DataTables JavaScript --}}
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="{{ mix('resources/js/app.js') }}"></script>
+    @endpush
+
 
 </body>
 

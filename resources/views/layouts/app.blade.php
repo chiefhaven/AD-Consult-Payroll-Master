@@ -7,6 +7,14 @@
     @hasSection('subtitle') | @yield('subtitle') @endif
 @stop
 
+{{-- Including DataTables CSS --}}
+{{-- @push('css')
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}">
+@endpush --}}
+
+
+
 {{-- Extend and customize the page content header --}}
 
 @section('content_header')
@@ -28,6 +36,8 @@
 
 @section('content')
     @yield('content_body')
+
+    {{-- <script src="{{ mix('js/app.js') }}"></script> --}}
 @stop
 
 {{-- Create a common footer --}}
@@ -43,6 +53,14 @@
         </a>
     </strong>
 @stop
+
+{{-- DataTables Script --}}
+{{-- @push('js')
+    {{-- Load necessary scripts --}}
+    {{-- <script src="{{ mix('js/app.js') }}"></script> --}}
+    {{-- <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script> --}}
+{{-- @endpush --}}
 
 {{-- Add common Javascript/Jquery code --}}
 
