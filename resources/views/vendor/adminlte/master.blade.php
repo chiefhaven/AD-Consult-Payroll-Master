@@ -2,13 +2,9 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-
     @push('css')
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    {{-- DataTables CSS --}}
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
     @endpush
-
 
     {{-- Base Meta Tags --}}
     <meta charset="utf-8">
@@ -113,11 +109,6 @@
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
 
-    @push('js')
-    {{-- DataTables JavaScript --}}
-    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-    <script src="{{ mix('resources/js/app.js') }}"></script>
-    @endpush
 
 
 </body>

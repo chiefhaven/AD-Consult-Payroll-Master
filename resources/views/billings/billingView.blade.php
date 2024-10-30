@@ -19,6 +19,10 @@
             @endif
         </h1>
     @endif
+
+    @push('css')
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap4.min.css">
+    @endpush
 @stop
 
 {{-- Rename section content to content_body --}}
@@ -29,7 +33,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body ">
-                   
+
                     <div class="row">
                         <div class="col md-5">
 
@@ -68,14 +72,17 @@
                         </div>
                     </div>
                     <div class="row">
-                        <table class="datatable">
-                            <head>
-                                <th>Product/Service</th>
-                                <th>Discription</th>
-                                <th>Quantity/Hours</th>
-                                <th>Rate   (MWK)</th>
-                                <th>Total  (MWK)</th>
-                            </head>
+                        <table id="myTable" class="display">
+                            <thead>
+                                <tr>
+                                    <th>Product/Service</th>
+                                    <th>Discription</th>
+                                    <th>Quantity/Hours</th>
+                                    <th>Rate   (MWK)</th>
+                                    <th>Total  (MWK)</th>
+                                </tr>
+                            </thead>
+
                             <tbody>
                                  @foreach ($billing->orders as $order)
                                 <tr>
@@ -106,6 +113,29 @@
                                 <div class="card">TOTAL: {{number_format($billing->total_amount-$billing->discount-$billing->tax_amount, 2) }}</div>
                             </div>
                         </div>
+                        @push('js')
+                            <script src="https://cdn.datatables.net/2.1.8/js/jquery.dataTables.min.js"></script>
+                            <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap4.min.js"></script>
+                        @endpush
+
+
+                    @push('js')
+                        <script>
+                        $(document).ready(function() {
+                            $('#myTable').DataTable({
+                                // autoWidth: false,
+                                // responsive: true
+                                // paging: true,
+                                // search: true,
+                                // ordering: true,
+                                // info: true,
+                                // lengthChange: true,
+                                // pageLength: 10,
+                             });
+                            });
+                        </script>
+                    @endpush
+
                     </div>
                 </div>
             </div>
@@ -113,3 +143,9 @@
     </div>
 
 </div>
+
+
+
+
+
+@stop

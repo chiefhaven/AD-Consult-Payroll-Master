@@ -19,7 +19,8 @@
         "nesbot/carbon": "^3.4",
         "rappasoft/laravel-livewire-tables": "^3.2",
         "realrashid/sweet-alert": "^7.1",
-        "woodsandwalker/laravel-countries": "^1.0"
+        "woodsandwalker/laravel-countries": "^1.0",
+        "yajra/laravel-datatables-oracle": "^11.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",

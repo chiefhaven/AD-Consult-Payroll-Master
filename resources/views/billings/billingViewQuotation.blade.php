@@ -97,7 +97,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <table class="datatable">
+                        <table id="myTable" class="display">
                             <head>
                                 <th>Product/Service</th>
                                 <th>Discription</th>

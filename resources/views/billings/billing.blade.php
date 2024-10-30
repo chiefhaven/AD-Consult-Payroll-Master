@@ -19,13 +19,19 @@
             @endif
         </h1>
     @endif
+
+    @push('css')
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap4.min.css">
+    @endpush
+
 @stop
 
 {{-- Rename section content to content_body --}}
 
 @section('content')
-<div class="row">
-    <table class="datatable">
+<div class="row ">
+
+    <table id="myTable" class="table table-striped table-bordered">
     <thead>
         <tr>
             <th>Client Name</th>
@@ -60,8 +66,31 @@
         @endforeach
     </tbody>
 </table>
-
 </div>
+
+@push('js')
+    <script src="https://cdn.datatables.net/2.1.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap4.min.js"></script>
+@endpush
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable({
+                autoWidth: false,
+                // responsive: true
+                // paging: true,
+                // search: true,
+                // ordering: true,
+                // info: true,
+                // lengthChange: true,
+                // pageLength: 10,
+            });
+        });
+    </script>
+@endpush
+
+
 @stop
 
 
