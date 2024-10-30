@@ -109,7 +109,7 @@
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-default" @click="addDesignation(state.designationId)">@{{ state.buttonName }}</button>
-            <button type="button" class="btn btn-default" @click="closeDesignationForm">Cancel</button>
+            <button type="button" class="btn btn-default" @click="closeForm">Cancel</button>
             </div>
         </div>
         </div>
