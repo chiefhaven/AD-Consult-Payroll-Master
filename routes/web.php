@@ -19,6 +19,7 @@ use App\Livewire\Employees\UpdateEmployee;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\Common\BusinessUtil;
 use App\Http\Controllers\HRMController;
+use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Artisan;
 
@@ -69,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/storeDesignation', [HRMController::class, 'storeDesignation'])->name('storeDesignation');
     Route::delete('/deleteDesignation/{designation}', [HRMController::class, 'deleteDesignation'])->name('deleteDesignation');
     Route::post('/updateDesignation/{id}', [HRMController::class, 'updateDesignation'])->name('updateDesignation');
-    Route::get('/hrm/leave-types', [HRMController::class, 'leaveTypesIndex'])->name('hrmLeaveTypes');
+    Route::get('/hrm/leave-types', [LeaveTypeController::class, 'index'])->name('leave-types');
 
 });
 
