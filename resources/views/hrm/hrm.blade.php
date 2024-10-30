@@ -26,7 +26,7 @@
 {{-- Rename section content to content_body --}}
 
 @section('content')
-<div class="row" id="hrm">
+<div class="row" id="hrm" v-cloak>
     <div class="col-md-12 pt-3">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
@@ -66,7 +66,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div v-if="buttonName" class="col-sm-12 d-flex justify-content-end pb-5">
-                            <button class="btn btn-default" @click="openForm()">
+                            <button class="btn btn-default" @click="openForm(buttonName, modalTitle, pageTitle)">
                                 @{{ buttonName }}
                             </button>
                         </div>
@@ -117,6 +117,7 @@
             const buttonName = ref("Click Here");
             const link = ref("/default-link");
             const showAddDesignationModal = ref(false);
+            const showAddLeaveTypeModal =ref(false);
             const state = ref({
                 name: '',
                 description: '',
@@ -198,7 +199,6 @@
                     const response = await axios.get(`/hrm/designations`);
                     designations.value = response.data.length > 0 ? response.data : [];
                     initializeDataTable();
-                    console.log(designations.value);
                 } catch (err) {
                     error.value = "Failed to fetch designations.";
                 } finally {
@@ -274,7 +274,7 @@
             // Function to initialize DataTable after Vue has rendered the table
             const initializeDataTable = () => {
                 setTimeout(() => {
-                    $('#designationsTable').DataTable({
+                    $('#designationsTable, #leaveTypesTable').DataTable({
                         dom: 'Bfrtip',
                         buttons: ['copy', 'excel', 'pdf', 'print'],
                         scrollX: true,
@@ -330,7 +330,7 @@
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        deleteDesignation(designationId); // Call your delete method
+                        deleteDesignation(designationId);
                     }
                 });
             };
@@ -353,14 +353,19 @@
                 }
             };
 
-            const openForm = async() => {
+            const openForm = async(name, title, type) => {
                 state.value = {
-                    buttonName:'Save',
-                    modalTitle:'Add designation',
+                    buttonName: name,
+                    modalTitle: name,
                     designationId: null,
-
                 };
-                showAddDesignationModal.value = true;
+
+                if(type === 'Designations'){
+                    showAddDesignationModal.value = true;
+                }
+                else if(type === 'Leave types'){
+                    showAddLeaveTypeModal.value = true;
+                }
             }
 
             const editDesignation = async(designation) => {
@@ -382,8 +387,9 @@
                 showAddDesignationModal.value = false;
             }
 
-            const closeDesignationForm = async() => {
+            const closeForm = async() => {
                 showAddDesignationModal.value = false;
+                showAddLeaveTypeModal.value = false;
             }
 
             const notification = ($text, $icon) =>{
@@ -429,12 +435,13 @@
                 addDesignation,
                 showAddDesignationModal,
                 openForm,
-                closeDesignationForm,
                 state,
                 deleteDesignation,
                 editDesignation,
                 designationDetails,
-                confirmDelete
+                confirmDelete,
+                showAddLeaveTypeModal,
+                closeForm
             };
 
         }
