@@ -54,7 +54,11 @@
                 @elseif($billing->bill_type == 'quotation')
                     {{ number_format($billing->quotation_amount, 2) }}
                 @endif --}}
-                {{ number_format($billing->total, 2)}}
+                {{-- {{ $billing->orders->sum(total)}} --}}
+                {{ $billing->orders->sum(function ($order) {
+                    $order->quantity * $order->rate;
+                    })
+                }}
             </td>
             <td>{{ $billing->status }}</td>
             <td>{{ $billing->issue_date }}</td>
@@ -78,7 +82,7 @@
         $(document).ready(function() {
             $('#myTable').DataTable({
                 autoWidth: false,
-                // responsive: true
+                responsive: true
                 // paging: true,
                 // search: true,
                 // ordering: true,

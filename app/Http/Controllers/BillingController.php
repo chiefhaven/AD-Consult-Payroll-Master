@@ -33,14 +33,14 @@ class BillingController extends Controller
         });
 
         // Calculate total by applying discount
-        $billing->total = $subtotal - ($subtotal * ($billing->discount / 100));
+        // $billing->total = $subtotal - ($subtotal * ($billing->discount / 100));
 
         // Add the current billing's total to the overall total
         $total += $billing->total;  // Calculate the overall total
     }
 
     // Pass both billings and total to the view
-    return view('Billings.billing', compact('billings', 'total'));
+    return view('Billings.billing', compact('billings'));
 }
 
 
