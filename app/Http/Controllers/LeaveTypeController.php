@@ -13,7 +13,9 @@ class LeaveTypeController extends Controller
      */
     public function index()
     {
-        //
+        $leaveTypes = LeaveType::all();
+        return response()->json($leaveTypes);
+
     }
 
     /**
