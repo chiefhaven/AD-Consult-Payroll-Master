@@ -70,18 +70,23 @@ class Employee extends Model
 
     ];
 
-    public function User()
+    public function user()
     {
         return $this->hasOne(User::class);
     }
 
-    public function Client()
+    public function client()
     {
         return $this->belongsTo(Client::class);
     }
 
-    public function Contact()
+    public function contact()
     {
         return $this->belongsTo(Contact::class);
+    }
+
+    public function leave()
+    {
+        return $this->hasMany(Leave::class);
     }
 }

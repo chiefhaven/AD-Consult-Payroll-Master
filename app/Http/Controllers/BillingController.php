@@ -113,9 +113,9 @@ class BillingController extends Controller
 
     // Determine which view to return based on billing type
     if ($billing->bill_type === 'invoice') {
-        return view('billings.billingView', compact('billing', 'subtotal', 'total'));
+        return view('billings.billingView', compact('billing'));
     } elseif ($billing->bill_type === 'quotation') {
-        return view('billings.billingViewQuotation', compact('billing', 'subtotal', 'total'));
+        return view('billings.billingViewQuotation', compact('billing'));
     }
 
     return redirect()->back()->with('error', 'Billing type not recognized.');

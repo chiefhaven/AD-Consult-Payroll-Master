@@ -25,34 +25,6 @@
 
 @section('content')
 
-    {{-- <div class="row p-4">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="row mt-2">
-                        <div class="col-md-4">
-                            <a href="{{ route('employees') }}" style="text-decoration: none;">
-                            <x-adminlte-small-box title="Employee Directory" text="{{ App\Models\Employee::get()->count() }}" theme="secondary" />
-                            </a>
-                        </div>
-
-                         <div class="col-md-4">
-                            <a href="{{ route('payrolls') }}" style="text-decoration: none;">
-                            <x-adminlte-small-box title="Payroll" text="{{ App\Models\Payroll::get()->count() }}" theme="secondary" />
-                            </a>
-                        </div>
-
-                         <div class="col-md-4">
-                            <a href="{{ route('billing') }}" style="text-decoration: none;">
-                            <x-adminlte-small-box title="Billings" text="{{ App\Models\Billing::get()->count() }}" theme="secondary" />
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-
       <div class="row p-4">
         <div class="col-md-12">
             <div class="card">
@@ -97,16 +69,28 @@
                         </div>
                     </div>
                     <div class="row">
-                        <table id="myTable" class="display">
-                            <head>
-                                <th>Product/Service</th>
-                                <th>Discription</th>
-                                <th>Quantity/Hours</th>
-                                <th>Rate   (MWK)</th>
-                                <th>Total  (MWK)</th>
-                            </head>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product/Service</th>
+                                    <th>Discription</th>
+                                    <th>Quantity/Hours</th>
+                                    <th>Rate   (MWK)</th>
+                                    <th>Total  (MWK)</th>
+                                </tr>
+                            </thead>
                             <tbody>
-                                 @foreach ($billing->orders as $order)
+
+                                @php
+                                    $subtotal = 0; // Initialize subtotal variable
+                                @endphp
+
+                                @foreach ($billing->orders as $order)
+                                    @php
+                                        $orderTotal = $order->quantity * $order->rate; // Calculate total for the current order
+                                        $subtotal += $orderTotal; // Sum up to subtotal
+                                    @endphp
+
                                 <tr>
                                     <td>{{ $order->product->name ?? 'N/A' }}</td>
                                     <td>{{ $order->product->description ?? 'N/A' }}</td>
@@ -117,8 +101,8 @@
                                 </tr>
                                 @endforeach
                             </tbody>
-
                         </table>
+
                         <div class="row">
                             <div class="col-md-4">
                                 <h4>Transaction Terms</h4>
@@ -129,13 +113,17 @@
                         </div>
 
                             <div class="col-md-4">
+                                    @php
+                                        $discountPercentage = $billing->discount; // Assuming this is a percentage
+                                        $discountAmount = ($subtotal * $discountPercentage) / 100; // Calculate the discount amount
+                                        $adjustedSubtotal = $subtotal - $discountAmount; // Apply discount
+                                        $taxAmount = ($adjustedSubtotal * $billing->tax_amount) / 100; // Calculate tax based on adjusted subtotal
+                                    @endphp
+
                                 <p>Subtotal:{{ number_format($subtotal,2) }} </p>
-                                {{-- <p>Discount:{{ $billing->discount }} </p> --}}
-                               <p>Discount: </p>
-                                {{-- <p>Tax Amount:{{ $billing->tax_amount }}</p> --}}
-                                <p>Tax Amount:</p>
-                                {{-- <div class="card">TOTAL: {{number_format($billing->total_amount-$billing->discount-$billing->tax_amount, 2) }}</div> --}}
-                                <div class="card">TOTAL: {{number_format($total, 2) }}</div>
+                                <p>Discount ({{ number_format($discountPercentage, 2) }}%): {{ number_format($discountAmount, 2) }}</p>
+                                <p>Tax Amount:{{ $taxAmount }}</p>
+                                <div class="card">TOTAL: {{ number_format($adjustedSubtotal + $taxAmount, 2) }}</div>
                             </div>
                         </div>
                     </div>
@@ -146,3 +134,4 @@
 
 </div>
 
+@stop
