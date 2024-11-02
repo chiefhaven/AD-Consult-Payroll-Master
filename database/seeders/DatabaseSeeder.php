@@ -51,5 +51,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'Accountant',
             'description' => 'For all field officers'
         ]);
+
+
+        $this->call(LeaveSeeder::class);
+
+
     }
 }
