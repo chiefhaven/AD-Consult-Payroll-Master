@@ -14,7 +14,10 @@ class Order extends Model
         'product_id',
         'quantity',
         'rate',
-        'total'
+        'total',
+        'discount_amount',
+        'discount_type',
+        'tax_amount',
     ];
 
     public function billing()

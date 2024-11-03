@@ -14,7 +14,10 @@ class Product extends Model
         'description',
         'price',
         'category',
-        'status'
+        'status',
+        'tax',
+        'total'
+
     ];
 
         public function billings()

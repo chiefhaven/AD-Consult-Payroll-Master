@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('billing_id'); // Reference to billing table
-            $table->foreignId('product_id'); // Reference to product table
-            $table->integer('quantity'); // Quantity of the product
-            $table->decimal('rate', 10, 2); // Rate per unit of the product
-            $table->decimal('total', 10, 2); // Total amount for this order line (quantity * rate)
+            $table->foreignId('billing_id');
+            $table->foreignId('product_id');
+            $table->integer('quantity');
+            $table->decimal('rate', 10, 2);
+            $table->decimal('total', 10, 2);
+            $table->decimal('discount_amount', 10, 2);
+            $table->decimal('tax_amount', 10, 2);
+            $table->enum('discount_type',['trade','loyalty']);
             $table->timestamps();
         });
     }

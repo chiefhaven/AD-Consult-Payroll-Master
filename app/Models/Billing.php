@@ -26,6 +26,7 @@ class Billing extends Model
             'discription',
             'issue_date',
             'due_date',
+            
             // 'product',
             // 'quantity',
             // 'rate',

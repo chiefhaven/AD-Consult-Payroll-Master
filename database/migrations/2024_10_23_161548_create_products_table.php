@@ -18,6 +18,8 @@ return new class extends Migration
             $table->float('rate');
             $table->enum('category',['Recruitment','Payroll','Training','Consulting']);
             $table->enum('status',['Available','Not Available']);
+            $table->float('tax');
+            $table->float('total'); 
             $table->timestamps();
         });
     }
