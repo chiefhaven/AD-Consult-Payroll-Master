@@ -31,7 +31,13 @@ class LeaveTypeController extends Controller
      */
     public function store(StoreLeaveTypeRequest $request)
     {
-        //
+        $leaveType = new LeaveType();
+        $leaveType->name = $request->name;
+        $leaveType->description = $request->description;
+
+        $leaveType->save();
+
+        return response()->json($leaveType,200);
     }
 
     /**
@@ -61,8 +67,21 @@ class LeaveTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LeaveType $leaveType)
+    public function destroy($leaveType)
     {
-        //
+        try {
+            // Find the leaveType by ID
+            $leaveType = LeaveType::findOrFail($leaveType);
+
+            // Delete the leaveType
+            $leaveType->delete();
+
+            // Return a success response
+            return response()->json(['message' => 'leaveType deleted successfully.'], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['message' => 'Leave type not found.'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error deleting leave type', 'error' => $e->getMessage()], 500);
+        }
     }
 }

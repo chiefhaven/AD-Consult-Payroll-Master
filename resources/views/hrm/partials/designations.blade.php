@@ -1,10 +1,5 @@
 <div id="designations" v-if="showDesignations" :class="{ show: showDesignations }">
-    <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: 200px;" v-if="loading">
-        <p class="spinner"></p>
-        <p>
-            Loading data, please wait...
-        </p>
-    </div>
+
     <div v-if="!loading && designations.length > 0">
         <div class="table-responsive container-fluid">
             <table id="designationsTable" class="table table-bordered table-striped table-vcenter w-100 display nowrap">

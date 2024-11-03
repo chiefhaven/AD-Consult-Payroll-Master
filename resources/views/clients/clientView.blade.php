@@ -244,7 +244,7 @@
         };
 
         const fetchAddPayrollDetails = async (client) =>{
-            loading.value = true;
+            NProgress.start();
             error.value = null;
             try {
                 const response = await axios.get(`/add-payroll/${client}`);
@@ -258,13 +258,15 @@
                 error.value = "Failed to fetch payroll data";
             } finally {
                 loading.value = false;
+                NProgress.done();
             }
         }
 
         // Open the payroll details modal and fetch payroll data
         const fetchPayrollDetails = (payroll) => {
-          showPayrollModal.value = true;
-          fetchData(payroll);  // Fetch data when the modal opens
+            NProgress.start();
+            showPayrollModal.value = true;
+            fetchData(payroll);  // Fetch data when the modal opens
         };
 
         // Close the modal
@@ -289,11 +291,13 @@
                 error.value = "Failed to fetch payroll data";
             } finally {
                 loading.value = false;
+                NProgress.done();
             }
         };
 
         // Open the payroll details modal and fetch payroll data
         const employeePayDetails = (employee, payroll) => {
+            NProgress.start();
             showEmployeePayModal.value = true;
             showPayrollModal.value = false;
             fetchEmployeePayDetails(employee, payroll);  // Fetch data when the modal opens
@@ -336,6 +340,7 @@
                 console.error(err); // Log the error for debugging purposes
             } finally {
                 loading.value = false; // Ensure loading is false after the request completes
+                NProgress.done();
             }
         };
 

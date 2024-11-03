@@ -1,60 +1,66 @@
 <div id="leavetypes" v-if="showLeaveTypes" :class="{ show: showLeaveTypes }">
-    <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: 200px;" v-if="loading">
-        <p class="spinner"></p>
-        <p>
-            Loading data, please wait...
-        </p>
-    </div>
+
     <div v-if="!loading && leaveTypes.length > 0">
         <div class="table-responsive container-fluid">
-            <table id="leavetypesTable" class="table table-bordered table-striped table-vcenter w-100 display nowrap">
-                <thead>
-                    <tr>
-                        <th style="min-width: 150px;">Name</th>
-                        <th style="min-width: 50px;">Description</th>
-                        <th class="text-center" style="width: 100px;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="leaveType in leaveTypes" :key="leaveType.id">
-                        <td class="font-w600">
-                            @{{ leaveType.name }}
-                        </td>
-                        <td>
-                            @{{ leaveType.description }}
-                        </td>
-                        <td class="text-center">
-                            <div class="dropdown d-inline-block">
-                                <button type="button" class="btn btn-default" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="d-sm-inline-block">Action</span>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-end p-0">
-                                    <div class="p-2">
-                                        <!-- View Payroll Link -->
-                                        <button class="dropdown-item nav-main-link" @click="leavetypeDetails(leaveType.id)">
-                                            <i class="nav-main-link-icon fas fa-eye"></i>
-                                            <span class="btn">View</span>
-                                        </button>
+            <table id="leaveTypesTable" class="table table-bordered table-striped table-vcenter w-100 display nowrap">
+            <thead>
+                <tr>
+                <th style="min-width: 150px;">Name</th>
+                <th style="min-width: 50px;">Description</th>
+                <th class="text-center" style="width: 100px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="leaveType in leaveTypes" :key="leaveType.id">
+                <td class="font-w600">
+                    @{{ leaveType.name }}
+                </td>
+                <td>
+                    @{{ leaveType.description }}
+                </td>
+                <td class="text-center">
+                    <div class="dropdown d-inline-block">
+                    <button
+                        type="button"
+                        class="btn btn-default"
+                        :id="'dropdown-' + leaveType.id"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                        <span class="d-sm-inline-block">Action</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end p-0">
+                        <div class="p-2">
+                        <!-- View Leave Type -->
+                        <button class="dropdown-item nav-main-link" @click="leavetypeDetails(leaveType.id)">
+                            <i class="nav-main-link-icon fas fa-eye"></i>
+                            <span class="btn">View</span>
+                        </button>
 
-                                        <!-- Edit leaveType -->
-                                        <button class="dropdown-item nav-main-link btn" @click="editLeaveType(leaveType)">
-                                            <i class="nav-main-link-icon fas fa-pencil-alt"></i>
-                                            <span class="btn">Edit</span>
-                                        </button>
+                        <!-- Edit Leave Type -->
+                        <button class="dropdown-item nav-main-link btn" @click="editLeaveType(leaveType)">
+                            <i class="nav-main-link-icon fas fa-pencil-alt"></i>
+                            <span class="btn">Edit</span>
+                        </button>
 
-                                        <button class="dropdown-item nav-main-link btn delete-leaveType-confirm" type="button" @click="confirmDelete(leaveType.id)">
-                                            <i class="nav-main-link-icon fas fa-trash-alt"></i>
-                                            <span class="btn">Delete</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
+                        <!-- Delete Leave Type -->
+                        <button class="dropdown-item nav-main-link btn delete-leaveType-confirm" type="button" @click="confirmLeaveTypeDelete(leaveType.id)">
+                            <i class="nav-main-link-icon fas fa-trash-alt"></i>
+                            <span class="btn">Delete</span>
+                        </button>
+                        </div>
+                    </div>
+                    </div>
+                </td>
+                </tr>
+            </tbody>
             </table>
         </div>
     </div>
+    <div v-if="!loading && leaveTypes.length <= 0">
+        <p class="text-center">No leave types available</p>
+    </div>
+
     <div v-if="error">
         <p class="p-5">
             @{{ error }}
@@ -104,7 +110,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-default" @click="addLeaveType(state.leavetypeId)">@{{ state.buttonName }}</button>
+            <button type="button" class="btn btn-default" @click="addLeaveType(state.leaveTypeId)">@{{ state.buttonName }}</button>
             <button type="button" class="btn btn-default" @click="closeForm">Cancel</button>
             </div>
         </div>

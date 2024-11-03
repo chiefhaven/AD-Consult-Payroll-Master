@@ -26,7 +26,7 @@
 {{-- Rename section content to content_body --}}
 
 @section('content')
-<div class="row" id="payroll">
+<div class="row" id="payroll" v-cloak>
     <livewire:common.page-header pageTitle="Add payroll" buttonName="Go back" link="/client/{{ $payroll->client->id }}" buttonClass="btn btn-warning"/>
     <div class="col-lg-12">
         @include('includes/error')

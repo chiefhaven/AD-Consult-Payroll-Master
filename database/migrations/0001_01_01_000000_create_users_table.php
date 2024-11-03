@@ -12,12 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();  // Auto-incrementing ID
+            $table->uuid('id')->primary();  // Set the id as a UUID
             $table->string('username')->unique();  // Unique username for the user
             $table->string('name')->nullable();  // User's name
             $table->string('email')->unique();  // Unique email for login
-            $table->uuid('employee_id')->nullable()->constrained('employees')->onDelete('set null'); // Foreign key for employees
-            $table->uuid('client_id')->nullable()->constrained('clients')->onDelete('set null'); // Foreign key for clients
+            $table->uuid('employee_id')->nullable(); // Foreign key for employees
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('set null'); // Set null on delete
+            $table->uuid('client_id')->nullable(); // Foreign key for clients
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('set null'); // Set null on delete
             $table->timestamp('email_verified_at')->nullable();  // Timestamp for email verification
             $table->string('password');  // Password for user authentication
             $table->rememberToken();  // Token for "remember me" functionality
@@ -34,7 +36,8 @@ return new class extends Migration
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();  // Unique session ID
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade')->index();  // Foreign key for users
+            $table->uuid('user_id')->nullable();  // Change to UUID for user_id
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->index();  // Foreign key for users
             $table->string('ip_address', 45)->nullable();  // Store IP addresses with room for IPv6
             $table->text('user_agent')->nullable();  // User agent string for tracking
             $table->longText('payload');  // Payload data associated with the session

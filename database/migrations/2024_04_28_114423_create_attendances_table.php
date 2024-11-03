@@ -12,15 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('attendances', function (Blueprint $table) {
-            $table->id();
-            $table->time('clock_in_time');
-            $table->time('clock_out_time');
-            $table->char('ip_address');
-            $table->char('clock_in_note');
-            $table->char('clock_out_note');
-            $table->char('clock_in_location');
-            $table->char('clock_out_location');
+            $table->uuid('id')->primary();
+            $table->uuid('employee_id'); // Foreign key for employee
+            $table->date('attendance_date');
+            $table->enum('status', ['present', 'absent', 'on leave', 'late']);
+            $table->time('check_in_time')->nullable();
+            $table->time('check_out_time')->nullable();
+            $table->decimal('working_hours', 5, 2)->nullable(); // E.g., 7.5 hours
+            $table->text('remarks')->nullable();
             $table->timestamps();
+
+            // Foreign key constraint
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
         });
     }
 

@@ -1,27 +1,45 @@
 <div id="attendances" v-if="showAttendances" :class="{ show: showAttendances }">
-    <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: 200px;" v-if="loading">
-        <p class="spinner"></p>
-        <p>
-            Loading data, please wait...
-        </p>
-    </div>
     <div v-if="!loading && attendances.length > 0">
         <div class="table-responsive">
             <table id="attendancesTable" class="table table-bordered table-striped table-vcenter display nowrap">
                 <thead>
                     <tr>
-                        <th style="min-width: 150px;">Name</th>
-                        <th style="min-width: 50px;">Description</th>
+                        <th style="min-width: 150px;">Employee</th>
+                        <th>Employee ID</th>
+                        <th>Attendance Date</th>
+                        <th>Status</th>
+                        <th>Check-In Time</th>
+                        <th>Check-Out Time</th>
+                        <th>Working Hours</th>
+                        <th>Remarks</th>
                         <th class="text-center" style="width: 100px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="attendance in attendances" :key="attendance.id">
                         <td class="font-w600">
-                            @{{ attendance.name }}
+                            @{{ attendance.employee.fname }} @{{ attendance.employee.mname }} @{{ attendance.employee.sname }}
                         </td>
                         <td>
-                            @{{ attendance.description }}
+                            @{{ attendance.employee.employee_no }}
+                        </td>
+                        <td>
+                            @{{ attendance.attendance_date }}
+                        </td>
+                        <td>
+                            @{{ attendance.status }}
+                        </td>
+                        <td>
+                            @{{ attendance.check_in_time || 'N/A' }}
+                        </td>
+                        <td>
+                            @{{ attendance.check_out_time || 'N/A' }}
+                        </td>
+                        <td>
+                            @{{ attendance.working_hours || 'N/A' }} hours
+                        </td>
+                        <td>
+                            @{{ attendance.remarks || 'N/A' }}
                         </td>
                         <td class="text-center">
                             <div class="dropdown d-inline-block">
@@ -35,20 +53,6 @@
                                             <i class="nav-main-link-icon fas fa-eye"></i>
                                             <span class="btn">View</span>
                                         </button>
-
-                                        <!-- Edit attendance -->
-                                        <a class="dropdown-item nav-main-link btn" href="#">
-                                            <i class="nav-main-link-icon fas fa-pencil-alt"></i>
-                                            <span class="btn">Edit</span>
-                                        </a>
-
-                                        <!-- Delete Designation Form -->
-                                        <form class="dropdown-item nav-main-link" method="POST" :action="'/delete-attendance/' + attendance.id">
-                                            @csrf
-                                            @method('DELETE')
-                                            <i class="nav-main-link-icon fas fa-trash-alt"></i>
-                                            <button class="btn delete-attendance-confirm" type="submit">Delete</button>
-                                        </form>
                                     </div>
                                 </div>
                             </div>

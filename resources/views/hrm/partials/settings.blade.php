@@ -1,10 +1,5 @@
 <div id="settings" v-if="showSettings" :class="{ show: showSettings }">
-    <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: 200px;" v-if="loading">
-        <p class="spinner"></p>
-        <p>
-            Loading data, please wait...
-        </p>
-    </div>
+
     <div v-if="!loading && settings.length > 0">
         <div class="table-responsive">
             <table id="settingsTable" class="table table-bordered table-striped table-vcenter display nowrap">

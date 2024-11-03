@@ -101,4 +101,14 @@ class Employee extends Model
     {
         return $this->belongsToMany(Payroll::class, 'payroll_employee')->withPivot('salary', 'pay_period', 'earning_description', 'earning_amount', 'deduction_description', 'deduction_amount', 'payee', 'net_salary', 'total_paid');
     }
+
+    public function Leave()
+    {
+        return $this->hasMany(Leave::class);
+    }
+
+    public function Attendance()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 }

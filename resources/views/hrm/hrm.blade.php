@@ -40,7 +40,7 @@
                             <button class="nav-link btn btn-link" @click="getLeaveTypes()">Leave Types</button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link btn btn-link" @click="getLeaves()">Leaves</button> <!-- Corrected from getLeave -->
+                            <button class="nav-link btn btn-link" @click="getLeaves()">Leaves</button>
                         </li>
                         <li class="nav-item">
                             <button class="nav-link btn btn-link" @click="getHolidays()">Holidays</button>
@@ -48,9 +48,9 @@
                         <li class="nav-item">
                             <button class="nav-link btn btn-link" @click="getAttendances()">Attendances</button>
                         </li>
-                        <li class="nav-item">
+                        {{--  <li class="nav-item">
                             <button class="nav-link btn btn-link" @click="getSettings()">Settings</button>
-                        </li>
+                        </li>  --}}
                     </ul>
                 </div>
             </div>
@@ -93,10 +93,6 @@
 @push('js')
 <script>
 
-    $(document).ready(function() {
-
-    });
-
     const hrm = createApp({
         setup() {
             const showDesignations = ref(false);
@@ -117,7 +113,11 @@
             const buttonName = ref("Click Here");
             const link = ref("/default-link");
             const showAddDesignationModal = ref(false);
-            const showAddLeaveTypeModal =ref(false);
+            const showAddLeaveTypeModal = ref(false);
+            const showAddHolidayModal = ref(false);
+            const isRecurring = ref(false);
+            const leaveId = ref('');
+
             const state = ref({
                 name: '',
                 description: '',
@@ -125,10 +125,26 @@
                 buttonName:'Add',
                 modalFunction:'',
                 designationId: null,
+                leaveTypeId: null,
+                leaveHolidayId: null,
+                date:'',
             });
 
             onMounted(() => {
                 getDesignations(); // Default behavior on mount
+
+                $("#date").datepicker({
+                    format: "dd MM yyyy",
+                    autoclose: true
+                }).on("changeDate", (e) => {
+                    // Update Vue model when date changes
+                    state.value.date = e.format(); // Adjust according to the datepicker's output format
+                });
+
+            });
+
+            onBeforeUnmount(() => {
+                $("#date").datepicker('destroy'); // Clean up on component unmount
             });
 
             // Generic toggle function to handle showing sections
@@ -148,8 +164,9 @@
                 fetchFunction();
             };
 
-            // Example usage for fetching and displaying different sections
             const getDesignations = () => {
+                NProgress.start();
+
                 link.value = "add-designation"
                 buttonName.value = "Add designation"
                 pageTitle.value = "Designations"
@@ -157,6 +174,8 @@
             };
 
             const getLeaveTypes = () => {
+                NProgress.start();
+
                 link.value = "add-leave-type"
                 buttonName.value = "Add leave type"
                 pageTitle.value = "Leave types"
@@ -164,6 +183,8 @@
             };
 
             const getHolidays = () => {
+                NProgress.start();
+
                 link.value = "add-holidays"
                 buttonName.value = "Add holiday"
                 pageTitle.value = "Holidays"
@@ -171,6 +192,7 @@
             };
 
             const getAttendances = () => {
+                NProgress.start();
                 link.value = null
                 buttonName.value = null
                 pageTitle.value = "Attendances"
@@ -178,6 +200,8 @@
             };
 
             const getLeaves = () => {
+                NProgress.start();
+
                 link.value = null
                 buttonName.value = null
                 pageTitle.value = "Leaves"
@@ -185,6 +209,8 @@
             };
 
             const getSettings = () => {
+                NProgress.start();
+
                 link.value = null
                 buttonName.value = null
                 pageTitle.value = "Settings"
@@ -203,6 +229,7 @@
                     error.value = "Failed to fetch designations.";
                 } finally {
                     loading.value = false;
+                    NProgress.done();
                 }
             };
 
@@ -212,10 +239,12 @@
                 try {
                     const response = await axios.get(`/hrm/leave-types`);
                     leaveTypes.value = response.data.length > 0 ? response.data : [];
+                    initializeDataTable();
                 } catch (err) {
                     error.value = "Failed to fetch leave types.";
                 } finally {
                     loading.value = false;
+                    NProgress.done();
                 }
             };
 
@@ -223,12 +252,14 @@
                 loading.value = true;
                 error.value = null;
                 try {
-                    const response = await axios.get(`/hrm/holidays`);
+                    const response = await axios.get(`/holidays`);
                     holidays.value = response.data.length > 0 ? response.data : [];
+                    initializeDataTable();
                 } catch (err) {
                     error.value = "Failed to fetch holidays.";
                 } finally {
                     loading.value = false;
+                    NProgress.done();
                 }
             };
 
@@ -236,12 +267,14 @@
                 loading.value = true;
                 error.value = null;
                 try {
-                    const response = await axios.get(`/hrm/attendances`);
+                    const response = await axios.get(`/attendances`);
                     attendances.value = response.data.length > 0 ? response.data : [];
+                    initializeDataTable();
                 } catch (err) {
                     error.value = "Failed to fetch attendances.";
                 } finally {
                     loading.value = false;
+                    NProgress.done();
                 }
             };
 
@@ -251,10 +284,12 @@
                 try {
                     const response = await axios.get(`/hrm/leaves`);
                     leaves.value = response.data.length > 0 ? response.data : [];
+                    initializeDataTable();
                 } catch (err) {
                     error.value = "Failed to fetch leaves.";
                 } finally {
                     loading.value = false;
+                    NProgress.done();
                 }
             };
 
@@ -264,17 +299,20 @@
                 try {
                     const response = await axios.get(`/hrm/settings`);
                     settings.value = response.data.length > 0 ? response.data : [];
+                    initializeDataTable();
                 } catch (err) {
                     error.value = "Failed to fetch settings.";
                 } finally {
                     loading.value = false;
+                    NProgress.done();
+
                 }
             };
 
             // Function to initialize DataTable after Vue has rendered the table
             const initializeDataTable = () => {
                 setTimeout(() => {
-                    $('#designationsTable, #leaveTypesTable').DataTable({
+                    $('#designationsTable, #leaveTypesTable, #leavesTable, #attendancesTable').DataTable({
                         dom: 'Bfrtip',
                         buttons: ['copy', 'excel', 'pdf', 'print'],
                         scrollX: true,
@@ -320,6 +358,48 @@
                 }
             };
 
+            const addLeaveType = async (leavetype) => {
+                NProgress.start();
+
+                try {
+                    if (leavetype === null) {
+                        const response = await axios.post('/storeLeaveType', {
+                            name: state.value.name,
+                            description: state.value.description,
+                        });
+
+                        if (response.status === 200) {
+                            notification('Leave type added successfully', 'success');
+                            getLeaveTypes();
+                            state.value = { name: '', description: '', buttonName:'Save', leavetypeId: null  }; // Reset the form
+                        }
+                    }
+                    if(leavetype !== null) {
+                        const response = await axios.post(`/updateLeaveType/${leavetype}`, {
+                            name: state.value.name,
+                            description: state.value.description,
+                        });
+
+                        if (response.status === 200) {
+                            notification('Leave type updated successfully', 'success');
+                            getLeaveType();
+                            state.value = { name: '', description: '', buttonName:'Update', }; // Reset the form
+                            showAddLeaveTypeModal.value = false;
+                        }
+                    }
+                } catch (error) {
+                    if (error.response && error.response.status === 422) {
+                        const errorMessage = error.response.data.message || 'An error occurred';
+                        notification(errorMessage, 'error');
+                    } else {
+                        notification('An unexpected error occurred', 'error');
+                    }
+                }
+                finally{
+                    NProgress.done();
+                }
+            };
+
             const confirmDelete = async(designationId) => {
                 Swal.fire({
                     title: 'Delete Designation?',
@@ -335,8 +415,93 @@
                 });
             };
 
+            const addLeave = async (leave) => {
+                NProgress.start();
+
+                try {
+                    if (leave === null) {
+                        const response = await axios.post('/storeLeave', {
+                            name: state.value.name,
+                            description: state.value.description,
+                        });
+
+                        if (response.status === 200) {
+                            notification('Leave type added successfully', 'success');
+                            getLeaves();
+                            state.value = { name: '', description: '', buttonName:'Save', leaveId: null  }; // Reset the form
+                        }
+                    }
+                    if(leave !== null) {
+                        const response = await axios.post(`/updateLeave/${leave}`, {
+                            name: state.value.name,
+                            description: state.value.description,
+                        });
+
+                        if (response.status === 200) {
+                            notification('Leave type updated successfully', 'success');
+                            getLeave();
+                            state.value = { name: '', description: '', buttonName:'Update', }; // Reset the form
+                            showAddLeaveModal.value = false;
+                        }
+                    }
+                } catch (error) {
+                    if (error.response && error.response.status === 422) {
+                        const errorMessage = error.response.data.message || 'An error occurred';
+                        notification(errorMessage, 'error');
+                    } else {
+                        notification('An unexpected error occurred', 'error');
+                    }
+                }
+                finally{
+                    NProgress.done();
+                }
+            };
+
+            const addHoliday = async (holiday) => {
+                NProgress.start();
+
+                try {
+                    if (leave === null) {
+                        const response = await axios.post('/storeHoliday', {
+                            name: state.value.name,
+                            description: state.value.description,
+                        });
+
+                        if (response.status === 200) {
+                            notification('Holiday added successfully', 'success');
+                            getHolidays();
+                            state.value = { name: '', description: '', buttonName:'Save', holidayId: null  }; // Reset the form
+                        }
+                    }
+                    if(leave !== null) {
+                        const response = await axios.post(`/updateHoliday/${holiday}`, {
+                            name: state.value.name,
+                            description: state.value.description,
+                        });
+
+                        if (response.status === 200) {
+                            notification('Holiday updated successfully', 'success');
+                            getHoliday();
+                            state.value = { name: '', description: '', buttonName:'Update', }; // Reset the form
+                            showAddHolidayModal.value = false;
+                        }
+                    }
+                } catch (error) {
+                    if (error.response && error.response.status === 422) {
+                        const errorMessage = error.response.data.message || 'An error occurred';
+                        notification(errorMessage, 'error');
+                    } else {
+                        notification('An unexpected error occurred', 'error');
+                    }
+                }
+                finally{
+                    NProgress.done();
+                }
+            };
+
             const deleteDesignation = async (designation) => {
                 loading.value = true;
+                NProgress.start();
 
                 try {
                     const response = await axios.delete(`/deleteDesignation/${designation}`, {});
@@ -350,6 +515,110 @@
                     notification(errorMessage, 'error');
                 } finally {
                     loading.value = false;
+                    NProgress.done();
+                }
+            };
+
+            const confirmLeaveTypeDelete = async(leaveTypeId) => {
+                Swal.fire({
+                    title: 'Delete leave type?',
+                    text: 'Do you want to delete this leavetype? This action cannot be undone!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Delete!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteLeaveType(leaveTypeId);
+                    }
+                });
+            };
+
+            const confirmHolidayDelete = async(holidayId) => {
+                Swal.fire({
+                    title: 'Delete holiday?',
+                    text: 'Do you want to delete this holiday? This action cannot be undone!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Delete!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteHoliday(holidayId);
+                    }
+                });
+            };
+
+
+            const confirmLeaveDelete = async(LeaveId) => {
+                Swal.fire({
+                    title: 'Delete leave?',
+                    text: 'Do you want to delete this Leave? This action cannot be undone!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Delete!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteLeave(LeaveId);
+                    }
+                });
+            };
+
+            const deleteLeaveType = async (leaveType) => {
+                NProgress.start();
+
+                try {
+                    const response = await axios.delete(`/deleteLeaveType/${leaveType}`, {});
+
+                    if (response.status === 200) {
+                        notification('LeaveType deleted successfully', 'success');
+                        getLeaveTypes();
+                    }
+                } catch (error) {
+                    const errorMessage = error.response.data.message || 'An unexpected error occurred';
+                    notification(errorMessage, 'error');
+                } finally {
+                    loading.value = false;
+                    NProgress.done();
+                }
+            };
+
+            const deleteHoliday = async (holiday) => {
+                NProgress.start();
+
+                try {
+                    const response = await axios.delete(`/deleteLeaveType/${leaveType}`, {});
+
+                    if (response.status === 200) {
+                        notification('LeaveType deleted successfully', 'success');
+                        getLeaveTypes();
+                    }
+                } catch (error) {
+                    const errorMessage = error.response.data.message || 'An unexpected error occurred';
+                    notification(errorMessage, 'error');
+                } finally {
+                    loading.value = false;
+                    NProgress.done();
+                }
+            };
+
+            const deleteLeave = async (Leave) => {
+                NProgress.start();
+
+                try {
+                    const response = await axios.delete(`/deleteLeave/${Leave}`, {});
+
+                    if (response.status === 200) {
+                        notification('Leave deleted successfully', 'success');
+                        getLeaves();
+                    }
+                } catch (error) {
+                    const errorMessage = error.response.data.message || 'An unexpected error occurred';
+                    notification(errorMessage, 'error');
+                } finally {
+                    loading.value = false;
+                    NProgress.done();
                 }
             };
 
@@ -358,6 +627,7 @@
                     buttonName: name,
                     modalTitle: name,
                     designationId: null,
+                    leaveTypeId: null,
                 };
 
                 if(type === 'Designations'){
@@ -365,6 +635,9 @@
                 }
                 else if(type === 'Leave types'){
                     showAddLeaveTypeModal.value = true;
+                }
+                else if(type === 'Holidays'){
+                    showAddHolidayModal.value = true;
                 }
             }
 
@@ -390,6 +663,47 @@
             const closeForm = async() => {
                 showAddDesignationModal.value = false;
                 showAddLeaveTypeModal.value = false;
+                showAddHolidayModal.value = false;
+            }
+
+            const leaveApproval = async (leaveId) =>{
+                Swal.fire({
+                    title: 'Change leave status?',
+                    text: `You are about to change the leave status. This action cannot be undone.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    showDenyButton: true,
+                    confirmButtonText: 'Approve',
+                    denyButtonText: 'Reject',
+                    cancelButtonText: 'Set as Pending'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Approve action
+                        updateLeaveStatus('approved', leaveId);
+                    } else if (result.isDenied) {
+                        // Reject action
+                        updateLeaveStatus('rejected', leaveId);
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        // Pending action
+                        updateLeaveStatus('pending', leaveId);
+                    }
+                });
+            }
+
+            function updateLeaveStatus(status, leaveId) {
+                console.log(`Status updated to: ${status}, ${leaveId}`);
+                // Make an API call to change the status
+                axios.patch(`/leaves/${leaveId}/approval`, { status: status })
+                .then(response => {
+                    // Display a success notification
+                    notification(response.data.message, 'success');
+                    getLeaves();
+                })
+                .catch(error => {
+                    //Display an error notification
+                    notification('Failed to update leave status.', 'error');
+                    console.error(error);
+                });
             }
 
             const notification = ($text, $icon) =>{
@@ -433,6 +747,7 @@
                 link,
                 buttonName,
                 addDesignation,
+                addHoliday,
                 showAddDesignationModal,
                 openForm,
                 state,
@@ -441,7 +756,13 @@
                 designationDetails,
                 confirmDelete,
                 showAddLeaveTypeModal,
-                closeForm
+                closeForm,
+                addLeaveType,
+                confirmLeaveTypeDelete,
+                confirmLeaveDelete,
+                showAddHolidayModal,
+                isRecurring,
+                leaveApproval
             };
 
         }

@@ -370,7 +370,7 @@
         };
 
         const submitPayroll = async () => {
-            console.log(payrollStates.value, clientId.value, payrollStatus.value, payrollMonthYear.value, status.value);
+            NProgress.start();
             try {
                 const response = await axios.post('/save-payroll', {
                     payrolls: payrollStates.value,
@@ -379,11 +379,12 @@
                     payrollMonthYear: payrollMonthYear.value,
                     status: status.value
                 });
-                console.log('Payroll saved successfully:', response.data);
                 // Handle success response
             } catch (error) {
                 console.error('Error saving payroll:', error);
                 // Handle error response
+            } finally{
+                Nprogress.done();
             }
         };
 

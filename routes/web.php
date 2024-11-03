@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Livewire\Clients\AddClient;
 use App\Livewire\Clients\UpdateClient;
 use App\Livewire\AddTaxRate;
@@ -18,9 +19,13 @@ use App\Http\Controllers\PayrollController;
 use App\Livewire\Employees\UpdateEmployee;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\Common\BusinessUtil;
+use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HRMController;
+use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\ProductController;
+use App\Models\Attendance;
+use App\Models\Holiday;
 use Illuminate\Support\Facades\Artisan;
 
 Auth::routes();
@@ -68,10 +73,26 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/hrm', [HRMController::class, 'index'])->name('hrm');
     Route::get('/hrm/designations', [HRMController::class, 'designationIndex'])->name('hrmDesignation');
     Route::post('/storeDesignation', [HRMController::class, 'storeDesignation'])->name('storeDesignation');
+    Route::post('/storeLeaveType', [LeaveTypeController::class, 'store'])->name('storeLeaveType');
     Route::delete('/deleteDesignation/{designation}', [HRMController::class, 'deleteDesignation'])->name('deleteDesignation');
+    Route::delete('/deleteLeaveType/{leavetype}', [LeaveTypeController::class, 'destroy'])->name('deleteLeaveType');
     Route::post('/updateDesignation/{id}', [HRMController::class, 'updateDesignation'])->name('updateDesignation');
     Route::get('/hrm/leave-types', [LeaveTypeController::class, 'index'])->name('leave-types');
+    Route::get('/hrm/leaves', [LeaveController::class, 'index'])->name('leaves');
+    Route::delete('/deleteLeave/{leave}', [LeaveController::class, 'destroy'])->name('deleteLeave');
+});
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/leaves', [LeaveController::class, 'index'])->name('leaves');
+    Route::patch('/leaves/{leave}/approval', [LeaveController::class, 'leaveApproval'])->name('leaves.approval');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/holidays', [HolidayController::class, 'index'])->name('holidays');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances');
 });
 
 
@@ -92,9 +113,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/view-employee-payroll/{employee}/{payroll}/{payslip}', [PayrollController::class, 'viewEmployeePayroll'])->name('viewEmployeePayroll');
 });
 
-Route::get('/leaves', Leaves::class)->middleware(['auth']);
-
-Route::get('/attendances', Attendances::class)->middleware(['auth']);
 
 Route::get('/tax-rates', TaxRateList::class)->middleware(['auth']);
 Route::get('/add-tax-rate', AddTaxRate::class)->middleware(['auth']);

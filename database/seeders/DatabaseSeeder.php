@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(ProjectsTableSeeder::class);
+        $this->call(AttendancesTableSeeder::class);
 
         Employee::factory()->count(50)->create([
             'status' => 'Active',
@@ -34,6 +35,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'Test',
             'name' => 'Test User',
             'email' => 'haven@haven-techmw.com',
+            'password' => bcrypt('password'), // Hash the password
         ]);
 
         Industry::factory()->create([
