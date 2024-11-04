@@ -124,7 +124,17 @@
 
 @section('js')
 <script>
+    function toggleCardBody() {
+        const cardBody = document.getElementById("payeBracketsCardBody");
+        const toggleIcon = document.getElementById("toggleIcon");
 
+        // Toggle the display of the card body
+        cardBody.style.display = cardBody.style.display === "none" ? "block" : "none";
+
+        // Toggle the icon
+        toggleIcon.classList.toggle("fa-chevron-down");
+        toggleIcon.classList.toggle("fa-chevron-up");
+    }
 </script>
 
 <script>
