@@ -17,76 +17,82 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="leave in leaves" :key="leave.id">
-                <td class="font-w600">
-                    @{{ leave.employee.fname }}
-                    @{{ leave.employee.mname }}
-                    @{{ leave.employee.sname }}
-                </td>
-                <td>
-                    @{{ leave.created_at }}
-                </td>
-                <td>
-                    @{{ leave.start_date }}
-                </td>
-                <td>
-                    @{{ leave.end_date }}
-                </td>
-                <td>
-                    @{{ leave.reason }}
-                </td>
-                <td>
-                    @{{ leave.status }}
-                </td>
-                <td>
-                    @{{ leave.approval_date }}
-                </td>
-                <td>
-                    @{{ leave.approved_by_user.username }}<br>
-                    <div class="small text-muted">
-                        @{{ leave.approved_by_user.email }}
-                    </div>
-                </td>
-                <td class="text-center">
-                    <div class="dropdown d-inline-block">
-                    <button
-                        type="button"
-                        class="btn btn-default"
-                        :id="'dropdown-' + leave.id"
-                        data-bs-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                    >
-                        <span class="d-sm-inline-block">Action</span>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end p-0">
-                        <div class="p-2">
-                        <!-- View Leave Details -->
-                        <button class="dropdown-item nav-main-link" @click="leaveDetails(leave.id)">
-                            <i class="nav-main-link-icon fas fa-eye"></i>
-                            <span class="btn">View</span>
-                        </button>
-
-                        <button class="dropdown-item nav-main-link" @click="leaveApproval(leave.id)">
-                            <i class="nav-main-link-icon fas fa-check-circle"></i>
-                            <span class="btn">Approval Status</span>
-                        </button>
-
-                        {{--  <!-- Edit Leave -->
-                        <button class="dropdown-item nav-main-link btn" @click="editLeave(leave)">
-                            <i class="nav-main-link-icon fas fa-pencil-alt"></i>
-                            <span class="btn">Edit</span>
-                        </button>
-
-                        <!-- Delete Leave -->
-                        <button class="dropdown-item nav-main-link btn delete-leave-confirm" type="button" @click="confirmLeaveDelete(leave.id)">
-                            <i class="nav-main-link-icon fas fa-trash-alt"></i>
-                            <span class="btn">Delete</span>
-                        </button>  --}}
+                <tr v-for="leave in leaves" :key="leave.id"
+                :class="{
+                    'text-danger': leave.status === 'rejected',
+                    'text-success': leave.status === 'approved',
+                }">
+                    <td class="font-w600">
+                        @{{ leave.employee.fname }}
+                        @{{ leave.employee.mname }}
+                        @{{ leave.employee.sname }}
+                    </td>
+                    <td>
+                        @{{ leave.created_at }}
+                    </td>
+                    <td>
+                        @{{ leave.start_date }}
+                    </td>
+                    <td>
+                        @{{ leave.end_date }}
+                    </td>
+                    <td>
+                        @{{ leave.reason }}
+                    </td>
+                    <td>
+                        @{{ leave.status }}
+                    </td>
+                    <td>
+                        @{{ leave.approval_date }}
+                    </td>
+                    <td>
+                        @{{ leave.approved_by_user.username }}<br>
+                        <div class="small text-muted">
+                            @{{ leave.approved_by_user.email }}
                         </div>
-                    </div>
-                    </div>
-                </td>
+                    </td>
+                    <td class="text-center">
+                        <div class="dropdown d-inline-block">
+                        <button
+                            type="button"
+                            class="btn btn-default"
+                            :id="'dropdown-' + leave.id"
+                            data-bs-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        >
+                            <span class="d-sm-inline-block">Action</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end p-0">
+                            <div class="p-2">
+                            <!-- View Leave Details -->
+                            <button class="dropdown-item nav-main-link" @click="leaveDetails(leave.id)">
+                                <i class="nav-main-link-icon fas fa-eye"></i>
+                                <span class="btn">View</span>
+                            </button>
+
+                            <div v-if="leave.status === 'pending'">
+                                <button class="dropdown-item nav-main-link btn btn-warning" @click="leaveApproval(leave.id)">
+                                    <i class="nav-main-link-icon fas fa-check-circle"></i>
+                                    <span class="btn">Approval</span>
+                                </button>
+                            </div>
+
+                            {{--  <!-- Edit Leave -->
+                            <button class="dropdown-item nav-main-link btn" @click="editLeave(leave)">
+                                <i class="nav-main-link-icon fas fa-pencil-alt"></i>
+                                <span class="btn">Edit</span>
+                            </button>
+
+                            <!-- Delete Leave -->
+                            <button class="dropdown-item nav-main-link btn delete-leave-confirm" type="button" @click="confirmLeaveDelete(leave.id)">
+                                <i class="nav-main-link-icon fas fa-trash-alt"></i>
+                                <span class="btn">Delete</span>
+                            </button>  --}}
+                            </div>
+                        </div>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
             </table>

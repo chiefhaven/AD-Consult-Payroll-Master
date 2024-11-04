@@ -39,7 +39,13 @@ class HolidayController extends Controller
      */
     public function store(StoreHolidayRequest $request)
     {
-        //
+        $holiday = new Holiday();
+        $holiday->name = $request->name;
+        $holiday->description = $request->description;
+
+        $holiday->save();
+
+        return response()->json($holiday,200);
     }
 
     /**

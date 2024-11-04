@@ -113,7 +113,7 @@
                         />
 
                         <x-adminlte-input
-                            type="text"
+                            type="date"
                             name="date"
                             v-model="state.date"
                             label="Date:"
@@ -140,28 +140,31 @@
                                 <x-adminlte-select2
                                     name="state.holiday_type"
                                     v-model="state.holiday_type"
-                                    label="Type:"
-                                    fgroup-class="col-md-6 px-0"
-                                    class="{{ $errors->has('holiday_type') ? 'is-invalid' : '' }}"
+                                    label="Holiday Type:"
+                                    fgroup-class="col-md-6"
+                                    class="{ 'is-invalid': $errors->has('holiday_type') }"
                                     data-placeholder="Select an option..."
                                     autocomplete="off">
                                     <option value="" selected disabled>Please select an option...</option>
-                                    <option value="public_holiday" {{ old('holiday_type') == 'public_holiday' ? 'selected' : '' }}>Public Holiday</option>
-                                    <option value="other" {{ old('holiday_type') == 'other' ? 'selected' : '' }}>Other</option>
+                                    <option value="public_holiday" selected="old('holiday_type') == 'public_holiday'">Public Holiday</option>
+                                    <option value="other" selected="old('holiday_type') == 'other'">Other</option>
                                 </x-adminlte-select2>
 
-                                <x-adminlte-input
-                                    type="checkbox"
-                                    name="recurring"
+                                <x-adminlte-select2
+                                    name="state.reccuring"
+                                    v-model="state.reccuring"
                                     label="Recurring:"
-                                    fgroup-class="col-md-6 checkbox"
-                                    class="{{ $errors->has('recurring') ? 'is-invalid' : '' }}"
-                                    id="recurring"
-                                    checked="state.isRecurring"
-                                    autocomplete="off"
-                                />
+                                    fgroup-class="col-md-6"
+                                    class="{ 'is-invalid': $errors->has('reccuring') }"
+                                    data-placeholder="Select an option..."
+                                    autocomplete="off">
+                                    <option value="" selected disabled>Please select an option...</option>
+                                    <option value="yes" selected="old('reccuring') == 'yes'">Yes</option>
+                                    <option value="no" selected="old('reccuring') == 'no'">No</option>
+                                </x-adminlte-select2>
                             </div>
                         </div>
+
 
                     </div>
                 </div>

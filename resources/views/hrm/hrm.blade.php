@@ -115,7 +115,6 @@
             const showAddDesignationModal = ref(false);
             const showAddLeaveTypeModal = ref(false);
             const showAddHolidayModal = ref(false);
-            const isRecurring = ref(false);
             const leaveId = ref('');
 
             const state = ref({
@@ -128,6 +127,7 @@
                 leaveTypeId: null,
                 leaveHolidayId: null,
                 date:'',
+                recurring: true,
             });
 
             onMounted(() => {
@@ -460,8 +460,10 @@
             const addHoliday = async (holiday) => {
                 NProgress.start();
 
+                console.log(state.value.name, state.value.description, state.value.date, state.value.recurring, state.value.holiday_type)
+
                 try {
-                    if (leave === null) {
+                    if (holiday === null) {
                         const response = await axios.post('/storeHoliday', {
                             name: state.value.name,
                             description: state.value.description,
@@ -473,7 +475,7 @@
                             state.value = { name: '', description: '', buttonName:'Save', holidayId: null  }; // Reset the form
                         }
                     }
-                    if(leave !== null) {
+                    if(holiday !== null) {
                         const response = await axios.post(`/updateHoliday/${holiday}`, {
                             name: state.value.name,
                             description: state.value.description,
@@ -628,6 +630,7 @@
                     modalTitle: name,
                     designationId: null,
                     leaveTypeId: null,
+                    holidayId: null,
                 };
 
                 if(type === 'Designations'){
@@ -666,8 +669,8 @@
                 showAddHolidayModal.value = false;
             }
 
-            const leaveApproval = async (leaveId) =>{
-                Swal.fire({
+            const leaveApproval = async (leaveId) => {
+                const result = await Swal.fire({
                     title: 'Change leave status?',
                     text: `You are about to change the leave status. This action cannot be undone.`,
                     icon: 'warning',
@@ -675,35 +678,38 @@
                     showDenyButton: true,
                     confirmButtonText: 'Approve',
                     denyButtonText: 'Reject',
-                    cancelButtonText: 'Set as Pending'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Approve action
-                        updateLeaveStatus('approved', leaveId);
-                    } else if (result.isDenied) {
-                        // Reject action
-                        updateLeaveStatus('rejected', leaveId);
-                    } else if (result.dismiss === Swal.DismissReason.cancel) {
-                        // Pending action
-                        updateLeaveStatus('pending', leaveId);
-                    }
+                    cancelButtonText: 'Cancel',
                 });
-            }
+
+                if (result.isConfirmed) {
+                    // Approve action
+                    await updateLeaveStatus('approved', leaveId);
+                } else if (result.isDenied) {
+                    // Reject action
+                    await updateLeaveStatus('rejected', leaveId);
+                } else if (result.isDismissed) {
+                    // Optional: Handle cancel action if needed
+                    Swal.fire('Cancelled', 'No changes were made.', 'info');
+                }
+            };
 
             function updateLeaveStatus(status, leaveId) {
-                console.log(`Status updated to: ${status}, ${leaveId}`);
+                console.log(`Status updated to: ${status}, Leave ID: ${leaveId}`);
+
                 // Make an API call to change the status
                 axios.patch(`/leaves/${leaveId}/approval`, { status: status })
-                .then(response => {
-                    // Display a success notification
-                    notification(response.data.message, 'success');
-                    getLeaves();
-                })
-                .catch(error => {
-                    //Display an error notification
-                    notification('Failed to update leave status.', 'error');
-                    console.error(error);
-                });
+                    .then(response => {
+                        // Display a success notification
+                        notification(response.data.message, 'success');
+                        // Refresh the leaves list after the status update
+                        getLeaves();
+                    })
+                    .catch(error => {
+                        // Display an error notification
+                        const errorMessage = error.response?.data?.message || 'Failed to update leave status.';
+                        notification(errorMessage, 'error');
+                        console.error('Error updating leave status:', error);
+                    });
             }
 
             const notification = ($text, $icon) =>{
@@ -761,7 +767,6 @@
                 confirmLeaveTypeDelete,
                 confirmLeaveDelete,
                 showAddHolidayModal,
-                isRecurring,
                 leaveApproval
             };
 

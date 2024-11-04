@@ -89,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/holidays', [HolidayController::class, 'index'])->name('holidays');
+    Route::post('/storeHoliday', [HolidayController::class, 'store'])->name('storeHoliday');
 });
 
 Route::middleware(['auth'])->group(function () {
