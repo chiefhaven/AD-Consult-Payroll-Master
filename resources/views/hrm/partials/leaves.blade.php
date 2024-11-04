@@ -17,11 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="leave in leaves" :key="leave.id"
-                :class="{
-                    'text-danger': leave.status === 'rejected',
-                    'text-success': leave.status === 'approved',
-                }">
+                <tr v-for="leave in leaves" :key="leave.id">
                     <td class="font-w600">
                         @{{ leave.employee.fname }}
                         @{{ leave.employee.mname }}
@@ -39,7 +35,10 @@
                     <td>
                         @{{ leave.reason }}
                     </td>
-                    <td>
+                    <td :class="{
+                        'text-danger': leave.status === 'rejected',
+                        'text-success': leave.status === 'approved',
+                    }">
                         @{{ leave.status }}
                     </td>
                     <td>

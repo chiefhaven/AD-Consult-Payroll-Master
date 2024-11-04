@@ -32,7 +32,7 @@
                     <div class="dropdown-menu dropdown-menu-end p-0">
                         <div class="p-2">
                         <!-- View Leave Type -->
-                        <button class="dropdown-item nav-main-link" @click="leavetypeDetails(leaveType.id)">
+                        <button class="dropdown-item nav-main-link" @click="leaveTypeDetails(leaveType.id)">
                             <i class="nav-main-link-icon fas fa-eye"></i>
                             <span class="btn">View</span>
                         </button>

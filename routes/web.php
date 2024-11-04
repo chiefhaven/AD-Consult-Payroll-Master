@@ -26,6 +26,7 @@ use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\ProductController;
 use App\Models\Attendance;
 use App\Models\Holiday;
+use App\Models\LeaveType;
 use Illuminate\Support\Facades\Artisan;
 
 Auth::routes();
@@ -78,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/deleteLeaveType/{leavetype}', [LeaveTypeController::class, 'destroy'])->name('deleteLeaveType');
     Route::post('/updateDesignation/{id}', [HRMController::class, 'updateDesignation'])->name('updateDesignation');
     Route::get('/hrm/leave-types', [LeaveTypeController::class, 'index'])->name('leave-types');
+    Route::patch('/updateLeaveType/{id}', [LeaveTypeController::class, 'update'])->name('updateLeaveType');
     Route::get('/hrm/leaves', [LeaveController::class, 'index'])->name('leaves');
     Route::delete('/deleteLeave/{leave}', [LeaveController::class, 'destroy'])->name('deleteLeave');
 });
@@ -90,6 +92,8 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/holidays', [HolidayController::class, 'index'])->name('holidays');
     Route::post('/storeHoliday', [HolidayController::class, 'store'])->name('storeHoliday');
+    Route::delete('/deleteHoliday/{holiday}', [HolidayController::class, 'destroy'])->name('deleteHoliday');
+    Route::patch('/updateHoliday/{holiday}', [HolidayController::class, 'update'])->name('updateHoliday');
 });
 
 Route::middleware(['auth'])->group(function () {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LeaveType;
 use App\Http\Requests\StoreLeaveTypeRequest;
 use App\Http\Requests\UpdateLeaveTypeRequest;
+use Illuminate\Validation\ValidationException;
 
 class LeaveTypeController extends Controller
 {
@@ -59,10 +60,30 @@ class LeaveTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateLeaveTypeRequest $request, LeaveType $leaveType)
+    public function update(UpdateLeaveTypeRequest $request, $id)
     {
-        //
+        try {
+            $post = $request->all();
+
+            // Find the designation by ID
+            $leaveType = LeaveType::findOrFail($id);
+
+            // Update the leave type fields
+            $leaveType->name = $post['name'];
+            $leaveType->description = $post['description'];
+
+            $leaveType->save();
+
+            // Return a response with the updated leave type
+            return response()->json($leaveType, 200);
+
+        } catch (ValidationException $e) {
+            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error updating leave type', 'error' => $e->getMessage()], 500);
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.

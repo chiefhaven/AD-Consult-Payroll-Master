@@ -18,10 +18,14 @@
                 <tbody>
                     <tr v-for="attendance in attendances" :key="attendance.id">
                         <td class="font-w600">
-                            @{{ attendance.employee.fname }} @{{ attendance.employee.mname }} @{{ attendance.employee.sname }}
+                            <div v-if="attendance.employee">
+                                @{{ attendance.employee.fname }} @{{ attendance.employee.mname }} @{{ attendance.employee.sname }}
+                            </div>
                         </td>
                         <td>
-                            @{{ attendance.employee.employee_no }}
+                            <div v-if="attendance.employee">
+                                @{{ attendance.employee.employee_no }}
+                            </div>
                         </td>
                         <td>
                             @{{ attendance.attendance_date }}

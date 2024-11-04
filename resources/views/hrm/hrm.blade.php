@@ -130,21 +130,21 @@
                 recurring: true,
             });
 
+            const initializeDatePicker = () => {
+                $(state.value.datePickerInput).datepicker({
+                    format: "MM yyyy",
+                    viewMode: "months",
+                    minViewMode: "months",
+                    autoclose: true,
+                }).on('changeDate', function(e) {
+                    // Update the Vue state when a date is selected
+                    state.value.date = $(this).datepicker('getFormattedDate');
+                });
+            };
+
             onMounted(() => {
                 getDesignations(); // Default behavior on mount
-
-                $("#date").datepicker({
-                    format: "dd MM yyyy",
-                    autoclose: true
-                }).on("changeDate", (e) => {
-                    // Update Vue model when date changes
-                    state.value.date = e.format(); // Adjust according to the datepicker's output format
-                });
-
-            });
-
-            onBeforeUnmount(() => {
-                $("#date").datepicker('destroy'); // Clean up on component unmount
+                initializeDatePicker();
             });
 
             // Generic toggle function to handle showing sections
@@ -375,14 +375,15 @@
                         }
                     }
                     if(leavetype !== null) {
-                        const response = await axios.post(`/updateLeaveType/${leavetype}`, {
+                        console.log(leavetype);
+                        const response = await axios.patch(`/updateLeaveType/${leavetype}`, {
                             name: state.value.name,
                             description: state.value.description,
                         });
 
                         if (response.status === 200) {
                             notification('Leave type updated successfully', 'success');
-                            getLeaveType();
+                            getLeaveTypes();
                             state.value = { name: '', description: '', buttonName:'Update', }; // Reset the form
                             showAddLeaveTypeModal.value = false;
                         }
@@ -459,47 +460,58 @@
 
             const addHoliday = async (holiday) => {
                 NProgress.start();
-
-                console.log(state.value.name, state.value.description, state.value.date, state.value.recurring, state.value.holiday_type)
-
                 try {
                     if (holiday === null) {
+                        // Adding a new holiday
                         const response = await axios.post('/storeHoliday', {
                             name: state.value.name,
                             description: state.value.description,
+                            date: state.value.date,
+                            recurring: state.value.recurring,
+                            holiday_type: state.value.holiday_type,
                         });
 
                         if (response.status === 200) {
                             notification('Holiday added successfully', 'success');
-                            getHolidays();
-                            state.value = { name: '', description: '', buttonName:'Save', holidayId: null  }; // Reset the form
+                            getHolidays(); // Refresh the list of holidays
+                            resetForm(); // Reset the form after successful addition
                         }
-                    }
-                    if(holiday !== null) {
-                        const response = await axios.post(`/updateHoliday/${holiday}`, {
+                    } else {
+                        // Updating an existing holiday
+                        const response = await axios.patch(`/updateHoliday/${holiday}`, {
                             name: state.value.name,
                             description: state.value.description,
+                            date: state.value.date,
+                            recurring: state.value.recurring,
+                            holiday_type: state.value.holiday_type,
                         });
 
                         if (response.status === 200) {
                             notification('Holiday updated successfully', 'success');
-                            getHoliday();
-                            state.value = { name: '', description: '', buttonName:'Update', }; // Reset the form
+                            getHolidays(); // Refresh the list of holidays
                             showAddHolidayModal.value = false;
                         }
                     }
                 } catch (error) {
-                    if (error.response && error.response.status === 422) {
-                        const errorMessage = error.response.data.message || 'An error occurred';
-                        notification(errorMessage, 'error');
-                    } else {
-                        notification('An unexpected error occurred', 'error');
-                    }
-                }
-                finally{
+                    const errorMessage = error.response?.data?.message || 'An unexpected error occurred';
+                    notification(errorMessage, 'error');
+                } finally {
                     NProgress.done();
                 }
             };
+
+            // Helper function to reset form values
+            const resetForm = () => {
+                state.value = {
+                    name: '',
+                    description: '',
+                    date: '',
+                    recurring: false,
+                    holiday_type: '',
+                    buttonName: 'Save',
+                    holidayId: null, };
+            };
+
 
             const deleteDesignation = async (designation) => {
                 loading.value = true;
@@ -586,18 +598,20 @@
                 }
             };
 
-            const deleteHoliday = async (holiday) => {
+            const deleteHoliday = async (holidayId) => {
                 NProgress.start();
+                loading.value = true;
 
                 try {
-                    const response = await axios.delete(`/deleteLeaveType/${leaveType}`, {});
+                    const response = await axios.delete(`/deleteHoliday/${holidayId}`);
 
                     if (response.status === 200) {
-                        notification('LeaveType deleted successfully', 'success');
-                        getLeaveTypes();
+                        notification('Holiday deleted successfully', 'success');
+                        getHolidays(); // Refresh the list after deletion
+                        showAddHolidayModal.value = false;
                     }
                 } catch (error) {
-                    const errorMessage = error.response.data.message || 'An unexpected error occurred';
+                    const errorMessage = error.response?.data?.message || 'An unexpected error occurred';
                     notification(errorMessage, 'error');
                 } finally {
                     loading.value = false;
@@ -605,11 +619,12 @@
                 }
             };
 
+
             const deleteLeave = async (Leave) => {
                 NProgress.start();
 
                 try {
-                    const response = await axios.delete(`/deleteLeave/${Leave}`, {});
+                    const response = await axios.delete(`/deleteLeave/${Leave}`);
 
                     if (response.status === 200) {
                         notification('Leave deleted successfully', 'success');
@@ -656,11 +671,59 @@
                 showAddDesignationModal.value = true;
             }
 
+            const editLeaveType = async(leaveType) => {
+                state.value = {
+                    name: leaveType.name,
+                    description: leaveType.description,
+                    buttonName:'Update',
+                    modalTitle:'Edit leave type',
+                    leaveTypeId: leaveType.id,
+                };
+
+                showAddLeaveTypeModal.value = true;
+            }
+
+            const editHoliday = async (holiday) => {
+                // Clear previous state or set default values
+                state.value = {
+                    name: '',
+                    holiday_type: '',
+                    recurring: false,
+                    description: '',
+                    buttonName: 'Add',  // Default to "Add" unless editing
+                    modalTitle: 'Add Holiday',
+                    holidayId: null,
+                };
+
+                // Set new state based on selected holiday for editing
+                state.value = {
+                    name: holiday.name,
+                    date: holiday.date,
+                    holiday_type: holiday.type,
+                    recurring: Boolean(holiday.recurring),
+                    description: holiday.description,
+                    buttonName: 'Update',
+                    modalTitle: 'Edit Holiday',
+                    holidayId: holiday.id,
+                };
+
+                // Show the modal for editing
+                showAddHolidayModal.value = true;
+            };
+
             const designationDetails = async() => {
                 state.value = {
                     name: '', description: ''
                 }
-                showAddDesignationModal.value = false;
+                showAddDesignationModal.value = true;
+            }
+
+            const leaveTypeDetails = async() => {
+                state.value = {
+                    name: '',
+                    description: ''
+                }
+                showAddleaveTypeModal.value = true;
             }
 
             const closeForm = async() => {
@@ -759,6 +822,7 @@
                 state,
                 deleteDesignation,
                 editDesignation,
+                editHoliday,
                 designationDetails,
                 confirmDelete,
                 showAddLeaveTypeModal,
@@ -766,14 +830,16 @@
                 addLeaveType,
                 confirmLeaveTypeDelete,
                 confirmLeaveDelete,
+                confirmHolidayDelete,
                 showAddHolidayModal,
-                leaveApproval
+                leaveApproval,
+                leaveTypeDetails,
+                editLeaveType
             };
 
         }
 
     });
-
     hrm.mount('#hrm')
 
 </script>

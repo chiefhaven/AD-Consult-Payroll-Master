@@ -7,14 +7,15 @@
 @stop
 
 @section('content')
+<div id="home" v-cloak>
     <div class="row p-4">
         <div class="col-md-9">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="border mb-3 p-4">
-                        <div class="box-body">
-                            <h3>Good Morning</h3>
-                            {!! \Illuminate\Foundation\Inspiring::quote() !!}
+                        <div class="box-body" >
+                            <h3>@{{ greetings }}</h3>
+                            {{ \Illuminate\Foundation\Inspiring::quote() }}
                         </div>
                     </div>
                 </div>
@@ -59,13 +60,13 @@
         </div>
         <div class="col-md-3">
             <div class="card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3"> <!-- Flexbox for alignment -->
-                        <strong>Paye Brackets</strong>
-                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#payBlacket_modal">
-                            <i class="fas fa-pencil-alt"></i> Edit
-                        </button>
-                    </div>
+                <div class="p-3 d-flex justify-content-between align-items-center">
+                    <strong>Paye Brackets</strong>
+                    <button class="btn btn-link" onclick="toggleCardBody()">
+                        <i id="toggleIcon" class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="payeBracketsCardBody" class="card-body" style="display: none;">
                     <table class="table">
                         <thead>
                             <tr>
@@ -87,8 +88,6 @@
                                         <b>
                                             @if ($payeBracket->limit <= 2050000)
                                                 {{ number_format($payeBracket->limit, 2) }}
-                                            @else
-
                                             @endif
                                         </b>
                                     </td>
@@ -99,10 +98,23 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#payBlacket_modal">
+                        <i class="fas fa-pencil-alt"></i> Edit
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="p-3 d-flex justify-content-between align-items-center">
+                    <strong>Upcoming events</strong>
+                </div>
+                <div class="card-body">
+
                 </div>
             </div>
         </div>
     </div>
+</div>
 @stop
 
 @section('css')
@@ -111,5 +123,49 @@
 @stop
 
 @section('js')
+<script>
 
+</script>
+
+<script>
+    const home = createApp({
+        setup() {
+            const greetings = ref('Good morning')
+            const quote = ref('')
+
+            onMounted(() => {
+                const currentHour = new Date().getHours();
+                if (currentHour < 12) {
+                    greetings.value = 'Good morning';
+                } else if (currentHour < 17) {
+                    greetings.value = 'Good afternoon';
+                } else {
+                    greetings.value = 'Good evening';
+                }
+            });
+
+            function notification($text, $icon){
+                Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    html: $text,
+                    showConfirmButton: false,
+                    timer: 5500,
+                    timerProgressBar: true,
+                    icon: $icon,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                      }
+                  });
+            }
+
+            return {
+                greetings,
+            };
+        },
+    });
+
+    home.mount('#home');
+</script>
 @stop

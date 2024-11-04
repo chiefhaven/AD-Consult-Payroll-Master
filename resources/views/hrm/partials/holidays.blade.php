@@ -119,8 +119,8 @@
                             label="Date:"
                             placeholder="Date"
                             fgroup-class="col-md-12"
-                            class="{{ $errors->has('date') ? 'is-invalid' : '' }}"
-                            id="date"
+                            class="{ 'is-invalid': errors.has('date') }"
+                            ref="datePickerInput"
                             autocomplete="off"
                         />
 
@@ -145,27 +145,25 @@
                                     class="{ 'is-invalid': $errors->has('holiday_type') }"
                                     data-placeholder="Select an option..."
                                     autocomplete="off">
-                                    <option value="" selected disabled>Please select an option...</option>
-                                    <option value="public_holiday" selected="old('holiday_type') == 'public_holiday'">Public Holiday</option>
-                                    <option value="other" selected="old('holiday_type') == 'other'">Other</option>
+                                    <option value="" disabled>Please select an option...</option>
+                                    <option value="National">National</option>
+                                    <option value="Other">Other</option>
                                 </x-adminlte-select2>
 
                                 <x-adminlte-select2
-                                    name="state.reccuring"
-                                    v-model="state.reccuring"
+                                    name="state.recurring"
+                                    v-model="state.recurring"
                                     label="Recurring:"
                                     fgroup-class="col-md-6"
-                                    class="{ 'is-invalid': $errors->has('reccuring') }"
+                                    class="{ 'is-invalid': $errors->has('recurring') }"
                                     data-placeholder="Select an option..."
                                     autocomplete="off">
-                                    <option value="" selected disabled>Please select an option...</option>
-                                    <option value="yes" selected="old('reccuring') == 'yes'">Yes</option>
-                                    <option value="no" selected="old('reccuring') == 'no'">No</option>
+                                    <option value="" disabled>Please select an option...</option>
+                                    <option :value="true">Yes</option>
+                                    <option :value="false">No</option>
                                 </x-adminlte-select2>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
