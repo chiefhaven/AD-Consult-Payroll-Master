@@ -1,5 +1,7 @@
 @extends('adminlte::auth.login')
 
+@section('title', 'Login')
+
 @push('css')
 
 {{-- <style type="text/css">
