@@ -322,11 +322,6 @@ return [
             ],
         ],
         [
-            'text' => 'Payrolls',
-            'url' => 'payroll',
-            'icon' => 'fa fa-money-check',
-        ],
-        [
             'text' => 'HRM',
             'url' => 'hrm',
             'icon' => 'fa fa-users',
