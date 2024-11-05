@@ -13,9 +13,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('billings', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary()->unique();
             // $table->uuid('id');
-            $table->unsignedBigInteger('client_id');
+            // $table->unsignedBigInteger('client_id');
+            $table->uuid('client_id'); 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->text('client_name');
             $table->float('total_amount');

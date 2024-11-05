@@ -309,32 +309,15 @@ return [
             'text' => 'Billings',
             'icon' => 'fa fa-fw fa-coins',
             'url' => 'billing',
-            'submenu' => [
-                [
-                    'text' => 'Invoices',
-                    'url' => 'billing',
-                    'icon' => 'fa fa-fas fa-arrow-right ',
-                ],
-                [
-                    'text' => 'Quotations',
-                    'url' => 'billing',
-                    'icon' => 'fa fa-fas fa-arrow-right ',
-                ],
-                [
-                    'text' => 'Receipts',
-                    'url' => 'billing',
-                    'icon' => 'fa fa-fas fa-arrow-right ',
-                ]
-            ],
         ],
         [
             'text' => 'Leaves',
             'icon' => 'fa fa-fw fa-calendar',
-            'url' => 'leaves',
+            'url' => 'leave',
             ],
 
         ],
-    
+
 
     /*
     |--------------------------------------------------------------------------

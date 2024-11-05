@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Employee extends Model
 {
     use HasFactory;
+    use HasUuids;
 
     /**
      * The attributes that are mass assignable.
@@ -15,9 +18,25 @@ class Employee extends Model
      * @var array<int, string>
      */
 
-     protected $casts = [
+
+    protected $keyType = 'string';
+    public $incrementing = false;
+    protected $casts = [
         'country' => \WW\Countries\Casts\Country::class,
+        'id'=>'string'
     ];
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Automatically generate a UUID when creating a model
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = (string) Str::uuid();
+            }
+        });
+    }
+
 
     protected $fillable = [
         'employee_no',

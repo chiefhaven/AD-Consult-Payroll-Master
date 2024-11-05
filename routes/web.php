@@ -23,9 +23,7 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PayrollController;
-
-
-
+use App\Models\Leave;
 
 Auth::routes();
 
@@ -39,12 +37,6 @@ Route::get('/employees', [EmployeeController::class, 'index'])->name('employees'
 //payroll routes
 Route::get('/payrolls', [PayrollController::class, 'index'])->name('payrolls');
 
-
-//route leaves
-Route::get('/leaves', [LeaveController::class, 'index'])->name('leave');
-
-
-
 //Billing routes
 Route::get('/billings', [BillingController::class, 'index'])->name('billing');
 
@@ -56,10 +48,17 @@ Route::get('/billings/invoice/download{id}', [BillingController::class, 'downloa
 Route::get('/billings/quotation/download{id}', [BillingController::class, 'downloadQuotation'])->name('download');
 
 
+//Leave routes
+Route::get('/leave', [LeaveController::class, 'index'])->name('leave');
+Route::get('/leave/{year}/{month}', [LeaveController::class, 'leaveView'])->name('leaveView');
+Route::post('/leaves/{year}/{month}/mass-approve', [LeaveController::class, 'massApprove'])->name('leaves.massApprove');
+Route::post('/leaves/{year}/{month}/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('leaves.massDisapprove');
 
 
-// //Leave routes
-Route::get('/employees', [EmployeeController::class, 'index'])->name('employees')->middleware(['auth']);
+
+
+
+//employee routes
 Route::get('/add-employee', AddEmployee::class)->name('add-employees')->middleware(['auth']);
 Route::get('/view-employee/{id}', ViewEmployee::class)->name('view-employee')->middleware(['auth']);
 Route::get('/update-employee/{id}', UpdateEmployee::class)->name('update-employee')->middleware(['auth']);
@@ -71,7 +70,7 @@ Route::get('/update-client/{id}', UpdateClient::class)->name('update-employee')-
 
 Route::get('/payroll', Payroll::class)->middleware(['auth']);
 
-Route::get('/leaves', Leaves::class)->middleware(['auth']);
+// Route::get('/leaves', Leaves::class)->middleware(['auth']);
 
 Route::get('/attendances', Attendances::class)->middleware(['auth']);
 

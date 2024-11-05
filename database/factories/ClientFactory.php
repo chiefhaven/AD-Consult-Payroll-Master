@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Factories;
+use Illuminate\Support\Str;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,7 +18,8 @@ class ClientFactory extends Factory
     public function definition(): array
     {
         return [
-            'client_name' => $this->faker->sentence(3),
+            'id' => (string) Str::uuid(),
+            'client_name' => $this->faker->name(2),
             'contract_start_date' => $this->faker->date(),
             'phone' => $this->faker->phoneNumber(5),
             'phone2' => $this->faker->phoneNumber(5),

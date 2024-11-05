@@ -2,7 +2,7 @@
 
 {{-- Extend and customize the browser title --}}
 
-@section('title', 'Employees')
+@section('title', 'Leave')
 
 {{-- Extend and customize the page content header --}}
 
@@ -19,72 +19,68 @@
             @endif
         </h1>
     @endif
+
+    @push('css')
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap4.min.css">
+    @endpush
+
 @stop
 
 {{-- Rename section content to content_body --}}
 
 @section('content')
- <div class="row p-4">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="row mt-2">
-                        <div class="col-md-4">
-                            <a href="{{ route('leave') }}" style="text-decoration: none;">
-                            <x-adminlte-small-box title="Requests" text="{{ App\Models\Leaves::get()->count() }}" theme="secondary" />
-                            </a>
-                        </div>
 
-                        <div class="col-md-4">
-                            <a href="{{ route('leave') }}" style="text-decoration: none;">
-                            <x-adminlte-small-box title="Approved" text="{{ App\Models\Leaves::where('is_approved', 1)->count() }}" theme="secondary" />
-                            </a>
-                        </div>
+<div class="row p-2">
 
-                        <div class="col-md-4">
-                            <a href="{{ route('leave') }}" style="text-decoration: none;">
-                            <x-adminlte-small-box title="Rejected" text="{{ App\Models\Leaves::where('is_approved', 0)->count() }}" theme="secondary" />
-                            </a>
-                        </div>
+        <button type="button" class="btn"> <a href="{{ route('leave', ['year' => $year - 1]) }}">Previous Year ({{ $year - 1 }})</a> </button>
+        <button type="button" class="btn"> <a href="{{ route('leave', ['year' => $year + 1]) }}">Next Year ({{ $year + 1 }})</a></button>
+</div>
+
+<div class="row ">
+
+    <table id="myTable" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Month</th>
+            <th>Total Requests</th>
+        </tr>
+    </thead>
+    <tbody>
+         @foreach($monthlyRequests as $month => $totalRequests)
+                {{-- <tr onclick="window.location='{{ route('leaveView', ['month' => $month]) }}'" style="cursor: pointer;"> --}}
+                <tr onclick="window.location='{{ route('leaveView', ['year' => $year, 'month' => $month]) }}'" style="cursor: pointer;">
+
+                    <td>{{ date('F', mktime(0, 0, 0, $month, 1)) }}</td> <!-- Get month name from the number -->
+                    <td>{{ $totalRequests }}</td>
+                </tr>
+            @endforeach
+    </tbody>
+</table>
+</div>
+
+{{-- @push('js')
+    <script src="https://cdn.datatables.net/2.1.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap4.min.js"></script>
+@endpush --}}
+{{--
+@push('js')
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable({
+                autoWidth: false,
+                responsive: true
+                // paging: true,
+                // search: true,
+                // ordering: true,
+                // info: true,
+                // lengthChange: true,
+                // pageLength: 10,
+            });
+        });
+    </script>
+@endpush --}}
 
 
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 @stop
 
-{{-- Create a common footer --}}
 
-@include('/components/layouts/footer_bottom')
-
-{{-- Add common Javascript/Jquery code --}}
-
-@push('js')
-<script>
-
-    $(document).ready(function() {
-        // Add your common script logic here...
-    });
-
-</script>
-@endpush
-
-{{-- Add common CSS customizations --}}
-
-@push('css')
-<style type="text/css">
-
-    {{-- You can add AdminLTE customizations here --}}
-
-    .card {
-        border-radius: none;
-    }
-    .card-title {
-        font-weight: 600;
-    }
-
-
-</style>
-@endpush

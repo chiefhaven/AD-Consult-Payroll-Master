@@ -22,7 +22,7 @@ class BillingFactory extends Factory
     public function definition(): array
     {
         return [
-            'client_id' => client::factory(),
+            'client_id' => client::factory(),//coming as aforeghn key
             'client_name' => $this->faker->sentence(2),
             'status' => $this->faker->randomElement(['pending', 'completed', 'failed']),
             'bill_type' => $this->faker->randomElement(['invoice', 'quotation']),
