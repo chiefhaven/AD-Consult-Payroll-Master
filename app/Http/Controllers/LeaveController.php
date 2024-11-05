@@ -113,7 +113,7 @@ public function index(Request $request)
     //     return view('leaves.leave', compact('leave'));
     // }
 
-    public function leaveView($year, $month)
+     public function leaveView($year, $month)
         {
             // Fetch all leave requests where the start_date falls in the specified month and year
             $leaves = DB::table('leaves')
@@ -159,6 +159,8 @@ public function index(Request $request)
             return redirect()->route('leaveView', ['year' => $year, 'month' => $month])
                 ->with('success', 'All leave requests have been disapproved.');
         }
+
+
 
 
 }

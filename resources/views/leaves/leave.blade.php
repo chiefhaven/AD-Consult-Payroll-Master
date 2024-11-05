@@ -47,9 +47,7 @@
     </thead>
     <tbody>
          @foreach($monthlyRequests as $month => $totalRequests)
-                {{-- <tr onclick="window.location='{{ route('leaveView', ['month' => $month]) }}'" style="cursor: pointer;"> --}}
                 <tr onclick="window.location='{{ route('leaveView', ['year' => $year, 'month' => $month]) }}'" style="cursor: pointer;">
-
                     <td>{{ date('F', mktime(0, 0, 0, $month, 1)) }}</td> <!-- Get month name from the number -->
                     <td>{{ $totalRequests }}</td>
                 </tr>
