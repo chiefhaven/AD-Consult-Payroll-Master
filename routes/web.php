@@ -103,7 +103,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/all-sales', [BillingController::class, 'index'])->middleware(['auth'])->name('billing');
 Route::get('/add-sale', [BillingController::class, 'create'])->middleware(['auth'])->name('add-sale');
-Route::get('/store-sale', [BillingController::class, 'store'])->middleware(['auth'])->name('store-sale');
+Route::put('/store-sale', [BillingController::class, 'store'])->middleware(['auth'])->name('store-sale');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/payroll', [PayrollController::class, 'index'])->name('payrolls');

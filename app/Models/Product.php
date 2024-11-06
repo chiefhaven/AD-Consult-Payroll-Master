@@ -18,7 +18,7 @@ class Product extends Model
         return 'id'; // or whatever column holds the UUID
     }
 
-    public function billings()
+    public function billing()
     {
         return $this->belongsToMany(Billing::class, 'bill_product')
                     ->withPivot('quantity', 'price', 'total')

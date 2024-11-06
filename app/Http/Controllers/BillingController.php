@@ -16,7 +16,7 @@ class BillingController extends Controller
      */
     public function index()
     {
-        $billing = Billing::all();
+        $billing = Billing::with('products')->get();
         return view("billing.index", compact("billing"));
     }
 
@@ -44,7 +44,47 @@ class BillingController extends Controller
      */
     public function store(StoreBillingRequest $request)
     {
-        //
+        // Retrieve all data from the request
+        $data = $request->all();
+
+        // Extract products and state from the request data
+        $products = $data['products'];
+        $state = $data['state'];
+
+        // Initialize a variable to keep track of the grand total
+        $grandTotal = 0;
+
+        // Loop through each product to calculate the total price
+        foreach ($products as $product) {
+            $productTotal = $product['price'] * $product['quantity'];
+            $grandTotal += $productTotal;
+        }
+
+        // Example: Saving the order in the database (adjust based on your schema)
+        $order = Billing::create([
+            'client_id' => $request->client, // Assuming you have a client ID
+            'billing_date' => $state['saleDate'],
+            'due_date' => $state['dueDate'],
+            'status' => $state['status'],
+            'total_amount' => $grandTotal,
+            'invoice_number' => 'AD-'. random_int(1,100),
+        ]);
+
+        // Loop through products and attach them to the order
+        foreach ($products as $product) {
+            $order->products()->attach($product['id'], [
+                'quantity' => $product['quantity'],
+                'price' => $product['price'],
+                'total' => $product['quantity'] * $product['price'],
+            ]);
+        }
+
+        // Return response
+        return response()->json([
+            'order' => $order,
+            'products' => $order->products,
+            'grandTotal' => $grandTotal,
+        ], 200);
     }
 
     /**

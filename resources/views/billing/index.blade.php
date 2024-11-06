@@ -2,7 +2,7 @@
 
 {{-- Extend and customize the browser title --}}
 
-@section('title', 'Clients')
+@section('title', 'Billing')
 
 {{-- Extend and customize the page content header --}}
 

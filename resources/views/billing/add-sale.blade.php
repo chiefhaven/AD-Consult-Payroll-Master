@@ -7,8 +7,8 @@
 @stop
 
 @section('content')
-<div id="addSale">
-    <form action="{{ route('store-sale') }}" method="POST" enctype="multipart/form-data">
+<div id="addSale" v-cloak>
+    <form @submit.prevent="postOrder">
         @csrf
         <div class="card mb-3 p-4">
             <div class="box-body">
@@ -26,42 +26,57 @@
                         placeholder="Select client">
 
                         <div v-if="clientData">
-                                <div class="mt-3">
-                                    <b>@{{ clientData.client_name }}</b><br>
-                                    Phone: @{{ clientData.phone }}<br>
-                                    <div v-if="clientData.user && clientData.user.email !== null">
-                                        Email: @{{ clientData.user.email }}
-                                    </div>
-                                    <div v-else>
-                                        Email: No email address available
-                                    </div>
+                            <div class="mt-3">
+                                <b>@{{ clientData.client_name }}</b><br>
+                                Phone: @{{ clientData.phone }}<br>
+                                <div v-if="clientData.user && clientData.user.email !== null">
+                                    Email: @{{ clientData.user.email }}
+                                </div>
+                                <div v-else>
+                                    Email: No email address available
                                 </div>
                             </div>
-
+                        </div>
                     </div>
 
                     <div class="col-md-8">
                         <div class="row">
                             <!-- Billing Date -->
-                            <div class="col-md-6 form-group">
-                                <label for="billing_date">Sale Date</label>
-                                <input type="date" class="form-control" name="sale_date" id="sale_date" required>
-                            </div>
 
-                            <!-- Due Date -->
-                            <div class="col-md-6 form-group">
-                                <label for="due_date">Due Date</label>
-                                <input type="date" class="form-control" name="due_date" id="due_date" required>
-                            </div>
+                            <x-adminlte-input
+                                type="date"
+                                name="saleDate"
+                                v-model="state.saleDate"
+                                label="Sale date:"
+                                placeholder="Sale date"
+                                fgroup-class="col-md-6"
+                                class="{ 'is-invalid': errors.has('sale_date') }"
+                                autocomplete="off"
+                            />
 
-                            <!-- Status -->
-                            <div class="col-md-6 form-group">
-                                <label for="status">Status</label>
-                                <select class="form-control" name="status" id="status" required>
-                                    <option value="completed">Draft</option>
-                                    <option value="failed">Final</option>
-                                </select>
-                            </div>
+                            <x-adminlte-input
+                                type="date"
+                                name="due_date"
+                                v-model="state.dueDate"
+                                label="Due date:"
+                                placeholder="Due date"
+                                fgroup-class="col-md-6"
+                                class="{ 'is-invalid': errors.has('due_date') }"
+                                autocomplete="off"
+                            />
+
+                            <x-adminlte-select2
+                                name="state.status"
+                                v-model="state.status"
+                                label="Status:"
+                                fgroup-class="col-md-6"
+                                class="{ 'is-invalid': $errors->has('status') }"
+                                data-placeholder="Select an option..."
+                                autocomplete="off">
+                                <option value="" disabled>Please select an option...</option>
+                                <option>Draft</option>
+                                <option>Final</option>
+                            </x-adminlte-select2>
                         </div>
                     </div>
                 </div>
@@ -183,6 +198,12 @@
             // Reactive state to hold product details
             const productDetails = ref([]);
 
+            const state = ref({
+                saleDate: '',
+                dueDate: '',
+                status:'Draft',
+            })
+
             onMounted(() => {
 
                 // Conditionally fetch client data if the client ID exists
@@ -238,7 +259,7 @@
                     afterSelect: async function (item) {
                         // Check if the product is already in the list
                         const existingProduct = selectedProducts.value.find(product => product.id === item.id);
-                        console.log(selectedProducts);
+                        console.log(selectedProducts.value);
 
                         if (existingProduct) {
                             // If the product already exists, increase its quantity by 1
@@ -319,6 +340,31 @@
                 quantities.value.splice(index, 1);
             };
 
+            const postOrder = async () => {
+                console.log();
+                try {
+                    const response = await axios.put('/store-sale', {
+                        client: clientData.value.id,
+                        products: selectedProducts.value,
+                        state: state.value,
+                    });
+
+                    // Handle success
+                    if (response.status === 200) {
+                        console.log('Order submitted successfully:', response.data);
+                        // You can also add additional actions, like resetting the form or showing a success message
+                    }
+                } catch (error) {
+                    // Handle error
+                    console.error('Error submitting order:', error);
+                    if (error.response) {
+                        console.log('Server responded with:', error.response.data);
+                        // Optionally, display error feedback to the user
+                    } else {
+                        console.log('Network error or request was not sent');
+                    }
+                }
+            };
 
             const notification = ($text, $icon) =>{
                 Swal.fire({
@@ -342,6 +388,7 @@
                     .then(response => {
                         clientData.value = response.data.data;
                         client.value = clientData.value.client_name;
+                        clientId.value = clientData.value.id;
                     })
                     .catch(error => {
 
@@ -371,7 +418,9 @@
                 removeProduct,
                 productSearch,
                 validateQuantity,
-                handleQuantityChange
+                handleQuantityChange,
+                postOrder,
+                state
             };
         }
     });

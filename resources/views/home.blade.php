@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="border mb-3 p-4">
-                        <div class="box-body" >
+                        <div class="box-body">
                             <h3>@{{ greetings }}</h3>
                             {{ \Illuminate\Foundation\Inspiring::quote() }}
                         </div>

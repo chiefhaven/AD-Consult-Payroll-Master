@@ -13,6 +13,10 @@ class Billing extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
+    protected $fillable = [
+        'client_id',
+    ];
+
     public function client()
     {
         return $this->belongsTo(Client::class);

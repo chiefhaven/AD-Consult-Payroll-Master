@@ -12,16 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bill_product', function (Blueprint $table) {
-            $table->uuid('id')->primary(); // Use UUID for the primary key
-            $table->uuid('bill_id'); // UUID for the bill_id foreign key
+            $table->id();
+            $table->uuid('billing_id'); // UUID for the bill_id foreign key
             $table->uuid('product_id'); // UUID for the product_id foreign key
             $table->integer('quantity')->default(1);
             $table->decimal('price', 15, 2); // Price at the time of billing
+            $table->decimal('item_discount', 15, 2)->default(0); // Price at the time of billing
             $table->decimal('total', 15, 2); // Calculated as quantity * price
             $table->timestamps();
 
             // Foreign key constraints
-            $table->foreign('bill_id')->references('id')->on('billings')->onDelete('cascade');
+            $table->foreign('billing_id')->references('id')->on('billings')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
     }
