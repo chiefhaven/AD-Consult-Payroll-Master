@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Add Ssale')
+@section('title', 'Add Sale')
 
 @section('content_header')
     <h1>Add Sale</h1>
@@ -98,49 +98,74 @@
                         @change="onProductChange" // Trigger on change
                         placeholder="Search product"
                     >
+                    <div class="col-md-12 block block-content">
+                        <div class="table-responsive">
+                            <table class="table mt-3 table-bordered table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="max-width: 15em; width: 15em;">Product</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th>Item Discount</th>
+                                        <th>Tax</th>
+                                        <th>Total</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="product-details">
+                                    <tr v-for="(product, index) in selectedProducts" :key="index">
+                                        <td>
+                                            <strong>@{{ product.name }}</strong>
+                                            <p>@{{ product.description }}</p>
+                                        </td>
+                                        <td>
+                                            <x-adminlte-input
+                                                type="number"
+                                                name="quantities[]"
+                                                v-model="quantities[index]"
+                                                min="1"
+                                                class="form-control"
+                                                @input="handleRowChanges(index)"
+                                            />
+                                        </td>
+                                        <td>@{{ formatCurrency(product.price) }}</td>
+                                        <td>
+                                            <x-adminlte-input
+                                                type="number"
+                                                name="itemDiscounts[]"
+                                                v-model="itemDiscounts[index]"
+                                                min="0"
+                                                class="form-control"
+                                                @input="handleRowChanges(index)"
+                                            />
+                                        </td>
+                                        <td>
+                                            <x-adminlte-select2
+                                                name="taxes"
+                                                v-model="taxes[index]"
+                                                class="form-control"
+                                                autocomplete="off"
+                                                @change="handleRowChanges(index)"
+                                            >
+                                                <option value="None">None</option>
+                                                <option value="VAT">VAT</option>
+                                            </x-adminlte-select2>
+                                        </td>
+                                        <td>
+                                            @{{ formatCurrency(product.total || 0 ) }}
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm" @click="removeProduct(index)">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
 
-                    <div class="table-responsive">
-                        <table class="table mt-3 table-bordered table-striped">
-                            <thead class="table-light">
-                                <tr>
-                                    <th style="max-width: 10em; width: 10em;">Product</th>
-                                    <th style="max-width: 50px; width: 50px;">Price</th>
-                                    <th style="max-width: 60px; width: 60px;">Quantity</th>
-                                    <th style="max-width: 100px; width: 100px;">Total</th>
-                                    <th style="max-width: 100px; width: 15px;">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="product-details">
-                                <tr v-for="(product, index) in selectedProducts" :key="index">
-                                    <td>
-                                        <strong>@{{ product.name }}</strong>
-                                        <p>@{{ product.description }}</p>
-                                    </td>
-                                    <td>@{{ formatCurrency(product.price) }}</td>
-                                    <td>
-                                        <x-adminlte-input
-                                            type="number"
-                                            name="quantities[]"
-                                            v-model="quantities[index]"
-                                            min="1"
-                                            class="form-control"
-                                            @input="handleQuantityChange(index)"
-                                        />
-                                    </td>
-                                    <td>
-                                        @{{ formatCurrency(product.price * quantities[index] || 0) }}
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-danger btn-sm" @click="removeProduct(index)">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <div class="text-right">
-                            <strong>Total Sales: @{{ formatCurrency(totalSales) }}</strong>
+                            <div class="text-right">
+                                <strong>Total Sales: @{{ formatCurrency(totalSales) }}</strong>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -152,28 +177,72 @@
                 <p>Payment details</p>
                 <div class="row">
                     <!-- Paid Amount -->
-                    <div class="col-md-6 form-group">
-                        <label for="paid_amount">Paid Amount</label>
-                        <input type="number" step="0.01" class="form-control" name="paid_amount" id="paid_amount" value="0">
-                    </div>
+                    <x-adminlte-input
+                        name="paid_amount"
+                        id="paid_amount"
+                        type="number"
+                        step="0.01"
+                        fgroup-class="col-md-4"
+                        autocomplete="off"
+                        class="{{ $errors->has('paid_amount') ? 'is-invalid' : '' }}"
+                        v-model="state.paid_amount"
+                        label="Paid amount:"
+                    />
+
+                    <!-- Payment Date -->
+                    <x-adminlte-input
+                        name="payment_date"
+                        id="payment_date"
+                        type="date"
+                        fgroup-class="col-md-4"
+                        autocomplete="off"
+                        class="{{ $errors->has('payment_date') ? 'is-invalid' : '' }}"
+                        v-model="state.payment_date"
+                        label="Payment date:"
+                    />
 
                     <!-- Payment Method -->
-                    <div class="col-md-6 form-group">
-                        <label for="payment_method">Payment Method</label>
-                        <select class="form-control" name="payment_method" id="payment_method" required>
-                            <option value="cash">Cash</option>
-                            <option value="credit_card">Credit Card</option>
-                            <option value="bank_transfer">Bank Transfer</option>
-                            <option value="online">Online</option>
-                        </select>
-                    </div>
+                    <x-adminlte-select2
+                        name="payment_method"
+                        v-model="state.payment_method"
+                        fgroup-class="col-md-4"
+                        class="{{ $errors->has('payment_method') ? 'is-invalid' : '' }}"
+                        label="Payment method:"
+                    >
+                        <option>Cash</option>
+                        <option>Cheque</option>
+                        <option>Credit Card</option>
+                        <option>Bank Transfer</option>
+                        <option>Online</option>
+                    </x-adminlte-select2>
+
+                    <!-- Cheque Number (conditionally shown) -->
+                    <x-adminlte-input
+                        v-show="state.payment_method === 'Cheque'"
+                        name="cheque_number"
+                        id="cheque_number"
+                        type="text"
+                        fgroup-class="col-md-4"
+                        autocomplete="off"
+                        class="{{ $errors->has('cheque_number') ? 'is-invalid' : '' }}"
+                        v-model="state.cheque_number"
+                        label="Cheque Number:"
+                    />
 
                     <!-- Notes -->
-                    <div class="col-md-12 form-group">
-                        <label for="notes">Notes</label>
-                        <textarea class="form-control" name="notes" id="notes" rows="3"></textarea>
-                    </div>
+                    <x-adminlte-textarea
+                        name="notes"
+                        id="notes"
+                        fgroup-class="col-md-12"
+                        autocomplete="off"
+                        class="{{ $errors->has('notes') ? 'is-invalid' : '' }}"
+                        v-model="state.notes"
+                        rows="3"
+                        label="Notes:"
+                    />
                 </div>
+
+
             </div>
         </div>
         <div class="form-group">
@@ -189,19 +258,25 @@
             // Reactive references
             const selectedProducts = ref([]); // Array to hold selected products
             const quantities = ref([]); // Array to hold quantities for each selected product
+            const itemDiscounts = ref([]); // Array to hold quantities for each selected product
+            const taxes = ref([]); // Array to hold quantities for each selected product
+            const taxAmounts = ref([]);
             const products = ref([]); // This should be populated with your products array from the API
             const client = ref('');
             const clientData = ref('');
             const clientId = '{{ $client->id ?? null }}'; // Use null if client ID is not set
             const searchQuery = ref('');
             const productSearch = ref('');
-            // Reactive state to hold product details
             const productDetails = ref([]);
 
-            const state = ref({
+            const state = reactive({
                 saleDate: '',
                 dueDate: '',
                 status:'Draft',
+                notes:'',
+                payment_method:'Cash',
+                paid_amount: 0,
+                cheque_number: ''
             })
 
             onMounted(() => {
@@ -212,16 +287,30 @@
                 }
             });
 
+
             const totalSales = computed(() => {
-                return selectedProducts.value.reduce((acc, product, index) => {
-                    const total = (product.price || 0) * (quantities.value[index] || 0);
-                    return acc + total;
+                return selectedProducts.value.reduce((total, product, index) => {
+                    const taxRate = product.tax === "VAT" ? 0.165 : 0; // Assuming VAT is 16.5%
+                    const quantity = quantities.value[index] || 0;
+                    const discount = itemDiscounts.value[index] || 0;
+                    const price = product.price || 0;
+
+                    // Calculate subtotal with quantity and discount
+                    const baseTotal = (price * quantity) - discount;
+
+                    // Apply tax to the baseTotal
+                    const lineTotal = baseTotal * (1 + taxRate);
+                    console.log(state.payment_method)
+
+                    return total + lineTotal;
                 }, 0);
             });
 
             // Function to handle adding a new product row
             const addProduct = () => {
                 quantities.value.push(1); // Add a default quantity of 1
+                itemDiscounts.value.push(0);
+                taxes.value.push('None');
             };
 
             function onProductChange(event) {
@@ -239,13 +328,13 @@
 
                     // Fetch the data from the server when a user types in the input
                     source: function (query, process) {
-                        // Use debounce to limit how frequently search requests are sent
                         clearTimeout(this.searchTimeout);
                         this.searchTimeout = setTimeout(() => {
                             $.get(path, { query: query }, function (data) {
                                 process(data); // Pass data to the typeahead process
                             }).fail(function () {
-                                console.error('Error fetching products'); // Handle server errors
+                                console.error('Error fetching products');
+                                alert("There was an issue fetching the products. Please try again later.");
                             });
                         }, 300); // Delay of 300ms before making the request
                     },
@@ -256,30 +345,27 @@
                     },
 
                     // Handle the event when a suggestion is selected
-                    afterSelect: async function (item) {
-                        // Check if the product is already in the list
+                    afterSelect: function (item) {
                         const existingProduct = selectedProducts.value.find(product => product.id === item.id);
-                        console.log(selectedProducts.value);
 
                         if (existingProduct) {
                             // If the product already exists, increase its quantity by 1
                             existingProduct.quantity += 1;
-
-                            // Update the quantities array to match the updated quantity in selectedProducts
                             const index = selectedProducts.value.findIndex(product => product.id === item.id);
                             quantities.value[index] = existingProduct.quantity;
                         } else {
                             // If the product doesn't exist, add it to the selectedProducts array with a default quantity of 1
-                            selectedProducts.value.push({ ...item, quantity: 1 });
+                            selectedProducts.value.push({ ...item, quantity: 1, discount: 0, tax: 'None', taxAmount: 0 });
                             quantities.value.push(1); // Add the default quantity to the quantities array
+                            taxes.value.push('None');
+                            taxAmounts.value.push(0);
                         }
 
                         // Clear the search input after adding the product
                         productSearch.value = '';
-                    }.bind(this),
+                    },
                 });
             };
-
 
             const searchClient = () => {
                 const path = "{{ route('search-client') }}";
@@ -309,7 +395,10 @@
             };
 
             const formatCurrency = (value) => {
-                return `K ${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'MMK'
+                }).format(value);
             };
 
             const validateQuantity = (index) => {
@@ -318,18 +407,41 @@
                 }
             };
 
-            const handleQuantityChange = (index) => {
+            const validateTax = (index) => {
+                if (taxes.value[index] !== "None" && taxes.value[index] !== "Withholding" && taxes.value[index] !== "VAT") {
+                    taxes.value[index] = "None"; // Reset to a default allowed value, e.g., "None"
+                }
+            };
+
+            const validateItemDiscounts = (index) => {
+                if (itemDiscounts.value[index] < 1) {
+                    itemDiscounts.value[index] = 0; // Reset to minimum allowed value
+                }
+            };
+
+            const handleRowChanges = (index) => {
                 // Validate the quantity to ensure it's not less than the minimum allowed value
                 validateQuantity(index);
+                validateItemDiscounts(index);
 
                 // Retrieve the product from the selectedProducts array using the index
                 const product = selectedProducts.value[index];
                 if (product) {
-                    // Update the total based on the new quantity
-                    product.total = product.price * product.quantity; // Calculate the new total
-                }
+                    // Update the product's quantity, discount, and tax first
+                    product.quantity = quantities.value[index];
+                    product.discount = itemDiscounts.value[index];
+                    product.tax = taxes.value[index];
 
-                // Optionally, you can update any computed properties that rely on these quantities
+                    // Define tax rate based on the tax type
+                    const taxRate = product.tax === "VAT" ? 0.165 : 0; // Assuming VAT is 16.5%; adjust as necessary
+
+                    // Calculate the total, applying discount and tax
+                    const baseTotal = product.price * product.quantity - product.discount;
+                    product.total = baseTotal * (1 + taxRate); // Apply tax if applicable
+                    product.taxAmount = baseTotal * (taxRate)
+
+                    console.log(selectedProducts.value); // Log to see updated product details
+                }
             };
 
 
@@ -338,6 +450,8 @@
                 // Remove the product ID and quantity at the specified index
                 selectedProducts.value.splice(index, 1);
                 quantities.value.splice(index, 1);
+                itemDiscounts.value.splice(index, 1);
+                taxes.value.splice(index, 1);
             };
 
             const postOrder = async () => {
@@ -351,8 +465,14 @@
 
                     // Handle success
                     if (response.status === 200) {
+                        notification('Bill created successfully', 'success');
                         console.log('Order submitted successfully:', response.data);
-                        // You can also add additional actions, like resetting the form or showing a success message
+
+                        // Optional: Reset form fields here if needed, e.g., form.reset();
+
+                        // Redirect to /all-sales and prevent further actions
+                        window.location.href = '/all-sales';
+                        return;
                     }
                 } catch (error) {
                     // Handle error
@@ -418,9 +538,11 @@
                 removeProduct,
                 productSearch,
                 validateQuantity,
-                handleQuantityChange,
+                handleRowChanges,
                 postOrder,
-                state
+                state,
+                itemDiscounts,
+                taxes,
             };
         }
     });

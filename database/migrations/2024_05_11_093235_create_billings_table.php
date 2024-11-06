@@ -63,8 +63,6 @@ return new class extends Migration
             // Additional info
             $table->text('transaction_terms')->nullable();
             $table->text('notes')->nullable();
-            $table->string('contact_email')->nullable();
-            $table->string('contact_phone')->nullable();
             $table->text('billing_address')->nullable();
             $table->text('shipping_address')->nullable();
             $table->string('transaction_id')->nullable();

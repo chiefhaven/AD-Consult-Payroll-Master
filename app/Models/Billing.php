@@ -15,7 +15,43 @@ class Billing extends Model
 
     protected $fillable = [
         'client_id',
+        'billing_type',
+        'amount',
+        'discount',
+        'discount_type',
+        'paid_amount',
+        'balance',
+        'amount_before_tax',
+        'tax_amount',
+        'tax_rate',
+        'tax_inclusive',
+        'shipping_amount',
+        'other_charges',
+        'billing_date',
+        'due_date',
+        'payment_due_date',
+        'overdue_date',
+        'invoice_number',
+        'reference_number',
+        'currency',
+        'payment_method',
+        'payment_status',
+        'reminder_sent',
+        'is_recurring',
+        'recurrence_period',
+        'late_fee',
+        'penalty_rate',
+        'transaction_terms',
+        'notes',
+        'contact_email',
+        'contact_phone',
+        'billing_address',
+        'shipping_address',
+        'transaction_id',
+        'payment_gateway',
+        'attachment_path'
     ];
+
 
     public function client()
     {
@@ -35,7 +71,7 @@ class Billing extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'bill_product')
-                    ->withPivot('quantity', 'price', 'total')
+                    ->withPivot('quantity', 'price', 'item_discount', 'tax', 'taxType', 'total')
                     ->withTimestamps();
     }
 

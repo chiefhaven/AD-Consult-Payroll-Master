@@ -21,7 +21,7 @@ class Product extends Model
     public function billing()
     {
         return $this->belongsToMany(Billing::class, 'bill_product')
-                    ->withPivot('quantity', 'price', 'total')
-                    ->withTimestamps();
+            ->withPivot('quantity', 'price', 'item_discount', 'tax', 'taxType', 'total')
+            ->withTimestamps();
     }
 }

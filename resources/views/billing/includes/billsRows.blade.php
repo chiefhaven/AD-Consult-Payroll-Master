@@ -54,19 +54,46 @@
         {{ $bill->products->sum('pivot.quantity') }}
     </td>
     <td class="text-end">
-        {{ number_format($bill->products->sum('pivot.price'), 2) }}
+        K{{ number_format($bill->products->map(function($product) {
+            return $product->pivot->price * $product->pivot->quantity;
+        })->sum(), 2) }}
     </td>
     <td class="text-end">
-        {{ number_format($bill->products->sum('pivot.discount'), 2) }}
+        K{{ number_format($bill->products->sum('pivot.item_discount'), 2) }}
     </td>
     <td class="text-end">
-        {{ number_format($bill->total_paid, 2) }}
+        K{{ number_format($bill->products->sum('pivot.tax'), 2) }}
     </td>
     <td class="text-end">
-        {{ number_format($bill->balance, 2) }}
+        K{{ number_format($bill->products->sum('pivot.total'), 2) }}
     </td>
     <td class="text-end">
-        {{ number_format($bill->tax, 2) }}
+        K{{ number_format($bill->total_paid, 2) }}
     </td>
-    <td>{{ $bill->payment_status }}</td>
+    <td>
+        K{{ number_format($bill->products->sum('pivot.total') - $bill->total_paid), 2 }}
+    </td>
+    <td>
+        @php
+            $remainingAmount = $bill->products->sum('pivot.total') - $bill->total_paid;
+        @endphp
+
+        <button class="btn btn-sm
+            @if ($remainingAmount == 0)
+                btn-success
+            @elseif ($remainingAmount < $bill->products->sum('pivot.total'))
+                btn-warning
+            @else
+                btn-danger
+            @endif">
+            @if ($remainingAmount == 0)
+                Paid
+            @elseif ($remainingAmount < $bill->products->sum('pivot.total'))
+                Partial Payment
+            @else
+                Due
+            @endif
+        </button>
+
+    </td>
 </tr>

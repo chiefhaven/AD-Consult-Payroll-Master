@@ -63,6 +63,8 @@ class BillingController extends Controller
         // Example: Saving the order in the database (adjust based on your schema)
         $order = Billing::create([
             'client_id' => $request->client, // Assuming you have a client ID
+            'billing_type' => 'invoice',
+            'bill_status' => $state['status'],
             'billing_date' => $state['saleDate'],
             'due_date' => $state['dueDate'],
             'status' => $state['status'],
@@ -75,12 +77,16 @@ class BillingController extends Controller
             $order->products()->attach($product['id'], [
                 'quantity' => $product['quantity'],
                 'price' => $product['price'],
-                'total' => $product['quantity'] * $product['price'],
+                'total' => $product['total'],
+                'item_discount' => $product['discount'],
+                'tax' => $product['taxAmount'],
+                'taxType' => $product['tax'] == "None" ? 'None': 1,
             ]);
         }
 
         // Return response
         return response()->json([
+            'data'=> $data,
             'order' => $order,
             'products' => $order->products,
             'grandTotal' => $grandTotal,

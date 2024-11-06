@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('quantity')->default(1);
             $table->decimal('price', 15, 2); // Price at the time of billing
             $table->decimal('item_discount', 15, 2)->default(0); // Price at the time of billing
+            $table->decimal('tax', 15, 2)->default(0);
+            $table->string('taxType', 15)->default('None');
             $table->decimal('total', 15, 2); // Calculated as quantity * price
             $table->timestamps();
 
