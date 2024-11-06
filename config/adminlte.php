@@ -313,7 +313,7 @@ return [
         [
             'text' => 'Leaves',
             'icon' => 'fa fa-fw fa-calendar',
-            'url' => 'leave',
+            'url' => 'leaveView',
             ],
 
         ],

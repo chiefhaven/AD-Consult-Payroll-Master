@@ -49,7 +49,7 @@ Route::get('/billings/quotation/download{id}', [BillingController::class, 'downl
 
 
 //Leave routes
-Route::get('/leave', [LeaveController::class, 'index'])->name('leave');
+// Route::get('/leave', [LeaveController::class, 'index'])->name('leave');
 Route::get('/leave/{year}/{month}', [LeaveController::class, 'leaveView'])->name('leaveView');
 Route::post('/leaves/{year}/{month}/mass-approve', [LeaveController::class, 'massApprove'])->name('leaves.massApprove');
 Route::post('/leaves/{year}/{month}/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('leaves.massDisapprove');

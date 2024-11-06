@@ -1,11 +1,11 @@
-@extends('adminlte::page')
+{{-- @extends('adminlte::page')
 
 {{-- Extend and customize the browser title --}}
 
-@section('title', 'Leave')
+{{-- @section('title', 'Leave') --}}
 
 {{-- Extend and customize the page content header --}}
-
+{{--
 @section('content_header')
     @hasSection('content_header_title')
         <h1 class="text-muted">
@@ -24,11 +24,11 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap4.min.css">
     @endpush
 
-@stop
+@stop --}}
 
 {{-- Rename section content to content_body --}}
 
-@section('content')
+{{-- @section('content')
 
 <div class="row p-2">
 
@@ -54,7 +54,7 @@
             @endforeach
     </tbody>
 </table>
-</div>
+</div> --}}
 
 {{-- @push('js')
     <script src="https://cdn.datatables.net/2.1.8/js/jquery.dataTables.min.js"></script>
@@ -79,6 +79,6 @@
 @endpush --}}
 
 
-@stop
+{{-- @stop
 
-
+ --}} 
