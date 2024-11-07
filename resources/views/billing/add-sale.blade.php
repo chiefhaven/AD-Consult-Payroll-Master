@@ -77,6 +77,7 @@
                                 <option>Draft</option>
                                 <option>Final</option>
                             </x-adminlte-select2>
+
                         </div>
                     </div>
                 </div>
@@ -180,12 +181,12 @@
                     <x-adminlte-input
                         name="paid_amount"
                         id="paid_amount"
+                        v-model="state.paid_amount"
                         type="number"
                         step="0.01"
                         fgroup-class="col-md-4"
                         autocomplete="off"
                         class="{{ $errors->has('paid_amount') ? 'is-invalid' : '' }}"
-                        v-model="state.paid_amount"
                         label="Paid amount:"
                     />
 
@@ -241,8 +242,6 @@
                         label="Notes:"
                     />
                 </div>
-
-
             </div>
         </div>
         <div class="form-group">
@@ -269,7 +268,7 @@
             const productSearch = ref('');
             const productDetails = ref([]);
 
-            const state = reactive({
+            const state = ref({
                 saleDate: '',
                 dueDate: '',
                 status:'Draft',
