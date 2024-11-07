@@ -13,6 +13,6 @@ class LeaveSeeder extends Seeder
      */
     public function run(): void
     {
-        Leave::factory()->count(10)->create();
+        Leave::factory()->count(50)->create();
     }
 }

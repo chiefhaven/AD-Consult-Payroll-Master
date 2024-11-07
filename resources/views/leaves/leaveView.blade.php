@@ -27,6 +27,12 @@
 {{-- Rename section content to content_body --}}
 
 @section('content')
+
+<!-- Vue app container for Leave View component -->
+<div id="app">
+    <leave-view :initial-year="{{ $year }}" :initial-month="{{ $month }}"></leave-view>
+</div>
+
 <div class="row">
 
  <div class="row p-4">
@@ -151,5 +157,14 @@
             });
         });
     </script>
+@endpush
+
+@push('js')
+    <!-- Include Vue, Axios, and the main Vue component logic in app.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap4.min.js"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
 @endpush
 

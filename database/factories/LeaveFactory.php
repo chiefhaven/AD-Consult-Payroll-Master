@@ -23,7 +23,7 @@ class LeaveFactory extends Factory
             'Surname'=> $this->faker->lastName (1),
             'Type' => $this->faker->randomElement(['Sick Leave','Marternity Leave','Annual Leave', 'Parental Leave','Unpaid Leave','Study Leave']),
             'start_date' => $this->faker->date(),
-            'Status' => $this->faker->boolean(75),
+            'Status' => $this->faker->randomElement(['Approved','Disapproved','Pending']),
             'Reason' => $this->faker->sentence(3),
         ];
     }

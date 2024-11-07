@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('Surname');
             $table->date('start_date');
             $table->enum('Type',['Sick Leave','Marternity Leave','Annual Leave', 'Parental Leave','Unpaid Leave','Study Leave']);
-            $table->boolean('Status')->default(0);
+            $table->enum('Status',['Approved','Disapproved','Pending']);
             $table->string('Reason');
             $table->timestamps();
         });
