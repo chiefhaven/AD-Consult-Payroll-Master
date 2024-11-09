@@ -4,33 +4,19 @@
             <h1>{{ monthName }} {{ year }}</h1>
         </div>
 
+        <!-- Status Cards -->
         <div class="row p-4">
-            <div class="col-md-4">
+            <div class="col-md-4" v-for="(count, status) in statusCounts" :key="status">
                 <div class="card text-white bg-secondary mb-1">
                     <div class="card-body">
-                        <h5 class="card-title">Total</h5>
-                        <p class="card-text">{{ totalRequests }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-white bg-secondary mb-1">
-                    <div class="card-body">
-                        <h5 class="card-title">Approved</h5>
-                        <p class="card-text">{{ approvedRequests }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-white bg-secondary mb-1">
-                    <div class="card-body">
-                        <h5 class="card-title">Disapproved</h5>
-                        <p class="card-text">{{ disapprovedRequests }}</p>
+                        <h5 class="card-title">{{ status }}</h5>
+                        <p class="card-text">{{ count }}</p>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Mass Approve/Disapprove Buttons -->
         <div class="row p-4">
             <div class="col-md-12 mb-3">
                 <button @click="massApprove" class="btn btn-success">Mass Approve</button>
@@ -38,6 +24,7 @@
             </div>
         </div>
 
+        <!-- Leaves Table -->
         <div class="row p-4 mt-1">
             <table id="leaveTable" class="table table-striped table-bordered">
                 <thead>
@@ -70,85 +57,84 @@
 </template>
 
 <script>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
 export default {
     props: ['initialYear', 'initialMonth'],
-    data() {
-        return {
-            year: this.initialYear,
-            month: this.initialMonth,
-            leaves: [],
-            totalRequests: 0,
-            approvedRequests: 0,
-            disapprovedRequests: 0,
-            pendingRequests: 0
-        };
-    },
-    computed: {
-        monthName() {
-            return new Date(this.year, this.month - 1).toLocaleString('default', { month: 'long' });
-        }
-    },
+    setup(props) {
+        const year = ref(props.initialYear);
+        const month = ref(props.initialMonth);
+        const leaves = ref([]);
+        const statusCounts = ref({
+            Approved: 0,
+            Disapproved: 0,
+            Pending: 0
+        });
 
-    methods: {
-        fetchLeaveData() {
-            axios.get(`/leave/${this.year}/${this.month}`)
+        const monthName = computed(() => {
+            return new Date(year.value, month.value - 1).toLocaleString('default', { month: 'long' });
+        });
+
+        const fetchLeaveData = () => {
+            axios.get(`/leave/${year.value}/${month.value}`)
                 .then(response => {
-                    this.leaves = response.data.leaves;
-                    this.totalRequests = this.leaves.length;
-                    this.approvedRequests = response.data.approvedRequests;
-                    this.disapprovedRequests = response.data.disapprovedRequests;
-                    this.pendingRequests = response.data.pendingRequests;
+                    leaves.value = response.data.leaves;
+                    statusCounts.value = {
+                        Approved: response.data.approvedRequests,
+                        Disapproved: response.data.disapprovedRequests,
+                        Pending: response.data.pendingRequests
+                    };
 
-                    // Initialize or reinitialize DataTables
-                    this.$nextTick(() => {
+                    // Initialize DataTable after fetching data
+                    nextTick(() => {
                         $('#leaveTable').DataTable({
-                            destroy: true,  // Reinitialize table
+                            destroy: true,
                             autoWidth: false,
                             responsive: true
                         });
                     });
                 })
-                .catch(error => {
-                    console.error("There was an error fetching the leave data:", error);
-                });
-        },
+                .catch(error => console.error('Error fetching leave data:', error));
+        };
 
-        // Mass approve method
-        async massApprove() {
+        const massApprove = async () => {
             try {
-                const response = await axios.post(`/leave/${this.year}/${this.month}/mass-approve`);
-                this.updateCounts(response.data);  // Update counts from response
+                const response = await axios.post(`/leave/${uuid.value}/mass-approve`);
+                updateCounts(response.data);
                 alert('Mass approval successful!');
             } catch (error) {
                 console.error('Error approving leaves:', error);
             }
-        },
+        };
 
-        // Mass disapprove method
-        async massDisapprove() {
+        const massDisapprove = async () => {
             try {
-                const response = await axios.post(`/leave/${this.year}/${this.month}/mass-disapprove`);
-                this.updateCounts(response.data);  // Update counts from response
+                const response = await axios.post(`/leave/${uuid.value}/mass-disapprove`);
+                updateCounts(response.data);
                 alert('Mass disapproval successful!');
             } catch (error) {
                 console.error('Error disapproving leaves:', error);
             }
-        },
+        };
 
-        // Update the counts after mass approval/disapproval
-        updateCounts(data) {
-            this.approvedRequests = data.approvedRequests;
-            this.disapprovedRequests = data.disapprovedRequests;
-            this.totalRequests = data.totalRequests;
-        }
-    },
+        const updateCounts = (data) => {
+            statusCounts.value.Approved = data.approvedRequests;
+            statusCounts.value.Disapproved = data.disapprovedRequests;
+            statusCounts.value.Pending = data.totalRequests;
+        };
 
-    mounted() {
-        this.fetchLeaveData();
+        onMounted(() => {
+            fetchLeaveData();
+        });
+
+        return {
+            leaves,
+            statusCounts,
+            monthName,
+            massApprove,
+            massDisapprove
+        };
     }
 };
 </script>
-
-<style scoped>
-/* Add any custom styles here */
-</style>

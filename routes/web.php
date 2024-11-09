@@ -25,6 +25,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PayrollController;
 use App\Models\Leave;
 
+
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['auth']);
@@ -49,10 +50,25 @@ Route::get('/billings/quotation/download{id}', [BillingController::class, 'downl
 
 
 //Leave routes
-Route::get('/leave', [LeaveController::class, 'index'])->name('leaveView');
-Route::get('/leave/{year}/{month}', [LeaveController::class, 'leaveView'])->name('leaveView');
-Route::post('/leaves/{year}/{month}/mass-approve', [LeaveController::class, 'massApprove'])->name('leaves.massApprove');
-Route::post('/leaves/{year}/{month}/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('leaves.massDisapprove');
+// Route::get('/leave', [LeaveController::class, 'index'])->name('leaveView');
+// Route::get('/leave/{year}/{month}', [LeaveController::class, 'leaveView'])->name('leaveView');
+// Route::post('/leaves/{year}/{month}/mass-approve', [LeaveController::class, 'massApprove'])->name('leaves.massApprove');
+// Route::post('/leaves/{year}/{month}/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('leaves.massDisapprove');
+
+
+// Route::get('/leave/{year?}/{month?}', [LeaveController::class, 'index'])->name('leaveView'); // Blade and Vue API data
+// Route::post('/leave/{year}/{month}/mass-approve', [LeaveController::class, 'massApprove'])->name('massApprove');
+// Route::post('/leave/{year}/{month}/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('massDisapprove');
+
+// Route::get('/leave/{year?}/{month?}', [LeaveController::class, 'index']);
+Route::get('/leaveView/{year?}/{month?}', [LeaveController::class, 'index'])->name('leaveView');
+
+Route::post('/leave/{year}/{month}/mass-approve', [LeaveController::class, 'massApprove'])->name('api.massApprove');
+Route::post('/leave/{year}/{month}/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('api.massDisapprove');
+
+Route::post('/leaveView/{uuid}/mass-approve', [LeaveController::class, 'massApprove'])->name('api.massApprove');
+Route::post('/leaveView/{uuid}/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('api.massDisapprove');
+
 
 
 

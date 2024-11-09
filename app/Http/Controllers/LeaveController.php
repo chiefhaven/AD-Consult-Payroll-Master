@@ -1,185 +1,72 @@
 <?php
-
 namespace App\Http\Controllers;
+ use Illuminate\Http\Request;
+ use App\Models\Leave;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
-use App\Models\Leave;
-use App\Http\Requests\StoreLeaveRequest;
-use App\Http\Requests\UpdateLeaveRequest;
-use App\Livewire\Leaves;
+ class LeaveController extends Controller {
 
-class LeaveController extends Controller
+    public function index($year=null, $month=null)
+    { // Default to current year/month if parameters aremissing
+
+    $year=$year ?? date('Y');
+    $month=$month ?? date('m'); // Fetch leave data and counts based on year and month
+
+
+    $leaves=Leave::whereYear('start_date', $year)->whereMonth('start_date', $month)->get();
+    $approvedRequests = $leaves->where('status', 'Approved')->count();
+    $disapprovedRequests = $leaves->where('status', 'Disapproved')->count();
+    $pendingRequests = $leaves->where('status', 'Pending')->count();
+
+
+
+    // If the request is for JSON data (API call)
+    if (request()->wantsJson()) {
+    return response()->json([
+    'leaves' => $leaves,
+    'approvedRequests' => $approvedRequests,
+    'disapprovedRequests' => $disapprovedRequests,
+    'pendingRequests' => $pendingRequests,
+    ]);
+    }
+
+    // Otherwise, pass year, month, and leaves to the Blade view
+    return view('leaves.leaveView', compact('year', 'month', 'leaves','approvedRequests', 'disapprovedRequests', 'pendingRequests'));
+    }
+public function massApprove($uuid)
 {
-    /**
-     * Display a listing of the resource.
-     */
-public function index()
-{
-    // Get the current year and month if not passed explicitly
-    $year = request()->year ?? now()->year;   // Default to the current year
-    $month = request()->month ?? now()->month; // Default to the current month
+    // Find the leave by UUID
+    $leave = Leave::findOrFail($uuid);
 
-    // Fetch leave data from the database based on the year and month
-    $leaves = DB::table('leaves')
-        ->whereYear('start_date', $year)
-        ->whereMonth('start_date', $month)
-        ->orderByRaw("FIELD(status, 'pending', 'approved', 'disapproved')")
-        ->orderBy('start_date', 'desc')
-        ->get();
+    // Update logic for mass approval (if you want to handle multiple records)
+    $leave->update(['status' => 'Approved']);
 
-    // Count the requests based on their status
-    $approvedRequests = $leaves->where('status', 'approved')->count();
-    $disapprovedRequests = $leaves->where('status', 'disapproved')->count();
-    $pendingRequests = $leaves->where('status', 'pending')->count();
+    // Fetch updated counts and return the JSON response
+    $approvedRequests = Leave::where('status', 'Approved')->count();
+    $disapprovedRequests = Leave::where('status', 'Disapproved')->count();
 
-    // Return the Blade view with the necessary data compacted
-    return view('leaveView', compact('leaves', 'approvedRequests', 'disapprovedRequests', 'pendingRequests', 'year', 'month'));
-}
-
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreLeaveRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Leave $leave)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Leave $leave)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateLeaveRequest $request, Leave $leave)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Leave $leave)
-    {
-        //
-    }
-
-    // public function showLeavesByYear(Request $request, $year)
-    // {
-    //     // Get total requests grouped by month for the specified year
-    //     $leaves = DB::table('leaves')
-    //         ->select(DB::raw("MONTH(start_date) as month"), DB::raw('count(*) as total_requests'))
-    //         ->whereYear('start_date', $year) // Filter by the specified year
-    //         ->groupBy('month')
-    //         ->orderBy('month') // Ensure months are ordered
-    //         ->get();
-
-    //     // Prepare an array to hold total requests for each month
-    //     $monthlyRequests = [];
-    //     for ($month = 1; $month <= 12; $month++) {
-    //         // Find the request count for the current month; default to 0 if not found
-    //         $total = $leaves->firstWhere('month', $month);
-    //         $monthlyRequests[$month] = $total ? $total->total_requests : 0;
-    //     }
-
-    //     return view('leaves.leave', compact('leave'));
-    // }
-
-
-
-public function massApprove($year, $month)
-{
-    // Update status to 1 (approved) for all leaves in the specified month and year
-    DB::table('leaves')
-        ->whereYear('start_date', $year)
-        ->whereMonth('start_date', $month)
-        ->update(['status' => 1]);
-
-    // Fetch updated counts to return as JSON
-    $approvedRequests = DB::table('leaves')
-        ->whereYear('start_date', $year)
-        ->whereMonth('start_date', $month)
-        ->where('status', 1)
-        ->count();
-
-    $disapprovedRequests = DB::table('leaves')
-        ->whereYear('start_date', $year)
-        ->whereMonth('start_date', $month)
-        ->where('status', 0)
-        ->count();
-
-    $totalRequests = DB::table('leaves')
-        ->whereYear('start_date', $year)
-        ->whereMonth('start_date', $month)
-        ->count();
-
-    // Return updated data as JSON
     return response()->json([
         'approvedRequests' => $approvedRequests,
         'disapprovedRequests' => $disapprovedRequests,
-        'totalRequests' => $totalRequests
+        'totalRequests' => $approvedRequests + $disapprovedRequests
     ]);
 }
 
-
-public function massDisapprove($year, $month)
+public function massDisapprove($uuid)
 {
-    // Update status to 0 (disapproved) for all leaves in the specified month and year
-    DB::table('leaves')
-        ->whereYear('start_date', $year)
-        ->whereMonth('start_date', $month)
-        ->update(['status' => 0]);
+    // Find the leave by UUID
+    $leave = Leave::findOrFail($uuid);
 
-    // Fetch updated counts to return as JSON
-    $approvedRequests = DB::table('leaves')
-        ->whereYear('start_date', $year)
-        ->whereMonth('start_date', $month)
-        ->where('status', 1)
-        ->count();
+    // Update logic for mass disapproval
+    $leave->update(['status' => 'Disapproved']);
 
-    $disapprovedRequests = DB::table('leaves')
-        ->whereYear('start_date', $year)
-        ->whereMonth('start_date', $month)
-        ->where('status', 0)
-        ->count();
+    // Fetch updated counts and return the JSON response
+    $approvedRequests = Leave::where('status', 'Approved')->count();
+    $disapprovedRequests = Leave::where('status', 'Disapproved')->count();
 
-    $totalRequests = DB::table('leaves')
-        ->whereYear('start_date', $year)
-        ->whereMonth('start_date', $month)
-        ->count();
-
-    // Return updated data as JSON
     return response()->json([
         'approvedRequests' => $approvedRequests,
         'disapprovedRequests' => $disapprovedRequests,
-        'totalRequests' => $totalRequests
+        'totalRequests' => $approvedRequests + $disapprovedRequests
     ]);
-}
-
-
-
-
+    }
 }

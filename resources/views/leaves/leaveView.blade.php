@@ -48,7 +48,7 @@
         <div class="card text-white bg-secondary mb-1">
             <div class="card-body">
                 <h5 class="card-title">Total</h5>
-                <p class="card-text">{{ $totalRequests }}</p>
+                <p class="card-text">{{ $pendingRequests }}</p>
             </div>
         </div>
     </div>
@@ -78,12 +78,14 @@
 <div class="row p-4">
     <!-- Mass Approve and Disapprove Buttons -->
     <div class="col-md-12 mb-3">
-        <form action="{{ route('leaves.massApprove', ['year' => $year, 'month' => $month]) }}" method="POST" style="display: inline;">
+        <form action="{{ route('api.massApprove', ['year' => $year, 'month' => $month]) }}" method="POST" style="display: inline;">
+        {{-- <form action="{{ route('api.massApprove', ['uuid' => $uuid]) }}" method="POST" style="display: inline;"> --}}
             @csrf
             <button type="submit" class="btn btn-success">Mass Approve</button>
         </form>
 
-        <form action="{{ route('leaves.massDisapprove', ['year' => $year, 'month' => $month]) }}" method="POST" style="display: inline;">
+        <form action="{{ route('api.massDisapprove', ['year' => $year, 'month' => $month]) }}" method="POST" style="display: inline;">
+        {{-- <form action="{{ route('api.massDisapprove', ['uuid' => $uuid]) }}" method="POST" style="display: inline;"> --}}
             @csrf
             <button type="submit" class="btn btn-danger">Mass Disapprove</button>
         </form>
