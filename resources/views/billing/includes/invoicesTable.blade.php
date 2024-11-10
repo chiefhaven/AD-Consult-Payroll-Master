@@ -5,6 +5,7 @@
             <tr>
                 <th class="text-center" style="width: 100px;">Actions</th>
                 <th style="min-width: 150px;">Date</th>
+                <th style="min-width: 150px;">Due Date</th>
                 <th style="min-width: 150px;">Invoice No.</th>
                 <th style="min-width: 150px;">Client</th>
                 <th class="text-end" style="min-width: 150px;">Items Qty</th>

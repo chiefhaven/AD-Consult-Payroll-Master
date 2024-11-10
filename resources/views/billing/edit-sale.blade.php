@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Add Sale')
+@section('title', 'Edit bill')
 
 @section('content_header')
     <h1>Add Sale</h1>
@@ -54,32 +54,16 @@
                                 autocomplete="off"
                             />
 
-                            <div class="col-md-6">
-                                <div class="row groupHaven">
-                                    <x-adminlte-input
-                                        type="text"
-                                        name="paymentTerms"
-                                        v-model="state.paymentTerms"
-                                        label="Payment terms:"
-                                        placeholder="Payment terms"
-                                        fgroup-class="col-md-7 pr-0"
-                                        class="{ 'is-invalid': errors.has('paymentTerms') } left-field"
-                                        autocomplete="off"
-                                    />
-                                    <x-adminlte-select2
-                                        name="state.termsUnits"
-                                        v-model="state.termsUnits"
-                                        label="-"
-                                        fgroup-class="col-md-5 pl-0"
-                                        class="{ 'is-invalid': $errors->has('termsUnits') } right-field"
-                                        data-placeholder="Select an option..."
-                                        autocomplete="off">
-                                        <option value="" disabled>Please select...</option>
-                                        <option>Days</option>
-                                        <option>Months</option>
-                                    </x-adminlte-select2>
-                                </div>
-                            </div>
+                            <x-adminlte-input
+                                type="date"
+                                name="due_date"
+                                v-model="state.dueDate"
+                                label="Due date:"
+                                placeholder="Due date"
+                                fgroup-class="col-md-6"
+                                class="{ 'is-invalid': errors.has('due_date') }"
+                                autocomplete="off"
+                            />
 
                             <x-adminlte-select2
                                 name="state.status"
@@ -292,8 +276,7 @@
 
             const state = ref({
                 saleDate: '',
-                paymentTerms: 0,
-                termsUnits:"",
+                dueDate: '',
                 status:'Draft',
                 notes:'',
                 paid_amount: 0,
@@ -303,12 +286,41 @@
 
             onMounted(() => {
 
-                const today = new Date().toISOString().split('T')[0];
-                state.value.saleDate = today;
-
                 // Conditionally fetch client data if the client ID exists
                 if (clientId) {
                     fetchClient(clientId.value);
+                }
+
+                if ('{{ $billing->id }}') {
+
+                    clientId.value = {!! json_encode($billing->client_id) !!};
+
+                    fetchClient(clientId.value);
+
+                    state.value.paid_amount = totalSales.value - {!! json_encode($billing->payments->sum('payment_amount')) !!};
+
+
+                    selectedProducts.value = {!! json_encode($billing->products) !!};
+
+                    state.value.saleDate = {!! json_encode($billing->billing_date) !!};
+                    state.value.dueDate = {!! json_encode($billing->due_date) !!};
+                    state.value.status = {!! json_encode($billing->bill_status) !!};
+
+                    quantities.value = {!! json_encode($billing->products->map(function($product) {
+                        return $product->pivot->quantity;
+                    })) !!};
+
+                    const taxes = {!! json_encode($billing->products->map(function($product) {
+                        $tax = \App\Models\TaxRate::find($product->pivot->taxType);
+                        return $tax ? $tax->tax_name : null;
+                    })) !!};
+
+                    console.log(taxes);
+
+                    itemDiscounts.value = {!! json_encode($billing->products->map(function($product) {
+                        return $product->pivot->item_discount;  // Extract the item_discount value from pivot
+                    })) !!};
+
                 }
             });
 

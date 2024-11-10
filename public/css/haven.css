@@ -154,3 +154,11 @@
     box-shadow: 0 0 1px rgba(0, 0, 0, 0.15), 0px 0px 10px 0.9px rgba(0, 0, 0, .07) !important;
     margin-bottom: 1rem !important;
 }
+
+.groupHaven .left-field{
+    border-radius: .25rem 0 0 0.25rem !important;
+}
+
+.groupHaven .right-field{
+    border-radius: 0 0.25rem 0.25rem 0 !important;
+}

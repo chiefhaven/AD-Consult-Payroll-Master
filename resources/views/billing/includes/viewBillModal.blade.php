@@ -21,7 +21,7 @@
                                     </tr>
                                     <tr>
                                         <th>Status:</th>
-                                        <td>@{{ billData.status }}</td>
+                                        <td class="capitalize">@{{ billData.bill_status }}</td>
                                     </tr>
                                     <tr>
                                         <th>Payment Status:</th>
@@ -39,7 +39,7 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <table>
                                     <tr>
                                         <th>Client Name:</th>
@@ -60,6 +60,18 @@
                                     <tr>
                                         <th>Phone:</th>
                                         <td>@{{ billData.client.phone }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-3">
+                                <table>
+                                    <tr>
+                                        <th>Created:</th>
+                                        <td>@{{ formatDate(billData.billing_date) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Due:</th>
+                                        <td>@{{ formatDate(billData.due_date) }}</td>
                                     </tr>
                                 </table>
                             </div>

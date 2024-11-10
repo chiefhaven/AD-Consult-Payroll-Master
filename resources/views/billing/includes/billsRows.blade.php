@@ -42,7 +42,10 @@
         </div>
     </td>
     <td>
-        {{ $bill->created_at->format('Y-m-d') }}
+        {{ \Carbon\Carbon::parse($bill->billing_date)->format('d F, Y') }}
+    </td>
+    <td>
+        {{ \Carbon\Carbon::parse($bill->due_date)->format('d F, Y') }}
     </td>
     <td>
         {{ $bill->invoice_number }}

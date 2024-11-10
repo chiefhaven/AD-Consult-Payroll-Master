@@ -35,6 +35,8 @@ class BillingController extends Controller
      */
     public function create(Request $request)
     {
+        $action = 'add';
+
         $clients = Client::all();
         $products = Product::all();
 
@@ -46,7 +48,7 @@ class BillingController extends Controller
             $client = Client::find($post['client']); // Find the client
         }
 
-        return view("billing.add-sale", compact('clients', 'products', 'client'));
+        return view("billing.add-sale", compact('clients', 'products', 'client', 'action'));
     }
 
     /**
@@ -76,7 +78,8 @@ class BillingController extends Controller
             'billing_type' => 'invoice',
             'bill_status' => $state['status'],
             'billing_date' => $state['saleDate'],
-            'due_date' => $state['dueDate'],
+            'paymentTerms' => $state['paymentTerms'],
+            'termsUnits' => $state['termsUnits'],
             'status' => $state['status'],
             'total_amount' => $grandTotal,
             'invoice_number' => 'AD-'. random_int(1,100),
@@ -138,7 +141,8 @@ class BillingController extends Controller
      */
     public function edit(Billing $billing)
     {
-        //
+        $action = 'edit';
+        return view('billing.add-sale', compact('billing', 'action'));
     }
 
     /**
