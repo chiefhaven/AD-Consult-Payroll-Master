@@ -100,10 +100,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances');
 });
 
-
-Route::get('/all-sales', [BillingController::class, 'index'])->middleware(['auth'])->name('billing');
-Route::get('/add-sale', [BillingController::class, 'create'])->middleware(['auth'])->name('add-sale');
-Route::put('/store-sale', [BillingController::class, 'store'])->middleware(['auth'])->name('store-sale');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/all-sales', [BillingController::class, 'index'])->name('billing');
+    Route::get('/view-bill/{bill}', [BillingController::class, 'show'])->name('showBill');
+    Route::get('/add-sale', [BillingController::class, 'create'])->name('add-sale');
+    Route::put('/store-sale', [BillingController::class, 'store'])->name('store-sale');
+    Route::delete('/delete-bill/{bill}', [BillingController::class, 'destroy'])->name('deleteBill');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/payroll', [PayrollController::class, 'index'])->name('payrolls');

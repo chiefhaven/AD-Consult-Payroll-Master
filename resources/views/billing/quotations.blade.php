@@ -28,17 +28,6 @@
     <livewire:common.page-header pageTitle="Sales" buttonName="Add Sale" link="add-sale"/>
     <div class="col-lg-12">
         <div class="card mb-3 p-4">
-            <h4 class="pb-4">Invoices</h4>
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        @include('/billing/includes/invoicesTable')
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card mb-3 p-4">
             <h4 class="pb-4">Quotations</h4>
             <div class="box-body">
                 <div class="row">
@@ -62,6 +51,24 @@
 <script>
 
     $(document).ready(function() {
+        $('.delete-bill-confirm').on('click', function (e) {
+            e.preventDefault(); // Prevent default button behavior
+            var form = $(this).closest('form'); // Get the closest form element
+            Swal.fire({
+                title: 'Delete Bill',
+                text: 'Do you want to delete this bill? This action cannot be undone!',
+                icon: 'warning', // Use warning icon
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit the form if confirmed
+                }
+            });
+        });
+
+
         $('#invoicesSalesTable').DataTable({
             dom: 'Bfrtip',
                 buttons: [

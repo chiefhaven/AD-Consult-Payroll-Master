@@ -341,13 +341,18 @@ return [
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
                 [
-                    'text' => 'All sales',
+                    'text' => 'List sales',
                     'url' => 'all-sales',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
                 [
                     'text' => 'Add sale',
                     'url' => 'add-sale',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+                [
+                    'text' => 'List quotations',
+                    'url' => 'all-quotations',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
                 [

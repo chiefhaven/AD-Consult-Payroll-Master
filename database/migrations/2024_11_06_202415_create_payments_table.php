@@ -21,8 +21,10 @@ return new class extends Migration
 
             // Payment details
             $table->decimal('payment_amount', 15, 2); // The amount paid in the payment
-            $table->enum('payment_method', ['cash', 'credit_card', 'bank_transfer', 'online'])->nullable(); // The payment method used
+            $table->enum('payment_method', ['cash','cheque', 'credit_card', 'bank_transfer', 'online'])->nullable(); // The payment method used
             $table->string('payment_reference')->nullable(); // A reference for the payment (transaction ID, check number, etc.)
+            $table->string('account_number')->nullable();
+            $table->string('cheque_number')->nullable();
             $table->enum('payment_status', ['pending', 'completed', 'failed'])->default('pending'); // Status of the payment
             $table->date('payment_date')->nullable(); // The date the payment was made
             $table->string('payment_gateway')->nullable(); // If the payment was made via an online gateway, store it here

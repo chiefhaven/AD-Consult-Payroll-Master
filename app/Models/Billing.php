@@ -75,4 +75,23 @@ class Billing extends Model
                     ->withTimestamps();
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($bill) {
+            $bill->payments()->delete();
+        });
+
+        static::deleting(function ($bill) {
+            // Detach all products associated with this bill from the pivot table
+            $bill->products()->detach();
+        });
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'billing_id');
+    }
+
 }

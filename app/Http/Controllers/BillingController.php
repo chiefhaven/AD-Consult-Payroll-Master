@@ -6,18 +6,28 @@ use App\Models\Billing;
 use App\Http\Requests\StoreBillingRequest;
 use App\Http\Requests\UpdateBillingRequest;
 use App\Models\Client;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Models\Product;
 
 class BillingController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of invoices.
      */
     public function index()
     {
-        $billing = Billing::with('products')->get();
-        return view("billing.index", compact("billing"));
+        $billing = Billing::with('products', 'payments')->where('billing_type', 'invoice')->get();
+        return view("billing.sales", compact("billing"));
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function indexQuotations()
+    {
+        $billing = Billing::with('products', 'payments')->where('billing_type', 'quotation')->get();
+        return view("billing.quotations", compact("billing"));
     }
 
     /**
@@ -84,6 +94,19 @@ class BillingController extends Controller
             ]);
         }
 
+        // If a payment has been made, create the payment record
+        if (isset($state['paid_amount']) && $state['paid_amount'] > 0) {
+            // Save the payment in the database
+            $payment = new Payment();
+            $payment->billing_id = $order->id;  // Link to the billing order
+            $payment->payment_amount = $state['paid_amount'];
+            $payment->payment_method = $state['payment_method'];
+            $payment->cheque_number = $state['payment_method'] === 'cheque' ? $state['chequeAccountNumber'] : null;
+            $payment->account_number = $state['payment_method'] === 'bank_transfer' ? $state['chequeAccountNumber'] : null;
+            $payment->payment_date = now();  // Or use the specific payment date
+            $payment->save();
+        }
+
         // Return response
         return response()->json([
             'data'=> $data,
@@ -96,9 +119,18 @@ class BillingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Billing $billing)
+    public function show($id)
     {
-        //
+        try {
+            // Find the bill and include related payments and products
+            $bill = Billing::with(['payments', 'products', 'client'])->findOrFail($id);
+
+            return response()->json($bill, 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['message' => 'Bill not found.'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error fetching bill details.', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -120,8 +152,31 @@ class BillingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Billing $billing)
+    public function destroy($id)
     {
-        //
+        try {
+            // Attempt to find the bill
+            $bill = Billing::findOrFail($id);
+
+            // Delete the bill if found
+            $bill->delete();
+
+            // Force delete payments if soft deletes are enabled
+            $bill->payments()->forceDelete();
+
+            // Return a success response
+            return response()->json([
+                'message' => 'Bill and associated payments deleted successfully.',
+                'data' => $bill->payments
+            ], 200);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Return an error if the bill was not found
+            return response()->json(['message' => 'Bill not found.'], 404);
+        } catch (\Exception $e) {
+            // Handle any other errors
+            return response()->json(['message' => 'Error deleting bill', 'error' => $e->getMessage()], 500);
+        }
+
     }
 }

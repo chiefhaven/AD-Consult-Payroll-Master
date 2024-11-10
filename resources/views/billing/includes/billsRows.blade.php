@@ -1,15 +1,19 @@
+@php
+    $balance = $bill->products->sum('pivot.total') - $bill->payments->sum('payment_amount');
+    $paidAmount = $bill->payments->sum('payment_amount');
+@endphp
 <tr>
     <td class="text-center">
         <div class="dropdown d-inline-block">
-            <button type="button" class="btn btn-default" id="action-dropdown-{{ $bill->id }}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="btn btn-default" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="d-sm-inline-block">Action</span>
             </button>
             <div class="dropdown-menu dropdown-menu-end p-0">
                 <div class="p-2">
-                    <a class="dropdown-item nav-main-link" href="{{ url('/view-bill', $bill) }}">
+                    <button class="dropdown-item nav-main-link" type="button" @click="viewBill('{{ $bill->id }}')">
                         <i class="nav-main-link-icon fas fa-eye"></i>
-                        <div class="btn">View</div>
-                    </a>
+                        <span class="btn">View</span>
+                    </button>
                     <form method="POST" class="dropdown-item nav-main-link" action="{{ url('/edit-bill', $bill) }}">
                         @csrf
                         <i class="nav-main-link-icon fas fa-pencil-alt"></i>
@@ -29,14 +33,10 @@
                         <i class="nav-main-link-icon fas fa-envelope"></i>
                         <div class="btn">Send new sale notification</div>
                     </a>
-                    <form class="dropdown-item nav-main-link" method="POST" action="{{ url('delete-bill', $bill->id) }}" onsubmit="return confirm('Are you sure you want to delete this bill?');">
-                        @csrf
-                        @method('DELETE')
-                        <i class="nav-main-link-icon fas fa-trash"></i>
-                        <button class="btn p-0 delete-employee-confirm" type="submit">
-                            <div class="btn">Delete</div>
-                        </button>
-                    </form>
+                    <button class="dropdown-item nav-main-link btn delete-bill-confirm" type="button" @click="confirmBillDelete('{{ $bill->id }}')">
+                        <i class="nav-main-link-icon fas fa-trash-alt"></i>
+                        <span class="btn">Delete</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -68,27 +68,23 @@
         K{{ number_format($bill->products->sum('pivot.total'), 2) }}
     </td>
     <td class="text-end">
-        K{{ number_format($bill->total_paid, 2) }}
+        K{{ number_format($bill->payments->sum('payment_amount'), 2) }}
     </td>
     <td>
-        K{{ number_format($bill->products->sum('pivot.total') - $bill->total_paid), 2 }}
+        K{{ number_format($bill->products->sum('pivot.total') - $paidAmount), 2 }}
     </td>
     <td>
-        @php
-            $remainingAmount = $bill->products->sum('pivot.total') - $bill->total_paid;
-        @endphp
-
         <button class="btn btn-sm
-            @if ($remainingAmount == 0)
+            @if ($balance == 0)
                 btn-success
-            @elseif ($remainingAmount < $bill->products->sum('pivot.total'))
-                btn-warning
+            @elseif ($balance > 0 && $paidAmount > 0))
+                btn-primary
             @else
-                btn-danger
+                btn-warning
             @endif">
-            @if ($remainingAmount == 0)
+            @if ($balance == 0)
                 Paid
-            @elseif ($remainingAmount < $bill->products->sum('pivot.total'))
+            @elseif ($balance > 0 && $paidAmount > 0)
                 Partial Payment
             @else
                 Due

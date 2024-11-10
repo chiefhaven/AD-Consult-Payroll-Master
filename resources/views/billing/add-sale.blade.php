@@ -203,32 +203,33 @@
                     />
 
                     <!-- Payment Method -->
-                    <x-adminlte-select2
+                    <x-adminlte-select
                         name="payment_method"
                         v-model="state.payment_method"
                         fgroup-class="col-md-4"
                         class="{{ $errors->has('payment_method') ? 'is-invalid' : '' }}"
                         label="Payment method:"
                     >
-                        <option>Cash</option>
-                        <option>Cheque</option>
-                        <option>Credit Card</option>
-                        <option>Bank Transfer</option>
-                        <option>Online</option>
-                    </x-adminlte-select2>
+                        <option value="" disabled selected>Select Payment Method</option>
+                        <option value="cash">Cash</option>
+                        <option value="cheque">Cheque</option>
+                        <option value="credit_card">Credit Card</option>
+                        <option value="bank_transfer">Bank Transfer</option>
+                        <option value="online">Online</option>
+                    </x-adminlte-select>
 
                     <!-- Cheque Number (conditionally shown) -->
-                    <x-adminlte-input
-                        v-show="state.payment_method === 'Cheque'"
-                        name="cheque_number"
-                        id="cheque_number"
-                        type="text"
-                        fgroup-class="col-md-4"
-                        autocomplete="off"
-                        class="{{ $errors->has('cheque_number') ? 'is-invalid' : '' }}"
-                        v-model="state.cheque_number"
-                        label="Cheque Number:"
-                    />
+                    <div class="col-md-4" v-if="state.payment_method === 'cheque' || state.payment_method === 'bank_transfer'">
+                        <x-adminlte-input
+                            v-model="state.chequeAccountNumber"
+                            name="chequeAccountNumber"
+                            id="chequeAccountNumber"
+                            type="text"
+                            autocomplete="off"
+                            class="{{ $errors->has('chequeAccountNumber') ? 'is-invalid' : '' }}"
+                            label="Cheque/Account Number:"
+                        />
+                    </div>
 
                     <!-- Notes -->
                     <x-adminlte-textarea
@@ -242,6 +243,9 @@
                         label="Notes:"
                     />
                 </div>
+            </div>
+            <div class="col-md-12" :class="{ 'text-danger': totalSales - state.paid_amount > 0 }">
+                Balance: @{{ formatCurrency(totalSales - state.paid_amount) }}
             </div>
         </div>
         <div class="form-group">
@@ -267,15 +271,16 @@
             const searchQuery = ref('');
             const productSearch = ref('');
             const productDetails = ref([]);
+            const balance = ref(0);
 
             const state = ref({
                 saleDate: '',
                 dueDate: '',
                 status:'Draft',
                 notes:'',
-                payment_method:'Cash',
                 paid_amount: 0,
-                cheque_number: ''
+                payment_method: '',
+                chequeAccountNumber: '',
             })
 
             onMounted(() => {
@@ -299,7 +304,6 @@
 
                     // Apply tax to the baseTotal
                     const lineTotal = baseTotal * (1 + taxRate);
-                    console.log(state.payment_method)
 
                     return total + lineTotal;
                 }, 0);
@@ -318,6 +322,8 @@
 
             // Method to initialize product search with typeahead
             const searchProduct = () => {
+
+                NProgress.start();
                 const path = "{{ route('search-product') }}";
 
                 // Initialize typeahead on the #product input
@@ -330,10 +336,15 @@
                         clearTimeout(this.searchTimeout);
                         this.searchTimeout = setTimeout(() => {
                             $.get(path, { query: query }, function (data) {
-                                process(data); // Pass data to the typeahead process
+                                if (!data || data.length === 0) {
+                                    notification('No products found, add', 'erro');
+                                }
+
+                                process(data);  // Pass data to the typeahead process
+                                NProgress.done();
                             }).fail(function () {
                                 console.error('Error fetching products');
-                                alert("There was an issue fetching the products. Please try again later.");
+                                notification("There was an issue fetching the products. Please try again later.", 'error');
                             });
                         }, 300); // Delay of 300ms before making the request
                     },
@@ -364,9 +375,11 @@
                         productSearch.value = '';
                     },
                 });
+
             };
 
             const searchClient = () => {
+                NProgress.start()
                 const path = "{{ route('search-client') }}";
 
                 // Initialize typeahead on the #client input
@@ -377,6 +390,13 @@
                     // Fetch the data from the server when a user types in the input
                     source: function (query, process) {
                         return $.get(path, { query: query }, function (data) {
+
+
+                            if (!data || data.length === 0) {
+                                notification('No client found', 'error');
+                            }
+
+                            NProgress.done();
                             return process(data);
                         });
                     },
@@ -438,8 +458,6 @@
                     const baseTotal = product.price * product.quantity - product.discount;
                     product.total = baseTotal * (1 + taxRate); // Apply tax if applicable
                     product.taxAmount = baseTotal * (taxRate)
-
-                    console.log(selectedProducts.value); // Log to see updated product details
                 }
             };
 
@@ -454,7 +472,7 @@
             };
 
             const postOrder = async () => {
-                console.log();
+                NProgress.start();
                 try {
                     const response = await axios.put('/store-sale', {
                         client: clientData.value.id,
@@ -465,7 +483,6 @@
                     // Handle success
                     if (response.status === 200) {
                         notification('Bill created successfully', 'success');
-                        console.log('Order submitted successfully:', response.data);
 
                         // Optional: Reset form fields here if needed, e.g., form.reset();
 
@@ -475,13 +492,14 @@
                     }
                 } catch (error) {
                     // Handle error
-                    console.error('Error submitting order:', error);
                     if (error.response) {
-                        console.log('Server responded with:', error.response.data);
+                        notification('Server responded with:', 'error');
                         // Optionally, display error feedback to the user
                     } else {
-                        console.log('Network error or request was not sent');
+                        notification('Network error or request was not sent', 'error');
                     }
+                } finally{
+                    NProgress.done();
                 }
             };
 
@@ -542,6 +560,7 @@
                 state,
                 itemDiscounts,
                 taxes,
+                balance,
             };
         }
     });
