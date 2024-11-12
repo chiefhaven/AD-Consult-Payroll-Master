@@ -14,15 +14,15 @@
                     <div class="row mt-2">
                         <div class="col-md-3">
                             <a href="{{ route('employees') }}" style="text-decoration: none;">
-                            <x-adminlte-small-box title="Employee Directory" text="{{ App\Models\Employee::get()->count() }}" theme="secondary" />
+                            <x-adminlte-small-box title="Employees" text="{{ App\Models\Employee::get()->count() }}" theme="secondary" />
                             </a>
                         </div>
 
-                        {{-- <div class="col-md-3">
-                            <a href="{{ route('employees') }}" style="text-decoration: none;">
-                            <x-adminlte-small-box title="Employee Directory" text="{{ App\Models\Employee::get()->count() }}" theme="secondary" />
+                        <div class="col-md-3">
+                            <a href="{{ route('leaveView') }}" style="text-decoration: none;">
+                            <x-adminlte-small-box title="Leaves" text="{{ App\Models\Leave::where('Status', 'Pending')->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count() }}" theme="secondary" />
                             </a>
-                        </div> --}}
+                        </div>
 
                          <div class="col-md-3">
                             <a href="{{ route('payrolls') }}" style="text-decoration: none;">

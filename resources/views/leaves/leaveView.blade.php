@@ -81,13 +81,13 @@
         <form action="{{ route('api.massApprove', ['year' => $year, 'month' => $month]) }}" method="POST" style="display: inline;">
         {{-- <form action="{{ route('api.massApprove', ['uuid' => $uuid]) }}" method="POST" style="display: inline;"> --}}
             @csrf
-            <button type="submit" class="btn btn-success">Mass Approve</button>
+            <button @click="massApprove" type="submit" class="btn btn-success">Mass Approve</button>
         </form>
 
         <form action="{{ route('api.massDisapprove', ['year' => $year, 'month' => $month]) }}" method="POST" style="display: inline;">
         {{-- <form action="{{ route('api.massDisapprove', ['uuid' => $uuid]) }}" method="POST" style="display: inline;"> --}}
             @csrf
-            <button type="submit" class="btn btn-danger">Mass Disapprove</button>
+            <button @click="massDisapprove" type="submit" class="btn btn-danger">Mass Disapprove</button>
         </form>
     </div>
 </div>

@@ -135,3 +135,8 @@
 </div>
 
 @stop
+
+
+@push('js')
+
+@endpush
