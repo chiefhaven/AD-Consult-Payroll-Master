@@ -28,7 +28,6 @@
             const searchQuery = ref('');
             const productSearch = ref('');
             const productDetails = ref([]);
-            const balance = ref(0);
             const bill = ref();
 
             const state = ref({
@@ -42,6 +41,20 @@
                 paidAmount: 0,
                 chequeAccountNumber: '',
             })
+
+            const balance = computed(() => {
+                return totalSales.value - state.value.amountToPay;
+            });
+
+            const payable = computed(() => {
+                return totalSales.value;
+            });
+
+            const taxRates = {
+                VAT: 0.165, // Define VAT as 16.5%
+                None: 0,    // Define None as 0%
+            };
+
 
             onMounted(() => {
 
@@ -325,6 +338,7 @@
                 itemDiscounts,
                 taxes,
                 balance,
+                payable
             };
         }
     });
