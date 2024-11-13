@@ -29,16 +29,17 @@
             const productSearch = ref('');
             const productDetails = ref([]);
             const balance = ref(0);
-            const bill = ref({});
+            const bill = ref();
 
             const state = ref({
                 saleDate: '',
                 paymentTerms: 0,
-                termsUnits:'',
-                status:'Draft',
-                notes:'',
-                paid_amount: 0,
+                termsUnits: '',
+                status: 'Draft',
+                notes: '',
                 payment_method: '',
+                amountToPay: 0,
+                paidAmount: 0,
                 chequeAccountNumber: '',
             })
 

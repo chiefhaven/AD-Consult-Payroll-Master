@@ -28,11 +28,9 @@
             const searchQuery = ref('');
             const productSearch = ref('');
             const productDetails = ref([]);
-            const balance = ref(0);
-            const bill = ref({});
-            const paidAoumt = ref(0);
+            const bill = ref();
 
-            const state = ref({
+            const state = reactive({
                 saleDate: '',
                 paymentTerms: 0,
                 termsUnits: '',
@@ -40,63 +38,9 @@
                 notes: '',
                 payment_method: '',
                 amountToPay: 0,
+                paidAmount: 0,
                 chequeAccountNumber: '',
             });
-
-            onMounted(() => {
-                // Conditionally fetch client data if the client ID exists
-                if (clientId.value) {
-                    fetchClient(clientId.value);
-                }
-
-                if ('{{ $billing->id }}') {
-                    clientId.value = {!! json_encode($billing->client_id) !!};
-
-                    fetchClient(clientId.value);
-
-                    paidAoumt.value = {!! json_encode($billing->payments->sum('payment_amount')) !!};
-
-                    balance.value = totalSales.value - paidAoumt.value;
-
-                    selectedProducts.value = {!! json_encode($billing->products) !!};
-
-                    state.value.saleDate = {!! json_encode($billing->billing_date) !!};
-                    state.value.paymentTerms = {!! json_encode($billing->paymentTerms) !!};
-                    state.value.termsUnits = {!! json_encode($billing->termsUnits) !!};
-                    state.value.status = {!! json_encode($billing->bill_status) !!};
-
-                    quantities.value = {!! json_encode($billing->products->map(function($product) {
-                        return $product->pivot->quantity;
-                    })) !!};
-
-                    product.total = {!! json_encode($billing->products->map(function($product) {
-                        return $product->pivot->total;
-                    })) !!};
-
-                    taxes.value = {!! json_encode($billing->products->map(function($product) {
-                        // Check if taxType exists and is not 'None'
-                        return $product->pivot->taxType && $product->pivot->taxType !== 'None'
-                            ? \App\Models\TaxRate::find($product->pivot->taxType)->tax_name ?? 'None'
-                            : 'None';
-                    })) !!};
-
-                    itemDiscounts.value = {!! json_encode($billing->products->map(function($product) {
-                        return $product->pivot->item_discount;  // Extract the item_discount value from pivot
-                    })) !!};
-
-                    // If you want to update product totals, you might loop through selectedProducts
-                    selectedProducts.value.forEach((product, index) => {
-                        // Assuming you want to update product total for each product
-                        // Update each product's total here
-                        product.total = product.pivot.total;  // or any other logic you need
-                    });
-                }
-            });
-
-            const taxRates = {
-                VAT: 0.165, // Define VAT as 16.5%
-                None: 0,    // Define None as 0%
-            };
 
             const totalSales = computed(() => {
                 return selectedProducts.value.reduce((total, product, index) => {
@@ -119,6 +63,73 @@
                     return total + lineTotal;
                 }, 0);
             });
+
+            const balance = computed(() => {
+                return totalSales.value - state.amountToPay - state.paidAmount;
+            });
+
+            const payable = computed(() => {
+                return totalSales.value - state.paidAmount;
+            });
+
+            onMounted(() => {
+                // Conditionally fetch client data if the client ID exists
+                if (clientId.value) {
+                    fetchClient(clientId.value);
+                }
+
+                if ('{{ $billing->id }}') {
+                    clientId.value = {!! json_encode($billing->client_id) !!};
+
+                    bill.value = '{{ $billing->id }}';
+
+                    fetchClient(clientId.value);
+
+                    state.paidAmount = {!! json_encode($billing->payments->sum('payment_amount')) !!};
+
+                    selectedProducts.value = {!! json_encode($billing->products) !!};
+
+                    state.saleDate = {!! json_encode($billing->billing_date) !!};
+                    state.paymentTerms = {!! json_encode($billing->paymentTerms) !!};
+                    state.termsUnits = {!! json_encode($billing->termsUnits) !!};
+                    state.status = {!! json_encode($billing->status) !!};
+
+                    quantities.value = {!! json_encode($billing->products->map(function($product) {
+                        return $product->pivot->quantity;
+                    })) !!};
+
+                    product.total = {!! json_encode($billing->products->map(function($product) {
+                        return $product->pivot->total;
+                    })) !!};
+
+                    taxes.value = {!! json_encode($billing->products->map(function($product) {
+                        // Check if taxType exists and is not 'None'
+                        return $product->pivot->taxType && $product->pivot->taxType !== 'None'
+                            ? \App\Models\TaxRate::find($product->pivot->taxType)->tax_name ?? 'None'
+                            : 'None';
+                    })) !!};
+
+                    itemDiscounts.value = {!! json_encode($billing->products->map(function($product) {
+                        return $product->pivot->item_discount;  // Extract the item_discount value from pivot
+                    })) !!};
+
+                    // Set up total amounts for each product from pivot data
+                    selectedProducts.value.forEach((product, index) => {
+                        product.total = product.pivot.total;
+                        product.quantity = quantities.value[index];
+                        product.price = product.pivot.price;
+                        product.discount = itemDiscounts.value[index];
+                        product.taxAmount = product.pivot.tax;
+                        product.tax = taxes.value[index];
+                    });
+                }
+            });
+
+            const taxRates = {
+                VAT: 0.165, // Define VAT as 16.5%
+                None: 0,    // Define None as 0%
+            };
+
 
             // Function to handle adding a new product row
             const addProduct = () => {
@@ -272,7 +283,6 @@
                     const baseTotal = product.price * product.quantity - product.discount;
                     product.total = baseTotal * (1 + taxRate); // Apply tax if applicable
                     product.taxAmount = baseTotal * (taxRate)
-                    balance.value = totalSales.value - amountToPay.value - paidAoumt.value;
 
                 }
             };
@@ -288,16 +298,18 @@
 
             const postOrder = async () => {
                 NProgress.start();
+                console.log(selectedProducts.value, clientData.value.id);
                 try {
-                    const response = await axios.put('/store-sale', {
+                    const response = await axios.put('/update-sale', {
                         client: clientData.value.id,
                         products: selectedProducts.value,
-                        state: state.value,
+                        state: state,
+                        billId: bill.value
                     });
 
                     // Handle success
                     if (response.status === 200) {
-                        notification('Bill created successfully', 'success');
+                        notification('Bill updated successfully', 'success');
 
                         // Optional: Reset form fields here if needed, e.g., form.reset();
 
@@ -308,8 +320,8 @@
                 } catch (error) {
                     // Handle error
                     if (error.response) {
-                        notification('Server responded with:', 'error');
-                        // Optionally, display error feedback to the user
+                        const message = error.response.data.message || 'An error occurred on the server.';
+                        notification(`Server responded with: ${message}`, 'error');
                     } else {
                         notification('Network error or request was not sent', 'error');
                     }
@@ -376,6 +388,7 @@
                 itemDiscounts,
                 taxes,
                 balance,
+                payable
             };
         }
     });

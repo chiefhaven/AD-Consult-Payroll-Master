@@ -207,10 +207,67 @@ class BillingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBillingRequest $request, Billing $billing)
+    public function update(UpdateBillingRequest $request)
     {
-        //
+        $data = $request->all();
+        $products = $data['products'];
+        $state = $data['state'];
+        $bill = $data['billId'];
+
+        $billing = Billing::find($bill);
+
+        // Calculate the grand total from products
+        $grandTotal = array_reduce($products, function ($total, $product) {
+            return $total + ($product['price'] * $product['quantity']);
+        }, 0);
+
+        // Update the billing record in the database
+        $billing->update([
+            'client_id' => $request->client,
+            'billing_type' => 'invoice',
+            'bill_status' => $state['status'],
+            'billing_date' => $state['saleDate'],
+            'paymentTerms' => $state['paymentTerms'],
+            'termsUnits' => $state['termsUnits'],
+            'total_amount' => $grandTotal,
+        ]);
+
+        // Prepare pivot data for syncing products
+        $productData = [];
+        foreach ($products as $product) {
+            $productData[$product['id']] = [
+                'quantity' => $product['quantity'],
+                'price' => $product['price'],
+                'total' => $product['total'],
+                'item_discount' => $product['discount'],
+                'tax' => $product['taxAmount'],
+                'taxType' => $product['tax'] === "None" ? 'None' : 1,
+            ];
+        }
+        $billing->products()->sync($productData);
+
+        // Handle payment if provided
+        if (!empty($state['amountToPay']) && $state['amountToPay'] > 0) {
+            Payment::create([
+                'billing_id' => $billing->id,
+                'payment_amount' => $state['amountToPay'],
+                'payment_method' => $state['payment_method'],
+                'cheque_number' => $state['payment_method'] === 'cheque' ? $state['chequeAccountNumber'] : null,
+                'account_number' => $state['payment_method'] === 'bank_transfer' ? $state['chequeAccountNumber'] : null,
+                'payment_date' => now(),
+            ]);
+        }
+
+        // Return response
+        return response()->json([
+            'data' => $data,
+            'order' => $billing,
+            'products' => $billing->products,
+            'grandTotal' => $grandTotal,
+        ], 200);
+
     }
+
 
     /**
      * Remove the specified resource from storage.

@@ -184,17 +184,19 @@
             <p>Add payment</p>
             <div class="row">
                 <!-- Paid Amount -->
-                <x-adminlte-input
-                    name="paid_amount"
-                    id="paid_amount"
-                    v-model="state.paid_amount"
-                    type="number"
-                    step="0.01"
-                    fgroup-class="col-md-4"
-                    autocomplete="off"
-                    class="{{ $errors->has('paid_amount') ? 'is-invalid' : '' }}"
-                    label="Paid amount:"
-                />
+                <div class="col-md-4">
+                    <x-adminlte-input
+                        name="amountToPay"
+                        id="amountToPay"
+                        v-model="state.amountToPay"
+                        type="number"
+                        step="0.01"
+                        autocomplete="off"
+                        class="{{ $errors->has('amountToPay') ? 'is-invalid' : '' }}"
+                        label="Amount:"
+                    />
+                    <div class="small-text muted">Payable: @{{ formatCurrency(payable) }}</div>
+                </div>
 
                 <!-- Payment Date -->
                 <x-adminlte-input
@@ -210,10 +212,10 @@
 
                 <!-- Payment Method -->
                 <x-adminlte-select
-                    name="amountToPay"
-                    v-model="state.amountToPay"
+                    name="payment_method"
+                    v-model="state.payment_method"
                     fgroup-class="col-md-4"
-                    class="{{ $errors->has('amountToPay') ? 'is-invalid' : '' }}"
+                    class="{{ $errors->has('payment_method') ? 'is-invalid' : '' }}"
                     label="Payment method:"
                 >
                     <option value="" disabled selected>Select Payment Method</option>
@@ -225,7 +227,7 @@
                 </x-adminlte-select>
 
                 <!-- Cheque Number (conditionally shown) -->
-                <div class="col-md-4" v-if="state.amountToPay === 'cheque' || state.amountToPay === 'bank_transfer'">
+                <div class="col-md-4" v-if="state.payment_method === 'cheque' || state.payment_method === 'bank_transfer'">
                     <x-adminlte-input
                         v-model="state.chequeAccountNumber"
                         name="chequeAccountNumber"

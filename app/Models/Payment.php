@@ -13,6 +13,23 @@ class Payment extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
+    protected $fillable = [
+        'billing_id',
+        'payment_amount',
+        'payment_method',
+        'payment_reference',
+        'account_number',
+        'cheque_number',
+        'payment_status',
+        'payment_date',
+        'payment_gateway',
+        'transaction_id',
+        'notes',
+        'created_by',
+        'updated_by',
+    ];
+
+
     public function Billing()
     {
         return $this->belongsTo(Billing::class);
