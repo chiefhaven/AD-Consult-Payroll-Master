@@ -260,6 +260,21 @@
                   });
             }
 
+            // Helper function to calculate the due date with flexible terms units
+            const calculateDueDate = (billingDate, paymentTerms, termsUnit) => {
+                const billingDateObj = new Date(billingDate);
+
+                if (termsUnit === 'Months') {
+                    // Add months to the date
+                    billingDateObj.setMonth(billingDateObj.getMonth() + paymentTerms);
+                } else {
+                    // Default to days if not 'months'
+                    billingDateObj.setDate(billingDateObj.getDate() + paymentTerms);
+                }
+
+                return formatDate(billingDateObj);
+            };
+
             return {
                 confirmBillDelete,
                 billData,
@@ -274,6 +289,7 @@
                 totalPayments,
                 balance,
                 formatDate,
+                calculateDueDate,
             };
         }
     });

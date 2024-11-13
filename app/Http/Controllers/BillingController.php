@@ -9,9 +9,21 @@ use App\Models\Client;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Settings;
 
 class BillingController extends Controller
 {
+    protected $settings;
+
+    // Constructor with dependency injection and loading settings
+    public function __construct()
+    {
+        $this->middleware('auth'); // Apply authentication middleware
+
+        // Load settings from the database
+        $this->settings = Settings::pluck('value', 'key')->toArray();
+    }
+
     /**
      * Display a listing of invoices.
      */
@@ -26,6 +38,7 @@ class BillingController extends Controller
      */
     public function indexQuotations()
     {
+        dd($this->settings);
         $billing = Billing::with('products', 'payments')->where('billing_type', 'quotation')->get();
         return view("billing.quotations", compact("billing"));
     }
@@ -72,6 +85,50 @@ class BillingController extends Controller
             $grandTotal += $productTotal;
         }
 
+        // Retrieve settings for invoice numbering
+        $settings = $this->settings;
+
+        // Get the client name if it's needed in the invoice number
+        $clientName = Client::find($request->client)->client_name ?? '';
+
+        // Retrieve the last invoice's invoice_number, or set the starting number if none exists
+        $lastInvoice = Billing::where('billing_type', 'invoice')->latest('id')->first();
+
+        if ($lastInvoice) {
+            // Extract the number after the last separator
+            $parts = explode($settings['invoice_number_seperator'] ?? '-', $lastInvoice->invoice_number);
+            $lastInvoiceNumber = intval(end($parts)); // Get the last numeric part and convert to integer
+        } else {
+            // Default to 0 if there is no last invoice
+            $lastInvoiceNumber = 0;
+        }
+
+        // Increment to get the next sequential number
+        $nextInvoiceNumber = $lastInvoiceNumber + 1;
+
+        // Build the invoice number based on settings
+        $invoiceNumber = $settings['invoice_number_prefix'] ?? '';
+
+        // Use the separator from settings, or default to '-'
+        $separator = $settings['invoice_number_seperator'] ?? '-';
+
+        // Add year if specified in the settings
+        if (isset($settings['invoice_number_year']) && $settings['invoice_number_year'] === 'yes') {
+            $invoiceNumber .= $separator . date('Y');
+        }
+
+        // Add client name if specified in the suffix setting
+        if (isset($settings['invoice_number_suffix']) && $settings['invoice_number_suffix'] === 'client_name') {
+            $invoiceNumber .= $separator . $clientName;
+        }
+
+        // Add the sequential number, padded to 4 digits
+        $invoiceNumber .= $separator . str_pad($nextInvoiceNumber, 4, '0', STR_PAD_LEFT);
+
+        // Remove the leading separator if prefix is empty
+        $invoiceNumber = ltrim($invoiceNumber, $separator);
+
+
         // Example: Saving the order in the database (adjust based on your schema)
         $order = Billing::create([
             'client_id' => $request->client, // Assuming you have a client ID
@@ -82,7 +139,7 @@ class BillingController extends Controller
             'termsUnits' => $state['termsUnits'],
             'status' => $state['status'],
             'total_amount' => $grandTotal,
-            'invoice_number' => 'AD-'. random_int(1,100),
+            'invoice_number' => $invoiceNumber,
         ]);
 
         // Loop through products and attach them to the order
@@ -142,7 +199,9 @@ class BillingController extends Controller
     public function edit(Billing $billing)
     {
         $action = 'edit';
-        return view('billing.add-sale', compact('billing', 'action'));
+        // Load related products and tax rates directly onto the existing billing instance
+        $billing->load(['products.taxRate']);
+        return view('billing.edit-sale', compact('billing', 'action'));
     }
 
     /**

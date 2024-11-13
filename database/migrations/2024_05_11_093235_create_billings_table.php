@@ -21,38 +21,28 @@ return new class extends Migration
 
             $table->enum('billing_type', ['quotation', 'invoice']);
 
+            // Reference numbers and currency
+            $table->string('invoice_number')->unique();
+            $table->string('currency', 3)->default('MK');
+
             // Financial fields
             $table->decimal('amount', 15, 2)->nullable();
             $table->decimal('discount', 15, 2)->default(0);
             $table->enum('discount_type', ['percentage', 'fixed'])->default('fixed');
-            $table->decimal('paid_amount', 15, 2)->default(0);
-            $table->decimal('balance', 15, 2)->default(0);
 
             // Tax fields
-            $table->decimal('amount_before_tax', 15, 2)->default(0);
             $table->decimal('tax_amount', 15, 2)->default(0);
             $table->decimal('tax_rate', 5, 2)->nullable();
             $table->boolean('tax_inclusive')->default(false);
 
+            // Date fields
+            $table->date('billing_date')->nullable();
+            $table->integer('paymentTerms')->nullable()->default(0);
+            $table->enum('termsUnits', ['Days', 'Months'])->nullable();
+
             // Additional charges
             $table->decimal('shipping_amount', 15, 2)->nullable();
             $table->decimal('other_charges', 15, 2)->nullable();
-
-            // Date fields
-            $table->date('billing_date')->nullable();
-            $table->date('due_date')->nullable();
-            $table->date('payment_due_date')->nullable();
-            $table->date('overdue_date')->nullable();
-
-            // Reference numbers and currency
-            $table->string('invoice_number')->unique()->nullable();
-            $table->string('reference_number')->unique()->nullable();
-            $table->string('currency', 3)->default('USD');
-
-            // Payment details
-            $table->enum('payment_method', ['cash', 'credit_card', 'bank_transfer', 'online'])->nullable();
-            $table->enum('payment_status', ['unpaid', 'partially_paid', 'paid', 'overdue'])->default('unpaid');
-            $table->boolean('reminder_sent')->default(false);
 
             // Recurrence and fees
             $table->boolean('is_recurring')->default(false);
@@ -65,9 +55,6 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->text('billing_address')->nullable();
             $table->text('shipping_address')->nullable();
-            $table->string('transaction_id')->nullable();
-            $table->string('payment_gateway')->nullable();
-            $table->string('attachment_path')->nullable();
 
             // Foreign keys for tracking creation and updates
             $table->foreignUuid('created_by')->nullable()->constrained('users')->onDelete('set null');

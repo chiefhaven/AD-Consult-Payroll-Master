@@ -71,7 +71,7 @@
                                     </tr>
                                     <tr>
                                         <th>Due:</th>
-                                        <td>@{{ formatDate(billData.due_date) }}</td>
+                                        <td>@{{ calculateDueDate(billData.billing_date, billData.paymentTerms, billData.termsUnits) }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -104,25 +104,27 @@
                                 </table>
                             </div>
                             <div class="col-md-8">
-                                <strong>Payment information</strong>
-                                <table class="table table-responsive table-striped">
-                                    <thead class="bg-primary">
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Amount</th>
-                                            <th>Payment Method</th>
-                                            <th>Reference</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="payment in billData.payments" :key="payment.id">
-                                            <td>@{{ payment.payment_date }}</td>
-                                            <td>@{{ formatCurrency(payment.payment_amount) }}</td>
-                                            <td>@{{ payment.payment_method }}</td>
-                                            <td>@{{ payment.payment_reference }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <div v-if="billData.payments.length > 0">
+                                    <strong>Payment information</strong>
+                                    <table class="table table-responsive table-striped">
+                                        <thead class="bg-primary">
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Amount</th>
+                                                <th>Payment Method</th>
+                                                <th>Reference</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="payment in billData.payments" :key="payment.id">
+                                                <td>@{{ payment.payment_date }}</td>
+                                                <td>@{{ formatCurrency(payment.payment_amount) }}</td>
+                                                <td>@{{ payment.payment_method }}</td>
+                                                <td>@{{ payment.payment_reference }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <table class="table">

@@ -331,16 +331,6 @@ return [
             'icon' => 'fa fa-fw fa-file-invoice',
             'submenu' => [
                 [
-                    'text' => 'Products',
-                    'url' => 'products',
-                    'icon' => 'fa fa-fas fa-arrow-right ',
-                ],
-                [
-                    'text' => 'Add product',
-                    'url' => 'add-product',
-                    'icon' => 'fa fa-fas fa-arrow-right ',
-                ],
-                [
                     'text' => 'List sales',
                     'url' => 'all-sales',
                     'icon' => 'fa fa-fas fa-arrow-right ',
@@ -358,6 +348,16 @@ return [
                 [
                     'text' => 'Add quotation',
                     'url' => 'add-quotation',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+                [
+                    'text' => 'Products',
+                    'url' => 'products',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+                [
+                    'text' => 'Add product',
+                    'url' => 'add-product',
                     'icon' => 'fa fa-fas fa-arrow-right ',
                 ],
             ],

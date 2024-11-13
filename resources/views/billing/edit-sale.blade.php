@@ -3,350 +3,131 @@
 @section('title', 'Edit bill')
 
 @section('content_header')
-    <h1>Add Sale</h1>
+    <h1>Edit bill</h1>
 @stop
 
 @section('content')
-<div id="addSale" v-cloak>
-    <form @submit.prevent="postOrder">
-        @csrf
-        <div class="card mb-3 p-4">
-            <div class="box-body">
-                <div class="row">
-                    <!-- Client ID -->
-                    <div class="col-md-4 form-group">
-                        <label for="client_id">Client</label>
-                        <input
-                        class="form-control"
-                        id="client"
-                        name="client"
-                        v-model="client"
-                        @input="searchClient"
-                        @blur="onClientChange($event)"
-                        placeholder="Select client">
-
-                        <div v-if="clientData">
-                            <div class="mt-3">
-                                <b>@{{ clientData.client_name }}</b><br>
-                                Phone: @{{ clientData.phone }}<br>
-                                <div v-if="clientData.user && clientData.user.email !== null">
-                                    Email: @{{ clientData.user.email }}
-                                </div>
-                                <div v-else>
-                                    Email: No email address available
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-8">
-                        <div class="row">
-                            <!-- Billing Date -->
-
-                            <x-adminlte-input
-                                type="date"
-                                name="saleDate"
-                                v-model="state.saleDate"
-                                label="Sale date:"
-                                placeholder="Sale date"
-                                fgroup-class="col-md-6"
-                                class="{ 'is-invalid': errors.has('sale_date') }"
-                                autocomplete="off"
-                            />
-
-                            <x-adminlte-input
-                                type="date"
-                                name="due_date"
-                                v-model="state.dueDate"
-                                label="Due date:"
-                                placeholder="Due date"
-                                fgroup-class="col-md-6"
-                                class="{ 'is-invalid': errors.has('due_date') }"
-                                autocomplete="off"
-                            />
-
-                            <x-adminlte-select2
-                                name="state.status"
-                                v-model="state.status"
-                                label="Status:"
-                                fgroup-class="col-md-6"
-                                class="{ 'is-invalid': $errors->has('status') }"
-                                data-placeholder="Select an option..."
-                                autocomplete="off">
-                                <option value="" disabled>Please select an option...</option>
-                                <option>Draft</option>
-                                <option>Final</option>
-                            </x-adminlte-select2>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card mb-3 p-4">
-            <div class="box-body">
-                <p>Product/Service details</p>
-                <div class="row">
-                    <!-- Product ID -->
-                    <label for="product_id">Product/Service</label>
-                    <input
-                        class="form-control"
-                        id="product"
-                        name="product"
-                        v-model="productSearch" // This could be the selected product ID
-                        @input="searchProduct"
-                        @change="onProductChange" // Trigger on change
-                        placeholder="Search product"
-                    >
-                    <div class="col-md-12 block block-content">
-                        <div class="table-responsive">
-                            <table class="table mt-3 table-bordered table-striped">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="max-width: 15em; width: 15em;">Product</th>
-                                        <th>Quantity</th>
-                                        <th>Unit Price</th>
-                                        <th>Item Discount</th>
-                                        <th>Tax</th>
-                                        <th>Total</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="product-details">
-                                    <tr v-for="(product, index) in selectedProducts" :key="index">
-                                        <td>
-                                            <strong>@{{ product.name }}</strong>
-                                            <p>@{{ product.description }}</p>
-                                        </td>
-                                        <td>
-                                            <x-adminlte-input
-                                                type="number"
-                                                name="quantities[]"
-                                                v-model="quantities[index]"
-                                                min="1"
-                                                class="form-control"
-                                                @input="handleRowChanges(index)"
-                                            />
-                                        </td>
-                                        <td>@{{ formatCurrency(product.price) }}</td>
-                                        <td>
-                                            <x-adminlte-input
-                                                type="number"
-                                                name="itemDiscounts[]"
-                                                v-model="itemDiscounts[index]"
-                                                min="0"
-                                                class="form-control"
-                                                @input="handleRowChanges(index)"
-                                            />
-                                        </td>
-                                        <td>
-                                            <x-adminlte-select2
-                                                name="taxes"
-                                                v-model="taxes[index]"
-                                                class="form-control"
-                                                autocomplete="off"
-                                                @change="handleRowChanges(index)"
-                                            >
-                                                <option value="None">None</option>
-                                                <option value="VAT">VAT</option>
-                                            </x-adminlte-select2>
-                                        </td>
-                                        <td>
-                                            @{{ formatCurrency(product.total || 0 ) }}
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-danger btn-sm" @click="removeProduct(index)">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <div class="text-right">
-                                <strong>Total Sales: @{{ formatCurrency(totalSales) }}</strong>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card mb-3 p-4">
-            <div class="box-body">
-                <p>Add payment</p>
-                <div class="row">
-                    <!-- Paid Amount -->
-                    <x-adminlte-input
-                        name="paid_amount"
-                        id="paid_amount"
-                        v-model="state.paid_amount"
-                        type="number"
-                        step="0.01"
-                        fgroup-class="col-md-4"
-                        autocomplete="off"
-                        class="{{ $errors->has('paid_amount') ? 'is-invalid' : '' }}"
-                        label="Paid amount:"
-                    />
-
-                    <!-- Payment Date -->
-                    <x-adminlte-input
-                        name="payment_date"
-                        id="payment_date"
-                        type="date"
-                        fgroup-class="col-md-4"
-                        autocomplete="off"
-                        class="{{ $errors->has('payment_date') ? 'is-invalid' : '' }}"
-                        v-model="state.payment_date"
-                        label="Payment date:"
-                    />
-
-                    <!-- Payment Method -->
-                    <x-adminlte-select
-                        name="payment_method"
-                        v-model="state.payment_method"
-                        fgroup-class="col-md-4"
-                        class="{{ $errors->has('payment_method') ? 'is-invalid' : '' }}"
-                        label="Payment method:"
-                    >
-                        <option value="" disabled selected>Select Payment Method</option>
-                        <option value="cash">Cash</option>
-                        <option value="cheque">Cheque</option>
-                        <option value="credit_card">Credit Card</option>
-                        <option value="bank_transfer">Bank Transfer</option>
-                        <option value="online">Online</option>
-                    </x-adminlte-select>
-
-                    <!-- Cheque Number (conditionally shown) -->
-                    <div class="col-md-4" v-if="state.payment_method === 'cheque' || state.payment_method === 'bank_transfer'">
-                        <x-adminlte-input
-                            v-model="state.chequeAccountNumber"
-                            name="chequeAccountNumber"
-                            id="chequeAccountNumber"
-                            type="text"
-                            autocomplete="off"
-                            class="{{ $errors->has('chequeAccountNumber') ? 'is-invalid' : '' }}"
-                            label="Cheque/Account Number:"
-                        />
-                    </div>
-
-                    <!-- Notes -->
-                    <x-adminlte-textarea
-                        name="notes"
-                        id="notes"
-                        fgroup-class="col-md-12"
-                        autocomplete="off"
-                        class="{{ $errors->has('notes') ? 'is-invalid' : '' }}"
-                        v-model="state.notes"
-                        rows="3"
-                        label="Notes:"
-                    />
-                </div>
-            </div>
-            <div class="col-md-12" :class="{ 'text-danger': totalSales - state.paid_amount > 0 }">
-                Balance: @{{ formatCurrency(totalSales - state.paid_amount) }}
-            </div>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Add Sale</button>
-        </div>
-    </form>
+<div id="editSale" v-cloak>
+    @include('billing.includes.form')
 </div>
 @stop
 @push('js')
 <script>
-    const addSale = createApp({
+    const editSale = createApp({
         setup() {
             // Reactive references
             const selectedProducts = ref([]); // Array to hold selected products
             const quantities = ref([]); // Array to hold quantities for each selected product
-            const itemDiscounts = ref([]); // Array to hold quantities for each selected product
-            const taxes = ref([]); // Array to hold quantities for each selected product
+            const itemDiscounts = ref([]); // Array to hold discounts for each selected product
+            const taxes = ref([]); // Array to hold tax names for each selected product
             const taxAmounts = ref([]);
             const products = ref([]); // This should be populated with your products array from the API
             const client = ref('');
             const clientData = ref('');
-            const clientId = ref('{{ $client->id ?? null }}'); // Use null if client ID is not set
+            const clientId = ref('{{ $client->id ?? null }}'); // Use ref to make clientId reactive
             const searchQuery = ref('');
             const productSearch = ref('');
             const productDetails = ref([]);
             const balance = ref(0);
             const bill = ref({});
+            const paidAoumt = ref(0);
 
             const state = ref({
                 saleDate: '',
-                dueDate: '',
-                status:'Draft',
-                notes:'',
-                paid_amount: 0,
+                paymentTerms: 0,
+                termsUnits: '',
+                status: 'Draft',
+                notes: '',
                 payment_method: '',
+                amountToPay: 0,
                 chequeAccountNumber: '',
-            })
+            });
 
             onMounted(() => {
-
                 // Conditionally fetch client data if the client ID exists
-                if (clientId) {
+                if (clientId.value) {
                     fetchClient(clientId.value);
                 }
 
                 if ('{{ $billing->id }}') {
-
                     clientId.value = {!! json_encode($billing->client_id) !!};
 
                     fetchClient(clientId.value);
 
-                    state.value.paid_amount = totalSales.value - {!! json_encode($billing->payments->sum('payment_amount')) !!};
+                    paidAoumt.value = {!! json_encode($billing->payments->sum('payment_amount')) !!};
 
+                    balance.value = totalSales.value - paidAoumt.value;
 
                     selectedProducts.value = {!! json_encode($billing->products) !!};
 
                     state.value.saleDate = {!! json_encode($billing->billing_date) !!};
-                    state.value.dueDate = {!! json_encode($billing->due_date) !!};
+                    state.value.paymentTerms = {!! json_encode($billing->paymentTerms) !!};
+                    state.value.termsUnits = {!! json_encode($billing->termsUnits) !!};
                     state.value.status = {!! json_encode($billing->bill_status) !!};
 
                     quantities.value = {!! json_encode($billing->products->map(function($product) {
                         return $product->pivot->quantity;
                     })) !!};
 
-                    const taxes = {!! json_encode($billing->products->map(function($product) {
-                        $tax = \App\Models\TaxRate::find($product->pivot->taxType);
-                        return $tax ? $tax->tax_name : null;
+                    product.total = {!! json_encode($billing->products->map(function($product) {
+                        return $product->pivot->total;
                     })) !!};
 
-                    console.log(taxes);
+                    taxes.value = {!! json_encode($billing->products->map(function($product) {
+                        // Check if taxType exists and is not 'None'
+                        return $product->pivot->taxType && $product->pivot->taxType !== 'None'
+                            ? \App\Models\TaxRate::find($product->pivot->taxType)->tax_name ?? 'None'
+                            : 'None';
+                    })) !!};
 
                     itemDiscounts.value = {!! json_encode($billing->products->map(function($product) {
                         return $product->pivot->item_discount;  // Extract the item_discount value from pivot
                     })) !!};
 
+                    // If you want to update product totals, you might loop through selectedProducts
+                    selectedProducts.value.forEach((product, index) => {
+                        // Assuming you want to update product total for each product
+                        // Update each product's total here
+                        product.total = product.pivot.total;  // or any other logic you need
+                    });
                 }
             });
 
+            const taxRates = {
+                VAT: 0.165, // Define VAT as 16.5%
+                None: 0,    // Define None as 0%
+            };
 
             const totalSales = computed(() => {
                 return selectedProducts.value.reduce((total, product, index) => {
-                    const taxRate = product.tax === "VAT" ? 0.165 : 0; // Assuming VAT is 16.5%
-                    const quantity = quantities.value[index] || 0;
-                    const discount = itemDiscounts.value[index] || 0;
-                    const price = product.price || 0;
+                    // Get the tax rate based on the product's tax type
+                    const taxType = taxes.value[index] || "None";
+                    const taxRate = taxRates[taxType] || 0;
 
-                    // Calculate subtotal with quantity and discount
+                    // Safely retrieve quantity, discount, and price values, defaulting to 0 if they are missing
+                    const quantity = parseFloat(quantities.value[index]) || 0;
+                    const discount = parseFloat(itemDiscounts.value[index]) || 0;
+                    const price = parseFloat(product.price) || 0;
+
+                    // Calculate the base total for each product, taking quantity and discount into account
                     const baseTotal = (price * quantity) - discount;
 
-                    // Apply tax to the baseTotal
+                    // Calculate the total including tax
                     const lineTotal = baseTotal * (1 + taxRate);
 
+                    // Accumulate the lineTotal for each product into the overall total
                     return total + lineTotal;
                 }, 0);
             });
 
             // Function to handle adding a new product row
             const addProduct = () => {
-                quantities.value.push(1); // Add a default quantity of 1
-                itemDiscounts.value.push(0);
-                taxes.value.push('None');
+                if (products.value.length > 0) {
+                    selectedProducts.value.push({ ...products.value[0], quantity: 1, discount: 0, tax: 'None' });
+                    quantities.value.push(1);
+                    itemDiscounts.value.push(0);
+                    taxes.value.push('None');
+                }
             };
 
             function onProductChange(event) {
@@ -491,9 +272,10 @@
                     const baseTotal = product.price * product.quantity - product.discount;
                     product.total = baseTotal * (1 + taxRate); // Apply tax if applicable
                     product.taxAmount = baseTotal * (taxRate)
+                    balance.value = totalSales.value - amountToPay.value - paidAoumt.value;
+
                 }
             };
-
 
 
             const removeProduct = (index) => {
@@ -598,6 +380,6 @@
         }
     });
 
-    addSale.mount('#addSale');
+    editSale.mount('#editSale');
 </script>
 @endpush

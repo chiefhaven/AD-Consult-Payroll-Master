@@ -24,4 +24,9 @@ class Product extends Model
             ->withPivot('quantity', 'price', 'item_discount', 'tax', 'taxType', 'total')
             ->withTimestamps();
     }
+
+    public function taxRate()
+    {
+        return $this->belongsTo(TaxRate::class, 'taxType');
+    }
 }
