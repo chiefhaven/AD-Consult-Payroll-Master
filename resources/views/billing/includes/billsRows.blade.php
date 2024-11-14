@@ -25,10 +25,10 @@
                         <i class="nav-main-link-icon fas fa-dollar-sign"></i>
                         <div class="btn">Add payment</div>
                     </a>
-                    <a class="dropdown-item nav-main-link" href="{{ url('/print-bill', $bill) }}">
+                    <button class="dropdown-item nav-main-link" @click="printBill('{{ $bill->id }}')">
                         <i class="nav-main-link-icon fas fa-print"></i>
                         <div class="btn">Print bill</div>
-                    </a>
+                    </button>
                     <a class="dropdown-item nav-main-link" href="{{ url('/send-notification', $bill) }}">
                         <i class="nav-main-link-icon fas fa-envelope"></i>
                         <div class="btn">Send new sale notification</div>

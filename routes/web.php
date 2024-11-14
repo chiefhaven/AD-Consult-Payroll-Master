@@ -107,6 +107,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/edit-bill/{billing}', [BillingController::class, 'edit'])->name('edit-sale');
     Route::put('/store-sale', [BillingController::class, 'store'])->name('store-sale');
     Route::put('/update-sale', [BillingController::class, 'update'])->name('update-sale');
+    Route::get('/print-bill/{bill}', [BillingController::class, 'billPdf'])->name('print-pdf');
     Route::delete('/delete-bill/{bill}', [BillingController::class, 'destroy'])->name('deleteBill');
 });
 

@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Settings;
 
+use RealRashid\SweetAlert\Facades\Alert;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 class BillingController extends Controller
 {
     protected $settings;
@@ -298,5 +301,22 @@ class BillingController extends Controller
             return response()->json(['message' => 'Error deleting bill', 'error' => $e->getMessage()], 500);
         }
 
+    }
+
+    public function billPdf(Billing $billing, $id)
+    {
+        // Use the injected $billing model directly, no need to call find()
+        $bill = $billing::with('products')->find($id);
+
+        // If no bill is found, handle the error
+        if (!$bill) {
+            return abort(404, 'Bill not found');
+        }
+
+        // Ensure the property name is correct (assuming it's 'invoice_number')
+        $pdf = PDF::loadView('pdf.billsDefault', ['bill' => $bill]);
+
+        // Return the PDF as a downloadable file
+        return $pdf->download($bill->invoice_number . '.pdf');
     }
 }

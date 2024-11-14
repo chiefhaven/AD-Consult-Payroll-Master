@@ -109,7 +109,6 @@
 
             const deleteBill = async (bill) => {
                 NProgress.start();
-                console.log(bill);
 
                 try {
                     const response = await axios.delete(`/delete-bill/${bill}`);
@@ -275,9 +274,25 @@
                 return formatDate(billingDateObj);
             };
 
+            const printBill = async (bill) => {
+                NProgress.start();
+
+                try {
+                    // Open the download route in a new window
+                    window.open(`/print-bill/${bill}`, '_blank');
+
+                } catch (err) {
+                    error.value = "Failed to fetch data";
+                } finally {
+                    NProgress.done();
+                }
+            };
+
+
             return {
                 confirmBillDelete,
                 billData,
+                printBill,
                 viewBill,
                 showBillModal,
                 closeForm,
