@@ -23,6 +23,7 @@ use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HRMController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LeaveTypeController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Models\Attendance;
 use App\Models\Holiday;
@@ -109,6 +110,17 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/update-sale', [BillingController::class, 'update'])->name('update-sale');
     Route::get('/print-bill/{bill}', [BillingController::class, 'billPdf'])->name('print-pdf');
     Route::delete('/delete-bill/{bill}', [BillingController::class, 'destroy'])->name('deleteBill');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/all-payments', [PaymentController::class, 'index'])->name('payments');
+    Route::get('/view-payments/{payment}', [PaymentController::class, 'show'])->name('paymentShow');
+    Route::get('/add-payment', [PaymentController::class, 'create'])->name('paymentsCreate'); // Changed from add-sale
+    Route::post('/store-payment', [PaymentController::class, 'store'])->name('paymentsStore'); // Changed to POST
+    Route::get('/edit-payment/{payment}', [PaymentController::class, 'edit'])->name('paymentsEdit'); // Changed to GET
+    Route::put('/update-payment/{payment}', [PaymentController::class, 'update'])->name('paymentsUpdate'); // Added {payment} parameter
+    Route::get('/print-payment/{payment}', [PaymentController::class, 'paymentPdf'])->name('paymentPrint'); // Updated name
+    Route::delete('/delete-payment/{payment}', [PaymentController::class, 'destroy'])->name('paymentDestroy');
 });
 
 Route::middleware(['auth'])->group(function () {

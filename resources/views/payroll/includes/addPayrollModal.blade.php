@@ -3,7 +3,7 @@
 
     <!-- Modal Dialog -->
     <div class="modal fade"   tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel" style="display: block;">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+        <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Payroll Details</h3>

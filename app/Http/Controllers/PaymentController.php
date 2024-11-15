@@ -6,6 +6,7 @@ use App\Models\Payment;
 use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
 use App\Models\Billing;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
@@ -30,14 +31,23 @@ class PaymentController extends Controller
      */
     public function store(StorePaymentRequest $request, Billing $billing)
     {
-        $payment = new Payment();
-        $payment->billing_id = $billing->id; // Link the payment to the correct billing
-        $payment->payment_amount = 100.00;
-        $payment->payment_method = 'credit_card';
-        $payment->payment_status = 'completed';
-        $payment->payment_date = now();
-        $payment->created_by = auth()->user()->id;
-        $payment->save();
+
+        $data = $request->all();
+        $state = $data['state'];
+
+        Payment::create([
+            'billing_id' => $data['bill'],
+            'payment_amount' => $state['amountToPay'],
+            'payment_method' => $state['payment_method'],
+            'cheque_number' => $state['payment_method'] === 'cheque' ? $state['chequeAccountNumber'] : null,
+            'account_number' => $state['payment_method'] === 'bank_transfer' ? $state['chequeAccountNumber'] : null,
+            'payment_date' => $state['payment_date'],
+            'created_by' => Auth::user()->id,
+
+        ]);
+
+        // Return response
+        return response()->json(['message' => 'Payment saved'  ], 200);
     }
 
     /**

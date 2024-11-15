@@ -4,7 +4,7 @@
 
     <!-- Modal Dialog -->
     <div class="modal fade" :class="{ show: showPayrollModal }" v-if="showPayrollModal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel" style="display: block;">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+        <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Payroll Details</h3>
@@ -141,7 +141,7 @@
 
     <!-- Modal Dialog -->
     <div class="modal fade" :class="{ show: showEmployeePayModal }" v-if="showEmployeePayModal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel" style="display: block;">
-        <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <div v-if="!loading && data">

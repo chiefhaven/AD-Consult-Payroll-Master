@@ -92,7 +92,7 @@
 
     <!-- Modal Dialog -->
     <div class="modal fade" :class="{ show: showAddHolidayModal }" v-if="showAddHolidayModal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel" style="display: block;">
-        <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>@{{ state.modalTitle }}</h3>

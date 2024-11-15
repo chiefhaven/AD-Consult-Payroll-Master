@@ -47,7 +47,8 @@
                         <div class="col-md-6">
                             <div class="row groupHaven">
                                 <x-adminlte-input
-                                    type="text"
+                                    type="number"
+                                    step="1"
                                     name="paymentTerms"
                                     v-model="state.paymentTerms"
                                     label="Payment terms:"
@@ -148,11 +149,11 @@
                                     </td>
                                     <td>
                                         <x-adminlte-select
-                                            name="taxes"
+                                            name="taxes[]"
                                             v-model="taxes[index]"
                                             class="form-control"
                                             autocomplete="off"
-                                            @input="handleRowChanges(index)"
+                                            @change="handleRowChanges(index)"
                                         >
                                             <option value="None">None</option>
                                             <option value="VAT">VAT</option>
@@ -185,17 +186,24 @@
             <div class="row">
                 <!-- Paid Amount -->
                 <div class="col-md-4">
-                    <x-adminlte-input
-                        name="amountToPay"
-                        id="amountToPay"
-                        v-model="state.amountToPay"
-                        type="number"
-                        step="0.01"
-                        autocomplete="off"
-                        class="{{ $errors->has('amountToPay') ? 'is-invalid' : '' }}"
-                        label="Amount:"
-                    />
-                    <div class="small-text muted">Payable: @{{ formatCurrency(payable) }}</div>
+                    <div class="form-group">
+                        <label for="amountToPay">Amount:</label>
+                            <input
+                                name="amountToPay"
+                                id="amountToPay"
+                                v-model="state.amountToPay"
+                                type="number"
+                                step="0"
+                                :max="payable"
+                                autocomplete="off"
+                                class="form-control"
+                                label="Amount:"
+                            />
+                    </div>
+                    <div :class="['small pb-3', { 'text-danger': state.amountToPay > payable }]">
+                        The maximum payable amount is @{{ formatCurrency(payable) }}.
+                    </div>
+
                 </div>
 
                 <!-- Payment Date -->

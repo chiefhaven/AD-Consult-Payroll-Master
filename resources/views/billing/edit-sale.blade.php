@@ -162,7 +162,7 @@
                         this.searchTimeout = setTimeout(() => {
                             $.get(path, { query: query }, function (data) {
                                 if (!data || data.length === 0) {
-                                    notification('No products found, add', 'erro');
+                                    notification('No products found, add', 'error');
                                 }
 
                                 process(data);  // Pass data to the typeahead process

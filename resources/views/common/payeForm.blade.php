@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal fade" id="payBlacket_modal" tabindex="-1" aria-labelledby="payBlacketLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="payBlacketLabel">PAYE Brackets</h5>

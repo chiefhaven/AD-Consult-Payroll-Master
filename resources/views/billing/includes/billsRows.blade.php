@@ -21,10 +21,10 @@
                             <div class="btn">Edit</div>
                         </button>
                     </form>
-                    <a class="dropdown-item nav-main-link" href="{{ url('/add-payment', $bill) }}">
+                    <button class="dropdown-item nav-main-link" @click="addPayment('{{ $bill->id }}')">
                         <i class="nav-main-link-icon fas fa-dollar-sign"></i>
                         <div class="btn">Add payment</div>
-                    </a>
+                    </button>
                     <button class="dropdown-item nav-main-link" @click="printBill('{{ $bill->id }}')">
                         <i class="nav-main-link-icon fas fa-print"></i>
                         <div class="btn">Print bill</div>

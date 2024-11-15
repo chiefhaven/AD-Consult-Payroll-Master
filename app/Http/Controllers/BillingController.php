@@ -158,16 +158,15 @@ class BillingController extends Controller
         }
 
         // If a payment has been made, create the payment record
-        if (isset($state['paid_amount']) && $state['paid_amount'] > 0) {
-            // Save the payment in the database
-            $payment = new Payment();
-            $payment->billing_id = $order->id;  // Link to the billing order
-            $payment->payment_amount = $state['paid_amount'];
-            $payment->payment_method = $state['payment_method'];
-            $payment->cheque_number = $state['payment_method'] === 'cheque' ? $state['chequeAccountNumber'] : null;
-            $payment->account_number = $state['payment_method'] === 'bank_transfer' ? $state['chequeAccountNumber'] : null;
-            $payment->payment_date = now();  // Or use the specific payment date
-            $payment->save();
+        if (!empty($state['amountToPay']) && $state['amountToPay'] > 0) {
+            Payment::create([
+                'billing_id' => $order->id,
+                'payment_amount' => $state['amountToPay'],
+                'payment_method' => $state['payment_method'],
+                'cheque_number' => $state['payment_method'] === 'cheque' ? $state['chequeAccountNumber'] : null,
+                'account_number' => $state['payment_method'] === 'bank_transfer' ? $state['chequeAccountNumber'] : null,
+                'payment_date' => $state['payment_date'],
+            ]);
         }
 
         // Return response
@@ -257,7 +256,7 @@ class BillingController extends Controller
                 'payment_method' => $state['payment_method'],
                 'cheque_number' => $state['payment_method'] === 'cheque' ? $state['chequeAccountNumber'] : null,
                 'account_number' => $state['payment_method'] === 'bank_transfer' ? $state['chequeAccountNumber'] : null,
-                'payment_date' => now(),
+                'payment_date' => $state['payment_date'],
             ]);
         }
 

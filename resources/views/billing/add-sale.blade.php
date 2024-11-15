@@ -19,7 +19,7 @@
             const selectedProducts = ref([]); // Array to hold selected products
             const quantities = ref([]); // Array to hold quantities for each selected product
             const itemDiscounts = ref([]); // Array to hold quantities for each selected product
-            const taxes = ref([]); // Array to hold quantities for each selected product
+            const taxes = ref([]); // Array to hold taxes for each selected product
             const taxAmounts = ref([]);
             const products = ref([]); // This should be populated with your products array from the API
             const client = ref('');
@@ -31,15 +31,16 @@
             const bill = ref();
 
             const state = ref({
-                saleDate: '',
+                saleDate: new Date().toISOString().split('T')[0],
                 paymentTerms: 0,
                 termsUnits: '',
                 status: 'Draft',
                 notes: '',
-                payment_method: '',
+                payment_method: 'cash',
                 amountToPay: 0,
                 paidAmount: 0,
                 chequeAccountNumber: '',
+                payment_date: new Date().toISOString().split('T')[0],
             })
 
             const balance = computed(() => {
@@ -57,10 +58,6 @@
 
 
             onMounted(() => {
-
-                const today = new Date().toISOString().split('T')[0];
-                state.value.saleDate = today;
-
                 // Conditionally fetch client data if the client ID exists
                 if (clientId) {
                     fetchClient(clientId);
@@ -113,7 +110,7 @@
                         this.searchTimeout = setTimeout(() => {
                             $.get(path, { query: query }, function (data) {
                                 if (!data || data.length === 0) {
-                                    notification('No products found, add', 'erro');
+                                    notification('No products found, add', 'error');
                                 }
 
                                 process(data);  // Pass data to the typeahead process
@@ -140,10 +137,9 @@
                             const index = selectedProducts.value.findIndex(product => product.id === item.id);
                             quantities.value[index] = existingProduct.quantity;
                         } else {
-                            // If the product doesn't exist, add it to the selectedProducts array with a default quantity of 1
-                            selectedProducts.value.push({ ...item, quantity: 1, discount: 0, tax: 'None', taxAmount: 0 });
+                            // If the product doesn't exist, add it to the selectedProducts array with defaults
+                            selectedProducts.value.push({ ...item, quantity: 1, discount: 0, tax: 'VAT', taxAmount: 0, total: item.price });
                             quantities.value.push(1); // Add the default quantity to the quantities array
-                            taxes.value.push('None');
                             taxAmounts.value.push(0);
                         }
 
@@ -218,22 +214,27 @@
                 // Validate the quantity to ensure it's not less than the minimum allowed value
                 validateQuantity(index);
                 validateItemDiscounts(index);
+                validateTax(index);
 
                 // Retrieve the product from the selectedProducts array using the index
                 const product = selectedProducts.value[index];
                 if (product) {
+
                     // Update the product's quantity, discount, and tax first
                     product.quantity = quantities.value[index];
                     product.discount = itemDiscounts.value[index];
                     product.tax = taxes.value[index];
 
                     // Define tax rate based on the tax type
-                    const taxRate = product.tax === "VAT" ? 0.165 : 0; // Assuming VAT is 16.5%; adjust as necessary
+                    const taxRate = product.tax === "VAT" ? 0.165 : 0;
 
                     // Calculate the total, applying discount and tax
                     const baseTotal = product.price * product.quantity - product.discount;
                     product.total = baseTotal * (1 + taxRate); // Apply tax if applicable
                     product.taxAmount = baseTotal * (taxRate)
+
+                    console.log(product.tax);
+
                 }
             };
 
@@ -260,9 +261,6 @@
                     if (response.status === 200) {
                         notification('Bill created successfully', 'success');
 
-                        // Optional: Reset form fields here if needed, e.g., form.reset();
-
-                        // Redirect to /all-sales and prevent further actions
                         //window.location.href = '/all-sales';
                         return;
                     }

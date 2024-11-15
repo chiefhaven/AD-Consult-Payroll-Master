@@ -35,6 +35,8 @@
                         @include('/billing/includes/invoicesTable')
 
                         @include('billing/includes/viewBillModal')
+
+                        @include('billing/includes/addPaymentModal')
                     </div>
                 </div>
             </div>
@@ -77,6 +79,15 @@
             // Reactive references
             const billData = ref();
             const showBillModal = ref(false);
+            const showAddPaymentModal = ref(false);
+            const state = ref({
+                notes: '',
+                payment_method: '',
+                amountToPay: 0,
+                paidAmount: 0,
+                chequeAccountNumber: '',
+                payment_date: new Date().toISOString().split('T')[0],
+            })
 
 
             const confirmBillDelete = async(billId) => {
@@ -145,6 +156,59 @@
                 }
             }
 
+            const addPayment = async(bill) => {
+                NProgress.start();
+                try {
+                    const response = await axios.get(`/view-bill/${bill}`);
+                    console.log(response)
+                    if (response.data) {
+                        billData.value = response.data;
+                        showAddPaymentModal.value = true;
+                    } else {
+                        notification('Shit happened.', 'error');
+                    }
+                } catch (err) {
+                    notification('Failed to fetch data', 'error');
+                } finally {
+                    NProgress.done();
+                }
+            }
+
+            const savePayment = async (bill) => {
+                NProgress.start();
+                try {
+                    const response = await axios.post(`/store-payment`, {
+                        bill: bill,
+                        state: state.value
+                    });
+
+                    console.log(response);
+
+                    if (response.data) {
+                        state.value = {
+                            notes: '',
+                            payment_method: '',
+                            amountToPay: 0,
+                            paidAmount: 0,
+                            chequeAccountNumber: '',
+                        };
+
+                        showAddPaymentModal.value = false;
+                        notification('Bill updated successfully', 'success');
+                        window.location.reload();
+
+                    } else {
+                        notification('No data found.', 'error');
+                    }
+                } catch (err) {
+                    notification(erro, 'error');
+                    console.error(err); // Log the error for debugging
+                } finally {
+                    NProgress.done();
+                }
+            };
+
+
             // Fetch Payroll details
             const fetchData = async (payroll) => {
 
@@ -152,6 +216,7 @@
 
             const closeForm = async() =>{
                 showBillModal.value = false;
+                showAddPaymentModal.value = false;
             }
 
             onMounted(() => {
@@ -166,7 +231,7 @@
                     return sum + (parseFloat(product.pivot.price*product.pivot.quantity) || 0);
                   }, 0);
                 } else {
-                  console.warn("No products found in billData.");
+                  console.warn("No products found");
                   return 0;
                 }
             });
@@ -194,7 +259,7 @@
                     return sum + (parseFloat(product.pivot.item_discount) || 0);
                   }, 0);
                 } else {
-                  console.warn("No products found in billData.");
+                  console.warn("No products found");
                   return 0;
                 }
             });
@@ -202,7 +267,6 @@
             const balance = computed(() => {
                 const totalPayableValue = totalPayable.value;
                 const totalPaymentsValue = totalPayments.value;
-
                 return totalPayableValue - totalPaymentsValue;
             });
 
@@ -226,7 +290,7 @@
                     // Calculate total payable: (Subtotal - Discount) + Tax
                     return subtotal - totalDiscount + totalTax;
                 } else {
-                    console.warn("No products found in billData.");
+                    console.warn("No products found");
                     return 0;
                 }
             });
@@ -238,7 +302,6 @@
                     return sum + (parseFloat(payment.payment_amount) || 0);
                   }, 0);
                 } else {
-                  console.warn("No payments found in billData.");
                   return 0;
                 }
               });
@@ -288,7 +351,6 @@
                 }
             };
 
-
             return {
                 confirmBillDelete,
                 billData,
@@ -305,6 +367,10 @@
                 balance,
                 formatDate,
                 calculateDueDate,
+                addPayment,
+                showAddPaymentModal,
+                state,
+                savePayment,
             };
         }
     });
