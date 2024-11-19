@@ -63,11 +63,15 @@ Route::get('/billings/quotation/download{id}', [BillingController::class, 'downl
 // Route::get('/leave/{year?}/{month?}', [LeaveController::class, 'index']);
 Route::get('/leaveView/{year?}/{month?}', [LeaveController::class, 'index'])->name('leaveView');
 
-Route::post('/leave/{year}/{month}/mass-approve', [LeaveController::class, 'massApprove'])->name('api.massApprove');
-Route::post('/leave/{year}/{month}/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('api.massDisapprove');
+// Route::post('/leave/{year}/{month}/mass-approve', [LeaveController::class, 'massApprove'])->name('massApprove');
+// Route::post('/leave/{year}/{month}/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('massDisapprove');
 
-Route::post('/leaveView/{uuid}/mass-approve', [LeaveController::class, 'massApprove'])->name('api.massApprove');
-Route::post('/leaveView/{uuid}/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('api.massDisapprove');
+Route::post('/leaveView/mass-approve', [LeaveController::class, 'massApprove'])->name('massApprove');
+Route::post('/leaveView/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('massDisapprove');
+
+Route::post('/leave/approve/{id}', [LeaveController::class, 'approve'])->name('leave.approve');
+Route::post('/leave/disapprove/{id}', [LeaveController::class, 'disapprove'])->name('leave.disapprove');
+
 
 
 

@@ -1,72 +1,105 @@
 <?php
+
 namespace App\Http\Controllers;
- use Illuminate\Http\Request;
- use App\Models\Leave;
 
- class LeaveController extends Controller {
+use Illuminate\Http\Request;
+use App\Models\Leave;
+use Illuminate\Support\Facades\DB;
 
-    public function index($year=null, $month=null)
-    { // Default to current year/month if parameters aremissing
+class LeaveController extends Controller
+{
+    public function index()
+    {
+        $leaves = Leave::orderBy('start_date', 'desc')->get();
 
-    $year=$year ?? date('Y');
-    $month=$month ?? date('m'); // Fetch leave data and counts based on year and month
+        // Consistent naming for status counts
+        $approvedRequests = $leaves->where('status', 'Approved')->count();
+        $disapprovedRequests = $leaves->where('status', 'Disapproved')->count();
+        $pendingRequests = $leaves->where('status', 'Pending')->count();
 
+        if (request()->wantsJson()) {
+            return response()->json([
+                'leaves' => $leaves,
+                'approvedRequests' => $approvedRequests,
+                'disapprovedRequests' => $disapprovedRequests,
+                'pendingRequests' => $pendingRequests,
+            ]);
+        }
 
-    $leaves=Leave::whereYear('start_date', $year)->whereMonth('start_date', $month)->get();
-    $approvedRequests = $leaves->where('status', 'Approved')->count();
-    $disapprovedRequests = $leaves->where('status', 'Disapproved')->count();
-    $pendingRequests = $leaves->where('status', 'Pending')->count();
-
-
-
-    // If the request is for JSON data (API call)
-    if (request()->wantsJson()) {
-    return response()->json([
-    'leaves' => $leaves,
-    'approvedRequests' => $approvedRequests,
-    'disapprovedRequests' => $disapprovedRequests,
-    'pendingRequests' => $pendingRequests,
-    ]);
+        return view('leaves.leaveView', compact('leaves', 'approvedRequests', 'disapprovedRequests', 'pendingRequests'));
     }
 
-    // Otherwise, pass year, month, and leaves to the Blade view
-    return view('leaves.leaveView', compact('year', 'month', 'leaves','approvedRequests', 'disapprovedRequests', 'pendingRequests'));
+    public function massApprove(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:leaves,id',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            Leave::whereIn('id', $request->input('ids'))->update(['status' => 'Approved']);
+            DB::commit();
+
+            $approvedRequests = Leave::where('status', 'Approved')->count();
+            $disapprovedRequests = Leave::where('status', 'Disapproved')->count();
+            $pendingRequests = Leave::where('status', 'Pending')->count();
+
+            return response()->json([
+                'approvedRequests' => $approvedRequests,
+                'disapprovedRequests' => $disapprovedRequests,
+                'pendingRequests' => $pendingRequests,
+                'message' => 'Mass approval successful!',
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Failed to approve leaves', 'message' => $e->getMessage()], 500);
+        }
     }
-public function massApprove($uuid)
-{
-    // Find the leave by UUID
-    $leave = Leave::findOrFail($uuid);
 
-    // Update logic for mass approval (if you want to handle multiple records)
-    $leave->update(['status' => 'Approved']);
+    public function massDisapprove(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:leaves,id',
+        ]);
 
-    // Fetch updated counts and return the JSON response
-    $approvedRequests = Leave::where('status', 'Approved')->count();
-    $disapprovedRequests = Leave::where('status', 'Disapproved')->count();
+        DB::beginTransaction();
 
-    return response()->json([
-        'approvedRequests' => $approvedRequests,
-        'disapprovedRequests' => $disapprovedRequests,
-        'totalRequests' => $approvedRequests + $disapprovedRequests
-    ]);
-}
+        try {
+            Leave::whereIn('id', $request->input('ids'))->update(['status' => 'Disapproved']);
+            DB::commit();
 
-public function massDisapprove($uuid)
-{
-    // Find the leave by UUID
-    $leave = Leave::findOrFail($uuid);
+            $approvedRequests = Leave::where('status', 'Approved')->count();
+            $disapprovedRequests = Leave::where('status', 'Disapproved')->count();
+            $pendingRequests = Leave::where('status', 'Pending')->count();
 
-    // Update logic for mass disapproval
-    $leave->update(['status' => 'Disapproved']);
+            return response()->json([
+                'approvedRequests' => $approvedRequests,
+                'disapprovedRequests' => $disapprovedRequests,
+                'pendingRequests' => $pendingRequests,
+                'message' => 'Mass disapproval successful!',
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Failed to disapprove leaves', 'message' => $e->getMessage()], 500);
+        }
+    }
 
-    // Fetch updated counts and return the JSON response
-    $approvedRequests = Leave::where('status', 'Approved')->count();
-    $disapprovedRequests = Leave::where('status', 'Disapproved')->count();
+    public function approve($id)
+    {
+        $leave = Leave::findOrFail($id);
+        $leave->update(['status' => 'Approved']);
 
-    return response()->json([
-        'approvedRequests' => $approvedRequests,
-        'disapprovedRequests' => $disapprovedRequests,
-        'totalRequests' => $approvedRequests + $disapprovedRequests
-    ]);
+        return response()->json(['success' => true, 'message' => 'Leave approved']);
+    }
+
+    public function disapprove($id)
+    {
+        $leave = Leave::findOrFail($id);
+        $leave->update(['status' => 'Disapproved']);
+
+        return response()->json(['success' => true, 'message' => 'Leave disapproved']);
     }
 }

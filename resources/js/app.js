@@ -1,10 +1,11 @@
 import './bootstrap'; // Bootstrap import, as needed
-import { createApp } from 'vue'; // Import Vue 3
-import LeaveView from './components/LeaveView.vue'; // Correct import path for LeaveView
+import { createApp } from 'vue';
+import axios from 'axios';
 
-// Create and mount the Vue app
-createApp({
-    components: {
-        LeaveView
-    }
-}).mount('#app');  // Mount the app to the element with id "app"
+// Register your Vue component
+import LeaveManagement from './components/LeaveManagement.vue';
+
+const app = createApp({});
+
+app.component('leave-management', LeaveManagement);
+app.mount('#app');
