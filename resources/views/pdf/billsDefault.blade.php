@@ -153,13 +153,18 @@
                                     <td>{{ number_format($bill->products->sum('pivot.total') - $bill->payments->sum('payment_amount'), 2) }}</td>
                                 </tr>
                             </tbody>
-                            
+
                         </table>
                     </div>
-                
+
             </div>
         </div>
 </div>
 </div>
+<script>
+    window.onload = function() {
+        window.print(); // Automatically trigger the print dialog
+    }
+</script>
 </body>
 </html>

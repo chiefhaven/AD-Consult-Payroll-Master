@@ -4,14 +4,13 @@ namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
-use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Industry;
 use App\Models\PayeBracket;
 use App\Models\Product;
-use Exception;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Artisan;
 
 class BusinessUtil extends Controller
 {
@@ -240,5 +239,65 @@ class BusinessUtil extends Controller
         // Return the product data as JSON
         return response()->json($product);
     }
+
+    /**
+     * Get email settings from the .env file.
+     */
+    public function getEmailSettings()
+    {
+        try {
+            $emailSettings = [
+                'mail_host' => env('MAIL_HOST'),
+                'mail_port' => env('MAIL_PORT'),
+                'mail_username' => env('MAIL_USERNAME'),
+                'mail_password' => '', // Do not expose the actual password
+                'mail_encryption' => env('MAIL_ENCRYPTION'),
+                'mail_from_address' => env('MAIL_FROM_ADDRESS'),
+                'mail_from_name' => env('MAIL_FROM_NAME'),
+            ];
+
+            return response()->json($emailSettings, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to retrieve email settings.'], 500);
+        }
+    }
+
+    public function updateEmailSettings(Request $request)
+    {
+        $validated = $request->validate([
+            'mail_host' => 'nullable|string',
+            'mail_port' => 'nullable|integer',
+            'mail_username' => 'nullable|string',
+            'mail_password' => 'nullable|string',
+            'mail_encryption' => 'nullable|string',
+            'mail_from_address' => 'nullable|email',
+            'mail_from_name' => 'nullable|string',
+        ]);
+
+        // Filter out null values
+        $filteredData = array_filter($validated, function ($value) {
+            return !is_null($value);
+        });
+
+        // Update .env only if there is data to update
+        if (!empty($filteredData)) {
+            $this->updateEnv($filteredData);
+        }
+
+        return response()->json(['message' => 'Email settings updated successfully.']);
+    }
+
+    private function updateEnv($data)
+    {
+        $envFile = base_path('.env');
+        $str = file_get_contents($envFile);
+
+        foreach ($data as $key => $value) {
+            $str = preg_replace("/^{$key}=.*$/m", "{$key}={$value}", $str);
+        }
+
+        file_put_contents($envFile, $str);
+    }
+
 
 }

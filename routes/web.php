@@ -25,6 +25,7 @@ use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SettingsController;
 use App\Models\Attendance;
 use App\Models\Holiday;
 use App\Models\LeaveType;
@@ -108,7 +109,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/edit-bill/{billing}', [BillingController::class, 'edit'])->name('edit-sale');
     Route::put('/store-sale', [BillingController::class, 'store'])->name('store-sale');
     Route::put('/update-sale', [BillingController::class, 'update'])->name('update-sale');
-    Route::get('/print-bill/{bill}', [BillingController::class, 'billPdf'])->name('print-pdf');
+    Route::get('/print-bill/{bill}/{action}', [BillingController::class, 'billPdf'])->name('print-pdf');
     Route::delete('/delete-bill/{bill}', [BillingController::class, 'destroy'])->name('deleteBill');
 });
 
@@ -149,7 +150,13 @@ Route::get('/reports', Reports::class)->middleware(['auth']);
 Route::get('/users', UserList::class)->middleware(['auth']);
 Route::get('/add-user', AddUser::class)->middleware(['auth']);
 
-Route::get('/settings', Settings::class)->middleware(['auth']);
+Route::middleware(['auth'])->group(function () {
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    Route::get('/settings/business-info', [SettingsController::class, 'businessInfo'])->name('business-info');
+    Route::post('/update-email-settings', [BusinessUtil::class, 'updateEmailSettings'])->name('update-email-settings');
+    Route::get('/email-settings', [BusinessUtil::class, 'getEmailSettings'])->name('email-settings');
+});
+
 
 Route::get('/migrate', function(){
     Artisan::call('migrate',['--force' => true]);

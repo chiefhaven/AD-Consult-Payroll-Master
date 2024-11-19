@@ -12,7 +12,7 @@
         <div class="col-md-9">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="border mb-3 p-4">
+                    <div class="border mb-3 p-4 card">
                         <div class="box-body">
                             <h3>@{{ greetings }}</h3>
                             {{ \Illuminate\Foundation\Inspiring::quote() }}
@@ -28,6 +28,7 @@
                                 <x-adminlte-small-box
                                     title="{{ App\Models\Client::get()->count() }}"
                                     text="Clients"
+                                    class="card"
                                     icon="fas fa-file-invoice small-icon"
                                     theme="light"
                                 />
@@ -38,6 +39,7 @@
                                 <x-adminlte-small-box
                                     title="{{ App\Models\Product::get()->count() }}"
                                     text="Products/Services"
+                                    class="card"
                                     icon="fas fa-shopping-cart small-icon"
                                     theme="light"
                                 />
@@ -48,6 +50,7 @@
                                 <x-adminlte-small-box
                                     title="{{ App\Models\Employee::get()->count() }}"
                                     text="Employees"
+                                    class="card"
                                     icon="fas fa-users small-icon"
                                     theme="light"
                                 />

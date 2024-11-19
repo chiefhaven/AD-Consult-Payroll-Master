@@ -265,30 +265,32 @@
             });
 
             const balance = computed(() => {
-                const totalPayableValue = totalPayable.value;
-                const totalPaymentsValue = totalPayments.value;
-                return totalPayableValue - totalPaymentsValue;
+                return totalPayable.value - state.value.amountToPay;
             });
 
             const totalPayable = computed(() => {
                 if (Array.isArray(billData.value.products) && billData.value.products.length > 0) {
+
+                    const totalPayment = billData.value.payments.reduce((sum, payment) => sum + parseFloat(payment.payment_amount), 0);
+
+                    console.log(totalPayment);
                     // Calculate subtotal by summing all product totals
                     const subtotal = billData.value.products.reduce((sum, product) => {
-                    return sum + (parseFloat(product.pivot.price*product.pivot.quantity) || 0);
+                        return sum + (parseFloat(product.pivot.price*product.pivot.quantity) || 0);
                     }, 0);
 
                     // Calculate total discount
                     const totalDiscount = billData.value.products.reduce((sum, product) => {
-                    return sum + (parseFloat(product.pivot.item_discount) || 0);
+                        return sum + (parseFloat(product.pivot.item_discount) || 0);
                     }, 0);
 
                     // Calculate total tax
                     const totalTax = billData.value.products.reduce((sum, product) => {
-                    return sum + (parseFloat(product.pivot.tax) || 0);
+                        return sum + (parseFloat(product.pivot.tax) || 0);
                     }, 0);
 
                     // Calculate total payable: (Subtotal - Discount) + Tax
-                    return subtotal - totalDiscount + totalTax;
+                    return subtotal - totalDiscount + totalTax - totalPayment;
                 } else {
                     console.warn("No products found");
                     return 0;
@@ -337,12 +339,12 @@
                 return formatDate(billingDateObj);
             };
 
-            const printBill = async (bill) => {
+            const printBill = async (bill, action) => {
                 NProgress.start();
 
                 try {
                     // Open the download route in a new window
-                    window.open(`/print-bill/${bill}`, '_blank');
+                    window.open(`/print-bill/${bill}/${action}`, '_blank');
 
                 } catch (err) {
                     error.value = "Failed to fetch data";

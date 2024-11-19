@@ -26,8 +26,10 @@
                                     label="Amount:"
                                 />
                                 <div class="small text-muted pb-3">
-                                    Payable: @{{ formatCurrency(totalPayable) }} |
-                                    <span :class="{'text-danger': balance - state.amountToPay > 0}">
+                                    <span :class="{ 'text-danger': state.amountToPay > totalPayable || state.amountToPay < 0 }">
+                                        Maximum payable is @{{ formatCurrency(totalPayable) }}
+                                    </span> |
+                                    <span :class="{'text-danger': balance - state.amountToPay != 0}">
                                         Balance: @{{ formatCurrency(balance - state.amountToPay) }}
                                     </span>
                                 </div>

@@ -21,13 +21,19 @@
                             <div class="btn">Edit</div>
                         </button>
                     </form>
-                    <button class="dropdown-item nav-main-link" @click="addPayment('{{ $bill->id }}')">
-                        <i class="nav-main-link-icon fas fa-dollar-sign"></i>
-                        <div class="btn">Add payment</div>
-                    </button>
-                    <button class="dropdown-item nav-main-link" @click="printBill('{{ $bill->id }}')">
+                    @if($balance > 0)
+                        <button class="dropdown-item nav-main-link" @click="addPayment('{{ $bill->id }}')">
+                            <i class="nav-main-link-icon fas fa-dollar-sign"></i>
+                            <div class="btn">Add payment</div>
+                        </button>
+                    @endif
+                    <button class="dropdown-item nav-main-link" @click="printBill('{{ $bill->id }}', 'print')">
                         <i class="nav-main-link-icon fas fa-print"></i>
                         <div class="btn">Print bill</div>
+                    </button>
+                    <button class="dropdown-item nav-main-link" @click="printBill('{{ $bill->id }}', 'pdf')">
+                        <i class="nav-main-link-icon fas fa-file"></i>
+                        <div class="btn">Export PDF</div>
                     </button>
                     <a class="dropdown-item nav-main-link" href="{{ url('/send-notification', $bill) }}">
                         <i class="nav-main-link-icon fas fa-envelope"></i>
@@ -74,7 +80,7 @@
         K{{ number_format($bill->payments->sum('payment_amount'), 2) }}
     </td>
     <td>
-        K{{ number_format($bill->products->sum('pivot.total') - $paidAmount), 2 }}
+        K{{ number_format($balance), 2 }}
     </td>
     <td>
         <button class="btn btn-sm

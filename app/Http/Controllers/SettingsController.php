@@ -13,7 +13,17 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        //
+        return view('settings.settings');
+    }
+
+    public function businessInfo()
+    {
+        try {
+            $businessInfo = Settings::select('key', 'value')->get(); // Replace 'key', 'value' with actual columns
+            return response()->json($businessInfo, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch business information.'], 500);
+        }
     }
 
     /**
@@ -29,7 +39,20 @@ class SettingsController extends Controller
      */
     public function store(StoreSettingsRequest $request)
     {
-        //
+        $validated = $request->validate([
+            'prefix' => 'required|string|max:10',
+            'seperator' => 'required|string|max:2',
+            'startNumber' => 'required|integer|min:1',
+            'taxRate' => 'required|numeric|min:0|max:100',
+            'terms' => 'nullable|string',
+            'header' => 'nullable|string',
+            'footer' => 'nullable|string',
+        ]);
+
+        // Save settings logic (e.g., database update)
+        Settings::updateOrCreate([], $validated);
+
+        return response()->json(['message' => 'Settings saved successfully!'], 200);
     }
 
     /**

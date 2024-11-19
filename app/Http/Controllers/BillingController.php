@@ -302,7 +302,7 @@ class BillingController extends Controller
 
     }
 
-    public function billPdf(Billing $billing, $id)
+    public function billPdf(Billing $billing, $id, $action)
     {
         // Use the injected $billing model directly, no need to call find()
         $bill = $billing::with('products')->find($id);
@@ -315,7 +315,12 @@ class BillingController extends Controller
         // Ensure the property name is correct (assuming it's 'invoice_number')
         $pdf = PDF::loadView('pdf.billsDefault', ['bill' => $bill]);
 
-        // Return the PDF as a downloadable file
-        return $pdf->download($bill->invoice_number . '.pdf');
+        if ($action == 'print') {
+            // Return the PDF as a downloadable file
+            return $pdf->stream($bill->invoice_number . '.pdf');
+        } else {
+            // Stream the PDF to the browser
+            return $pdf->download($bill->invoice_number . '.pdf');
+        }
     }
 }
