@@ -76,17 +76,18 @@
         </tr>
     </thead>
     <tbody>
-        <tr v-for="leave in leaves" :key="leave.id">
+        <tr v-for="leave in leaves" >
             <td><input type="checkbox" v-model="leave.selected"></td>
-            <td>{{ leave.employee_no }}</td>
-            <td>{{ leave.Name }}</td>
-            <td>{{ leave.Surname }}</td>
-            <td>{{ leave.start_date }}</td>
-            <td>{{ leave.Type }}</td>
-            <td>{{ leave.Status }}</td>
-            <td>{{ leave.Reason }}</td>
-            <td>
-                <div class="dropdown">
+            <td>@{{ leave.employee_no }}</td>  <!-- Use Vue data properties, not Blade variables -->
+            <td>@{{ leave.Name }}</td>
+            <td>@{{ leave.Surname }}</td>
+            <td>@{{ leave.start_date }}</td>
+            <td>@{{ leave.Type }}</td>
+            <td>@{{ leave.Status }}</td>
+            <td>@{{ leave.Reason }}</td>
+            <td> </td>
+        </tr>
+<div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" @click="toggleDropdown(leave.id)">
                         Actions
                     </button>
@@ -108,119 +109,149 @@
 @endsection
 
 @include('/components/layouts/footer_bottom')
+
+
 @push('js')
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap4.min.js"></script>
+
     <script>
-       new Vue({
-    el: '#app',
-    data: {
-    leaves: [],
-    selectAll: false,
-    statusCounts: {
-        Approved: 0,
-        Disapproved: 0,
-        Pending: 0
-    }
-},
-methods: {
-    fetchLeaveData() {
-        axios.get('/leave')  // Ensure the API call is returning a proper response
-            .then(response => {
-                // Check if response contains 'leaves' data
-                console.log(response.data);  // Debugging response
-                this.leaves = response.data.leaves.map(leave => ({
-                    ...leave,
-                    selected: false, // Add a 'selected' property to each leave for checkbox logic
-                    showDropdown: false // Make sure this is initialized if you're using it in the template
-                }));
-                this.statusCounts = {
-                    Approved: response.data.approvedRequests,
-                    Disapproved: response.data.disapprovedRequests,
-                    Pending: response.data.pendingRequests
-                };
-            })
-            .catch(error => console.error('Error fetching leave data:', error));
-    }
-,
-        toggleSelectAll() {
-            this.selectAll = !this.selectAll;
-            this.leaves.forEach(leave => {
-                leave.selected = this.selectAll; // Make sure 'selected' is being properly updated
+
+    const { ref, onMounted, createApp } = Vue;
+
+    const app = createApp({
+        setup() {
+            const leaves = ref([]);
+            const selectAll = ref(false);
+            const statusCounts = ref({
+                Approved: 0,
+                Disapproved: 0,
+                Pending: 0,
             });
-        },
-        // Toggle the dropdown visibility for a specific leave entry
-        toggleDropdown(leaveId) {
-        this.leaves = this.leaves.map(leave => ({...leave,
-            showDropdown: leave.id === leaveId ? !leave.showDropdown : false
-        }));
-    },
-        getSelectedIds() {
-            // Make sure the 'selected' property is being used to filter selected leaves
-            return this.leaves.filter(leave => leave.selected).map(leave => leave.id);
-        },
-        massApprove() {
-            const selectedIds = this.getSelectedIds();
-            if (selectedIds.length === 0) {
-                alert('Please select at least one leave request.');
-                return;
-            }
-            axios.post(`/leave/mass-approve`, { ids: selectedIds })
-                .then(response => {
-                    this.updateCounts(response.data);
-                    alert('Mass approval successful!');
-                    this.fetchLeaveData();
-                })
-                .catch(error => console.error('Error approving leaves:', error));
-        },
 
-        massDisapprove() {
-            const selectedIds = this.getSelectedIds();
-            if (selectedIds.length === 0) {
-                alert('Please select at least one leave request.');
-                return;
-            }
-            axios.post(`/leave/mass-disapprove`, { ids: selectedIds })
-                .then(response => {
-                    this.updateCounts(response.data);
-                    alert('Mass disapproval successful!');
-                    this.fetchLeaveData(); // Refresh leave data to reflect changes
-                })
-                .catch(error => console.error('Error disapproving leaves:', error));
+            // Fetch leave data from the API
+            const fetchLeaveData = () => {
+                axios.get('leaves/leaveView')
+                    .then(response => {
+                        console.log(response.data); // Debugging response
+                        leaves.value = response.data.leaves.map(leave => ({
+                            ...leave,
+                            selected: false, // Add a 'selected' property for checkbox logic
+                            showDropdown: false, // Initialize dropdown visibility
+                        }));
+                        statusCounts.value = {
+                            Approved: response.data.approvedRequests,
+                            Disapproved: response.data.disapprovedRequests,
+                            Pending: response.data.pendingRequests,
+                        };
+                    })
+                    .catch(error => console.error('Error fetching leave data:', error));
+            };
+
+            // Toggle all checkboxes
+            const toggleSelectAll = () => {
+                selectAll.value = !selectAll.value;
+                leaves.value.forEach(leave => {
+                    leave.selected = selectAll.value;
+                });
+            };
+
+            // Toggle the dropdown visibility for a specific leave entry
+            const toggleDropdown = (leaveId) => {
+                leaves.value = leaves.value.map(leave => ({
+                    ...leave,
+                    showDropdown: leave.id === leaveId ? !leave.showDropdown : false,
+                }));
+            };
+
+            // Get the IDs of all selected leaves
+            const getSelectedIds = () => {
+                return leaves.value.filter(leave => leave.selected).map(leave => leave.id);
+            };
+
+            // Mass approve selected leave requests
+            const massApprove = () => {
+                const selectedIds = getSelectedIds();
+                if (selectedIds.length === 0) {
+                    alert('Please select at least one leave request.');
+                    return;
+                }
+                axios.post(`/leave/mass-approve`, { ids: selectedIds })
+                    .then(response => {
+                        updateCounts(response.data);
+                        alert('Mass approval successful!');
+                        fetchLeaveData();
+                    })
+                    .catch(error => console.error('Error approving leaves:', error));
+            };
+
+            // Mass disapprove selected leave requests
+            const massDisapprove = () => {
+                const selectedIds = getSelectedIds();
+                if (selectedIds.length === 0) {
+                    alert('Please select at least one leave request.');
+                    return;
+                }
+                axios.post(`/leave/mass-disapprove`, { ids: selectedIds })
+                    .then(response => {
+                        updateCounts(response.data);
+                        alert('Mass disapproval successful!');
+                        fetchLeaveData();
+                    })
+                    .catch(error => console.error('Error disapproving leaves:', error));
+            };
+
+            // Update the leave status counts
+            const updateCounts = (data) => {
+                statusCounts.value = {
+                    Approved: data.approvedRequests,
+                    Disapproved: data.disapprovedRequests,
+                    Pending: data.pendingRequests,
+                };
+            };
+
+            // Approve a single leave request
+            const approveLeave = (leaveId) => {
+                axios.post(`/leave/approve/${leaveId}`)
+                    .then(response => {
+                        alert('Leave approved');
+                        fetchLeaveData();
+                    })
+                    .catch(error => console.error('Error approving leave:', error));
+            };
+
+            // Disapprove a single leave request
+            const disapproveLeave = (leaveId) => {
+                axios.post(`/leave/disapprove/${leaveId}`)
+                    .then(response => {
+                        alert('Leave disapproved');
+                        fetchLeaveData();
+                    })
+                    .catch(error => console.error('Error disapproving leave:', error));
+            };
+
+            // Fetch leave data when the component is mounted
+            onMounted(() => {
+                console.log('onMounted');
+                fetchLeaveData();
+            });
+
+            return {
+                leaves,
+                selectAll,
+                statusCounts,
+                fetchLeaveData,
+                toggleSelectAll,
+                toggleDropdown,
+                getSelectedIds,
+                massApprove,
+                massDisapprove,
+                approveLeave,
+                disapproveLeave,
+            };
         },
+    });
 
-        updateCounts(data) {
-            this.statusCounts.Approved = data.approvedRequests;
-            this.statusCounts.Disapproved = data.disapprovedRequests;
-            this.statusCounts.Pending = data.pendingRequests;
-        },
-
-        approveLeave(leaveId) {
-            axios.post(`/leave/approve/${leaveId}`)
-                .then(response => {
-                    alert('Leave approved');
-                    this.fetchLeaveData(); // Refresh leave data to reflect changes
-                })
-                .catch(error => console.error('Error approving leave:', error));
-        },
-
-        disapproveLeave(leaveId) {
-            axios.post(`/leave/disapprove/${leaveId}`)
-                .then(response => {
-                    alert('Leave disapproved');
-                    this.fetchLeaveData(); // Refresh leave data to reflect changes
-                })
-                .catch(error => console.error('Error disapproving leave:', error));
-        },
-
-    }
-    mounted() {
-    this.fetchLeaveData();
-}
-
-});
+    // Mount the app to the DOM
+    app.mount('#app');
 
     </script>
 @endpush

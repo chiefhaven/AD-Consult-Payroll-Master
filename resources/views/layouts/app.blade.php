@@ -1,6 +1,7 @@
 @extends('adminlte::page')
 
 {{-- Extend and customize the browser title --}}
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 @section('title')
     {{ config('adminlte.title') }}

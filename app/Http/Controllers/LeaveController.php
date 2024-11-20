@@ -10,7 +10,9 @@ class LeaveController extends Controller
 {
     public function index()
     {
-        $leaves = Leave::orderBy('start_date', 'desc')->get();
+        $leaves = Leave::all();
+
+        // $leaves = Leave::orderBy('start_date', 'desc')->get();
 
         // Consistent naming for status counts
         $approvedRequests = $leaves->where('status', 'Approved')->count();
@@ -27,6 +29,8 @@ class LeaveController extends Controller
         }
 
         return view('leaves.leaveView', compact('leaves', 'approvedRequests', 'disapprovedRequests', 'pendingRequests'));
+        // return view('leaves.leaveView', compact('leaves'));
+
     }
 
     public function massApprove(Request $request)
