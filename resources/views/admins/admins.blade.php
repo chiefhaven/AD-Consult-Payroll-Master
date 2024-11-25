@@ -62,10 +62,35 @@
                                             {{ $admin->sirname }}
                                         </td>
                                         <td>{{ $admin->user->email }}</td>
-                                        <td>{{ $admin->role }}</td>
                                         <td>
-                                            <a href="{{ route('edit-admin', $admin->id) }}" class="btn btn-info btn-sm">Edit</a>
-                                            <button class="btn btn-danger btn-sm" onclick="deleteAdmin({{ $admin->id }})">Delete</button>
+                                            {{ optional($admin->user->role)->name ?? 'No Role Assigned' }}
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="dropdown d-inline-block">
+                                                <button type="button" class="btn btn-default" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="d-sm-inline-block">Action</span>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-end p-0">
+                                                    <div class="p-2">
+                                                        <!-- View -->
+                                                        <button class="dropdown-item nav-main-link" @click="viewRole($admin->id)">
+                                                            <i class="nav-main-link-icon fas fa-eye"></i>
+                                                            <span class="btn">View</span>
+                                                        </button>
+
+                                                        <!-- Edit role -->
+                                                        <button class="dropdown-item nav-main-link btn" @click="editRole($admin->id)">
+                                                            <i class="nav-main-link-icon fas fa-pencil-alt"></i>
+                                                            <span class="btn">Edit</span>
+                                                        </button>
+
+                                                        <button class="dropdown-item nav-main-link btn delete-designation-confirm" type="button" @click="confirmDelete($admin->id)">
+                                                            <i class="nav-main-link-icon fas fa-trash-alt"></i>
+                                                            <span class="btn">Delete</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach

@@ -152,6 +152,7 @@ Route::get('/reports', Reports::class)->middleware(['auth']);
 Route::middleware(['auth'])->group(function () {
     Route::get('/admins', [AdministratorController::class, 'index'])->name('admins');
     Route::get('/add-admin', [AdministratorController::class, 'create'])->name('add-admin');
+    Route::get('/add-store', [AdministratorController::class, 'store'])->name('admin-store');
     Route::get('/edit-admin', [AdministratorController::class, 'edit'])->name('edit-admin');
 });
 

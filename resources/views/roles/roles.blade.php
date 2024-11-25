@@ -40,12 +40,12 @@
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <table id="rolesTable" class="table table-bordered table-striped">
+                        <table id="rolesTable" class="table table-bordered table-striped" style="min-width: 100%">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
+                                    <th style="min-width: 10em">Name</th>
                                     <th>Description</th>
-                                    <th>Actions</th>
+                                    <th style="min-width: 5em;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
