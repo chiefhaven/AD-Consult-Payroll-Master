@@ -375,19 +375,8 @@ return [
         ],
         [
             'text' => 'Users',
+            'url' => 'users',
             'icon' => 'fa fa-users',
-            'submenu' => [
-                [
-                    'text' => 'List users',
-                    'url' => 'users',
-                    'icon' => 'fa fa-fas fa-arrow-right ',
-                ],
-                [
-                    'text' => 'Add user',
-                    'url' => 'add-user',
-                    'icon' => 'fa fa-fas fa-arrow-right ',
-                ],
-            ],
         ],
         [
             'text' => 'Settings',

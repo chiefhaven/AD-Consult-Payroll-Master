@@ -1,17 +1,37 @@
 <div id="emailSettings" v-if="showEmailSettings" :class="{ show: showEmailSettings }">
-    <div v-if="!loading && data.length > 0">
+    <div v-if="!loading && data">
         <div class="container">
             <!-- Form Start -->
             <form id="emailConfigurationForm" @submit.prevent="submitEmailForm">
+
+                <!-- Mail mailer -->
+                <x-adminlte-select2
+                    id="mailMailer"
+                    name="mail_mailer"
+                    label="Mail Mailer"
+                    fgroup-class="form-group"
+                    v-model="emailForm.mail_mailer"
+                    required
+                >
+                    <option value="" disabled selected>Select Mailer</option>
+                    <option value="smtp">SMTP</option>
+                    <option value="sendmail">Sendmail</option>
+                    <option value="mailgun">Mailgun</option>
+                    <option value="ses">SES</option>
+                    <option value="postmark">Postmark</option>
+                    <option value="log">Log</option>
+                    <option value="array">Array</option>
+                </x-adminlte-select2>
+
                 <!-- Mail Host -->
                 <x-adminlte-input
                     id="mailHost"
                     name="mail_host"
                     label="Mail Host"
                     placeholder="e.g., smtp.mailtrap.io"
-                    fgroup-class="form-group col-md-5"
+                    fgroup-class="form-group"
                     label-class="form-label"
-                    v-model="form.mail_host"
+                    v-model="emailForm.mail_host"
                     required
                 />
 
@@ -22,9 +42,9 @@
                     type="number"
                     label="Mail Port"
                     placeholder="e.g., 587"
-                    fgroup-class="form-group col-md-5"
+                    fgroup-class="form-group"
                     label-class="form-label"
-                    v-model.number="form.mail_port"
+                    v-model.number="emailForm.mail_port"
                     required
                 />
 
@@ -34,9 +54,9 @@
                     name="mail_username"
                     label="Mail Username"
                     placeholder="Email username"
-                    fgroup-class="form-group col-md-5"
+                    fgroup-class="form-group"
                     label-class="form-label"
-                    v-model="form.mail_username"
+                    v-model="emailForm.mail_username"
                     required
                 />
 
@@ -47,9 +67,9 @@
                     type="text"
                     label="Mail Password"
                     placeholder="Email password"
-                    fgroup-class="form-group col-md-5"
+                    fgroup-class="form-group"
                     label-class="form-label"
-                    v-model="form.mail_password"
+                    v-model="emailForm.mail_password"
                 />
 
                 <!-- Mail Encryption -->
@@ -57,8 +77,8 @@
                     id="mailEncryption"
                     name="mail_encryption"
                     label="Mail Encryption"
-                    fgroup-class="form-group col-md-5"
-                    v-model="form.mail_encryption"
+                    fgroup-class="form-group"
+                    v-model="emailForm.mail_encryption"
                 >
                     <option value="" disabled selected>Select Encryption</option>
                     <option value="tls">TLS</option>
@@ -73,9 +93,9 @@
                     type="email"
                     label="From Address"
                     placeholder="e.g., no-reply@yourdomain.com"
-                    fgroup-class="form-group col-md-5"
+                    fgroup-class="form-group"
                     label-class="form-label"
-                    v-model="form.mail_from_address"
+                    v-model="emailForm.mail_from_address"
                     required
                 />
 
@@ -85,9 +105,9 @@
                     name="mail_from_name"
                     label="From Name"
                     placeholder="e.g., Your Company Name"
-                    fgroup-class="form-group col-md-5"
+                    fgroup-class="form-group"
                     label-class="form-label"
-                    v-model="form.mail_from_name"
+                    v-model="emailForm.mail_from_name"
                     required
                 />
 

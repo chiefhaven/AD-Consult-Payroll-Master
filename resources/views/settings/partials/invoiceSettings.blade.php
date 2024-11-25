@@ -1,24 +1,49 @@
 <div id="invoiceSettings" v-if="showInvoiceSettings" :class="{ show: showInvoiceSettings }">
-    <div v-if="!loading && data.length > 0">
+    <div v-if="!loading && data">
         <div class="container">
             <!-- Form Start -->
-            <form id="invoiceSettingsForm" @submit.prevent="submitForm">
+            <form id="invoiceSettingsForm" @submit.prevent="submitInvoiceForm">
                 <div class="card-body">
-                    <x-adminlte-input
-                        id="invoicePrefix"
-                        name="prefix"
-                        label="Invoice Prefix"
-                        placeholder="E.g., INV-"
-                        fgroup-class="form-group"
-                        label-class="form-label"
-                        v-model="form.prefix"
-                        required
-                    />
+                    <div class="row">
+                        <x-adminlte-input
+                            id="invoicePrefix"
+                            name="prefix"
+                            label="Invoice Prefix:"
+                            placeholder="E.g., INV-"
+                            fgroup-class="form-group col-md-6"
+                            label-class="form-label"
+                            v-model="form.prefix"
+                            required
+                        />
+                        <x-adminlte-input
+                            id="invoiceNumberIncludeYear"
+                            name="invoiceNumberIncludeYear"
+                            type="checkbox"
+                            label="Include year:"
+                            placeholder="Yes"
+                            fgroup-class="form-group col-md-3"
+                            label-class="form-label"
+                            v-model.number="form.invoiceNumberIncludeYear"
+                            required
+                        />
+
+                        <x-adminlte-input
+                            id="invoiceNumberIncludeClientName"
+                            name="invoiceNumberIncludeClientName"
+                            type="checkbox"
+                            label="Include client name:"
+                            placeholder="Yes"
+                            fgroup-class="form-group col-md-3"
+                            label-class="form-label"
+                            v-model.number="form.invoiceNumberIncludeClientName"
+                            required
+                        />
+                    </div>
 
                     <x-adminlte-input
                         id="invoiceSeparator"
                         name="separator"
-                        label="Separator"
+                        label="Separator:"
                         placeholder="E.g., -, _"
                         fgroup-class="form-group"
                         label-class="form-label"
@@ -30,7 +55,7 @@
                         id="startingInvoiceNumber"
                         name="startNumber"
                         type="number"
-                        label="Starting Invoice Number"
+                        label="Starting Invoice Number:"
                         placeholder="E.g., 1"
                         fgroup-class="form-group"
                         label-class="form-label"
@@ -38,12 +63,11 @@
                         min="1"
                         required
                     />
-
                     <x-adminlte-input
                         id="defaultTaxRate"
                         name="taxRate"
                         type="number"
-                        label="Default Tax Rate (%)"
+                        label="Default Tax Rate (%):"
                         placeholder="E.g., 15"
                         fgroup-class="form-group"
                         label-class="form-label"
@@ -56,7 +80,7 @@
                     <x-adminlte-textarea
                         id="termsAndConditions"
                         name="terms"
-                        label="Terms and Conditions"
+                        label="Terms and Conditions:"
                         type="textarea"
                         rows="4"
                         placeholder="Enter terms and conditions"

@@ -247,6 +247,7 @@ class BusinessUtil extends Controller
     {
         try {
             $emailSettings = [
+                'mail_mailer' => env('MAIL_MAILER'),
                 'mail_host' => env('MAIL_HOST'),
                 'mail_port' => env('MAIL_PORT'),
                 'mail_username' => env('MAIL_USERNAME'),
@@ -265,24 +266,31 @@ class BusinessUtil extends Controller
     public function updateEmailSettings(Request $request)
     {
         $validated = $request->validate([
-            'mail_host' => 'nullable|string',
-            'mail_port' => 'nullable|integer',
-            'mail_username' => 'nullable|string',
+            'mail_host' => 'required|string',
+            'mail_port' => 'required|numeric',
+            'mail_username' => 'required|string',
             'mail_password' => 'nullable|string',
-            'mail_encryption' => 'nullable|string',
-            'mail_from_address' => 'nullable|email',
-            'mail_from_name' => 'nullable|string',
+            'mail_encryption' => 'required|string|in:tls,ssl,none',
+            'mail_from_address' => 'required|email',
+            'mail_from_name' => 'required|string',
+            'mail_mailer' => 'required|string|in:smtp,sendmail,mailgun,ses,postmark,log,array',
         ]);
 
-        // Filter out null values
-        $filteredData = array_filter($validated, function ($value) {
-            return !is_null($value);
-        });
+        // Update the .env file
+        $this->updateEnv([
+            'MAIL_MAILER' => $validated['mail_mailer'],
+            'MAIL_HOST' => $validated['mail_host'],
+            'MAIL_PORT' => $validated['mail_port'],
+            'MAIL_USERNAME' => $validated['mail_username'],
+            'MAIL_PASSWORD' => $validated['mail_password'] == '' || $validated['mail_password'] == null ? env('MAIL_PASSWORD') : $validated['mail_password'],
+            'MAIL_ENCRYPTION' => $validated['mail_encryption'],
+            'MAIL_FROM_ADDRESS' => $validated['mail_from_address'],
+            'MAIL_FROM_NAME' => $validated['mail_from_name'],
+        ]);
 
-        // Update .env only if there is data to update
-        if (!empty($filteredData)) {
-            $this->updateEnv($filteredData);
-        }
+
+        // Clear configuration cache
+        Artisan::call('config:clear');
 
         return response()->json(['message' => 'Email settings updated successfully.']);
     }

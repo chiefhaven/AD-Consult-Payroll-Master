@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdministratorController;
 use App\Http\Controllers\AttendanceController;
 use App\Livewire\Clients\AddClient;
 use App\Livewire\Clients\UpdateClient;
@@ -147,14 +148,16 @@ Route::get('/notifications', Notifications::class)->middleware(['auth']);
 
 Route::get('/reports', Reports::class)->middleware(['auth']);
 
-Route::get('/users', UserList::class)->middleware(['auth']);
-Route::get('/add-user', AddUser::class)->middleware(['auth']);
+Route::get('/admins', [AdministratorController::class, 'index'])->middleware(['auth'])->name('admins');
+Route::get('/add-admin', [AdministratorController::class, 'create'])->middleware(['auth'])->name('add-admin');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::get('/settings/business-info', [SettingsController::class, 'businessInfo'])->name('business-info');
     Route::post('/update-email-settings', [BusinessUtil::class, 'updateEmailSettings'])->name('update-email-settings');
     Route::get('/email-settings', [BusinessUtil::class, 'getEmailSettings'])->name('email-settings');
+    Route::post('/update-invoice-settings ', [SettingsController::class, 'updateInvoiceSettings'])->name('update-invoice-settings ');
+    Route::get('/invoice-settings', [SettingsController::class, 'getinvoiceSettings'])->name('invoice-settings');
 });
 
 

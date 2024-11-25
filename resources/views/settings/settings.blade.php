@@ -61,6 +61,7 @@
                     <div class="col-md-12">
                         @include('settings.partials.invoiceSettings')
                         @include('settings.partials.emailSettings')
+                        @include('settings.partials.smsSettings')
                         @include('settings.partials.businessInfo')
                     </div>
                 </div>
@@ -102,6 +103,21 @@
                 recurring: true,
             });
 
+            const businessForm = ref({
+                business_name: "",
+                street_address: "",
+                street_address_2: "",
+                district: "",
+                province_or_region: "",
+                country: "",
+                business_email: "",
+                business_phone: "",
+                alt_phone_number: "",
+                business_website: "",
+                registration_number: "",
+                tax_id: "",
+            });
+
             const form = ref({
                 prefix: '',
                 startNumber: 1,
@@ -110,14 +126,27 @@
                 header: '',
                 footer: '',
                 seperator: '-',
+                invoiceNumberIncludeClientName: true,
+                invoiceNumberIncludeYear: true,
+            })
 
+            const emailForm = ref({
                 mail_host: '',
                 mail_port: null,
                 mail_username: '',
-                mail_password: '',
+                mail_password: null,
                 mail_encryption: '',
                 mail_from_address: '',
                 mail_from_name: '',
+            })
+
+            const smsForm = ref({
+                sms_gateway: "",
+                sms_api_key: "",
+                sms_api_secret: "",
+                sms_sender_id: "",
+                sms_country_code: "",
+                sms_message_type: "",
             })
 
             const initializeDatePicker = () => {
@@ -177,7 +206,7 @@
                 resetViews()
                 pageTitle.value = "Invoice Settings";
                 showInvoiceSettings.value = true;
-
+                fetchInvoiceSettings();
                 NProgress.done();
             };
 
@@ -188,6 +217,7 @@
                 pageTitle.value = "Email Settings";
                 showEmailSettings.value = true;
                 fetchEmailSettings();
+                NProgress.done();
             };
 
             const getSmsSettings = () => {
@@ -205,13 +235,15 @@
                 error.value = null;
                 try {
                     const response = await axios.get(`/settings/business-info`);
-                    data.value = response.data.length > 0 ? response.data : [];
+                    data.value = response.data ? response.data : [];
 
+                    if (response.data) {
+                        Object.assign(businessForm.value, response.data);
+                    }
                     console.log(data.value)
-                    //initializeDataTable();
+
                 } catch (err) {
                     error.value = "Failed to fetch business information.";
-                    console.log(err);
                 } finally {
                     loading.value = false;
                     NProgress.done();
@@ -318,12 +350,53 @@
                 }
             };
 
+            const submitInvoiceForm = async () => {
+                try {
+                    const response = await axios.post('/update-invoice-settings', form.value);
+
+                    // Check response status
+                    if (response.status === 200) {
+                        console.log(response)
+                        notification('Settings saved successfully', 'success');
+                    } else {
+                        notification('Unexpected response from the server.', 'warning');
+                    }
+                } catch (err) {
+                    console.error('Error saving settings:', err);
+                    error.value = 'Failed to save settings. Please try again.';
+                    notification(error.value, 'error');
+                }
+            };
+
+            // Function to fetch email settings
             const fetchEmailSettings = async () => {
                 loading.value = true;
                 error.value = null;
 
                 try {
-                    const response = await axios.get(`/email-settings`);
+                const response = await axios.get('/email-settings');
+                    if (response.data) {
+                        // Populate form with fetched data
+                        Object.assign(emailForm.value, response.data);
+                    }
+                    console.log(emailForm.value);
+                } catch (err) {
+                error.value = 'Failed to fetch email settings.';
+                console.error('Fetch Error:', err.response?.data || err.message);
+                // Assuming you have a notification function in place
+                notification(error.value, 'error');
+                } finally {
+                loading.value = false;
+                NProgress.done();
+                }
+            };
+
+            const fetchInvoiceSettings = async () => {
+                loading.value = true;
+                error.value = null;
+
+                try {
+                    const response = await axios.get(`/invoice-settings`);
 
                     // Populate the form with the response data
                     if (response.data) {
@@ -334,7 +407,7 @@
 
                 } catch (err) {
                     // Display error message
-                    error.value = "Failed to fetch email settings.";
+                    error.value = "Failed to fetch invoice settings.";
                     console.error('Fetch Error:', err.response?.data || err.message);
 
                     // Optionally display a user notification
@@ -347,10 +420,11 @@
 
             const submitEmailForm = async () => {
                 try {
-                    const response = await axios.post('/update-email-settings', form.value);
+                    const response = await axios.post('/update-email-settings', emailForm.value);
 
                     // Check response status
                     if (response.status === 200) {
+                        console.log(response)
                         notification('Settings saved successfully', 'success');
                     } else {
                         notification('Unexpected response from the server.', 'warning');
@@ -359,6 +433,40 @@
                     console.error('Error saving settings:', err);
                     error.value = 'Failed to save settings. Please try again.';
                     notification(error.value, 'error');
+                }
+            }
+
+            const submitSmsForm = async () => {
+                try {
+                    this.loading = true;
+                    this.error = null;
+
+                    // Submit logic (e.g., API call)
+                    console.log("SMS Configuration:", this.smsForm);
+
+                    // Example success message
+                    alert("SMS Configuration saved successfully!");
+                } catch (err) {
+                    this.error = "Failed to save SMS configuration.";
+                } finally {
+                    this.loading = false;
+                }
+            };
+
+            const submitBusinessInfo = async () => {
+                try {
+                    this.loading = true;
+                    this.error = null;
+
+                    // Example submission logic
+                    console.log("Business Information:", this.businessForm);
+
+                    // Example success message
+                    alert("Business Information saved successfully!");
+                } catch (err) {
+                    this.error = "Failed to save business information.";
+                } finally {
+                    this.loading = false;
                 }
             };
 
@@ -382,6 +490,13 @@
                 form,
                 showEmailSettings,
                 submitEmailForm,
+                submitInvoiceForm,
+                emailForm,
+                showSmsSettings,
+                submitSmsForm,
+                smsForm,
+                businessForm,
+                submitBusinessInfo
             };
 
         }

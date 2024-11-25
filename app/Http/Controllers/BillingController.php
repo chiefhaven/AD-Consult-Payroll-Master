@@ -24,7 +24,7 @@ class BillingController extends Controller
         $this->middleware('auth'); // Apply authentication middleware
 
         // Load settings from the database
-        $this->settings = Settings::pluck('value', 'key')->toArray();
+        $this->settings = Settings::first();
     }
 
     /**
@@ -99,7 +99,7 @@ class BillingController extends Controller
 
         if ($lastInvoice) {
             // Extract the number after the last separator
-            $parts = explode($settings['invoice_number_seperator'] ?? '-', $lastInvoice->invoice_number);
+            $parts = explode($settings->invoice_number_seperator ?? '-', $lastInvoice->invoice_number);
             $lastInvoiceNumber = intval(end($parts)); // Get the last numeric part and convert to integer
         } else {
             // Default to 0 if there is no last invoice
@@ -110,18 +110,18 @@ class BillingController extends Controller
         $nextInvoiceNumber = $lastInvoiceNumber + 1;
 
         // Build the invoice number based on settings
-        $invoiceNumber = $settings['invoice_number_prefix'] ?? '';
+        $invoiceNumber = $settings->invoice_number_prefix ?? '';
 
         // Use the separator from settings, or default to '-'
-        $separator = $settings['invoice_number_seperator'] ?? '-';
+        $separator = $settings->invoice_number_seperator ?? '-';
 
         // Add year if specified in the settings
-        if (isset($settings['invoice_number_year']) && $settings['invoice_number_year'] === 'yes') {
+        if (isset($settings->invoice_number_year) && $settings->invoice_number_year === 'yes') {
             $invoiceNumber .= $separator . date('Y');
         }
 
         // Add client name if specified in the suffix setting
-        if (isset($settings['invoice_number_suffix']) && $settings['invoice_number_suffix'] === 'client_name') {
+        if (isset($settings->invoice_number_suffix) && $settings->invoice_number_suffix === 'client_name') {
             $invoiceNumber .= $separator . $clientName;
         }
 
