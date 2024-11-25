@@ -374,9 +374,20 @@ return [
             'icon' => 'fa fas fa-chart-bar',
         ],
         [
-            'text' => 'Users',
-            'url' => 'users',
+            'text' => 'Admins',
             'icon' => 'fa fa-users',
+            'submenu' => [
+                [
+                    'text' => 'Admins',
+                    'url' => 'admins',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+                [
+                    'text' => 'Roles',
+                    'url' => 'roles',
+                    'icon' => 'fa fa-fas fa-arrow-right ',
+                ],
+            ],
         ],
         [
             'text' => 'Settings',

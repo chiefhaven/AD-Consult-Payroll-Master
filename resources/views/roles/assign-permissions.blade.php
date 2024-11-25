@@ -2,7 +2,7 @@
 
 {{-- Extend and customize the browser title --}}
 
-@section('title', 'Adminitrators')
+@section('title', 'Roles')
 
 {{-- Extend and customize the page content header --}}
 
@@ -27,50 +27,53 @@
 <div class="row">
     <!-- Page Header -->
     <livewire:common.page-header
-        pageTitle="Administrators"
-        buttonName="Add Admin"
-        link="add-admin"
+        pageTitle="Roles"
+        buttonName="Add role"
+        link="add-role"
     />
 
     <!-- Admin List Section -->
     <div class="col-lg-12" id="sales">
         <div class="card mb-3 p-4">
             <!-- Card Header -->
-            <h4 class="pb-4">All Administrators</h4>
+            <h4 class="pb-4">All roles</h4>
 
             <!-- Admin Table -->
             <div class="box-body">
                 <div class="row">
-                    <div class="col-md-12">
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($admins as $admin)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>
-                                            {{ $admin->first_name }}
-                                            {{ $admin->middle_name }}
-                                            {{ $admin->sirname }}
-                                        </td>
-                                        <td>{{ $admin->user->email }}</td>
-                                        <td>{{ $admin->role }}</td>
-                                        <td>
-                                            <a href="{{ route('edit-admin', $admin->id) }}" class="btn btn-info btn-sm">Edit</a>
-                                            <button class="btn btn-danger btn-sm" onclick="deleteAdmin({{ $admin->id }})">Delete</button>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    <div class="container">
+                        <h1>Assign Permissions to Role: {{ $role->name }}</h1>
+
+                        @if(session('success'))
+                            <div class="alert alert-success">{{ session('success') }}</div>
+                        @endif
+
+                        <form action="{{ route('roles.update-permissions', $role->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="mb-4">
+                                <h4>Permissions</h4>
+                                <div class="row">
+                                    @foreach($permissions as $permission)
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input"
+                                                       name="permissions[]"
+                                                       value="{{ $permission->id }}"
+                                                       id="permission-{{ $permission->id }}"
+                                                       @if(in_array($permission->id, $rolePermissions)) checked @endif>
+                                                <label class="form-check-label" for="permission-{{ $permission->id }}">
+                                                    {{ $permission->name }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Update Permissions</button>
+                        </form>
                     </div>
                 </div>
             </div>

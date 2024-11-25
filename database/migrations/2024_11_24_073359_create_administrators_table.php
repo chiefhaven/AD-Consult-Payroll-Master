@@ -12,11 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('administrators', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Link to the users table
+            $table->uuid('id')->primary(); // Primary key using UUID
             $table->string('first_name'); // Admin's first name
+            $table->string('middle_name')->nullable(); // Admin's middle name (optional)
             $table->string('sirname'); // Admin's last name or surname
-            $table->text('address')->nullable(); // Admin's address
+            $table->string('profile_picture')->nullable(); // Path or URL for the profile picture
+            $table->string('phone')->nullable(); // Admin's primary phone number
+            $table->string('alt_phone')->nullable(); // Admin's alternative phone number
+            $table->string('street_address')->nullable(); // Admin's street address
+            $table->string('district')->nullable(); // Admin's district
+            $table->string('country')->nullable(); // Admin's country
             $table->string('department')->nullable(); // Department the admin belongs to
             $table->string('role')->default('admin'); // Role (e.g., admin, super_admin)
             $table->boolean('is_active')->default(true); // Status: active or inactive

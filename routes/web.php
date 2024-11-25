@@ -26,6 +26,7 @@ use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingsController;
 use App\Models\Attendance;
 use App\Models\Holiday;
@@ -148,8 +149,21 @@ Route::get('/notifications', Notifications::class)->middleware(['auth']);
 
 Route::get('/reports', Reports::class)->middleware(['auth']);
 
-Route::get('/admins', [AdministratorController::class, 'index'])->middleware(['auth'])->name('admins');
-Route::get('/add-admin', [AdministratorController::class, 'create'])->middleware(['auth'])->name('add-admin');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admins', [AdministratorController::class, 'index'])->name('admins');
+    Route::get('/add-admin', [AdministratorController::class, 'create'])->name('add-admin');
+    Route::get('/edit-admin', [AdministratorController::class, 'edit'])->name('edit-admin');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::view('/roles', 'roles.roles');
+    Route::get('/get-roles', [RoleController::class, 'index'])->name('roles');
+    Route::get('/add-role', [RoleController::class, 'create'])->name('add-role');
+    Route::get('/edit-role/{role}', [RoleController::class, 'edit'])->name('edit-role');
+    Route::get('/store-role', [RoleController::class, 'store'])->name('store-role');
+    Route::put('/roles/{role}/permissions', [RoleController::class, 'update'])->name('roles.update-permissions');
+    Route::get('/delete-role', [RoleController::class, 'destroy'])->name('delete-role');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
