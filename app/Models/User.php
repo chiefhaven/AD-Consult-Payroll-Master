@@ -65,7 +65,12 @@ class User extends Authenticatable
 
     public function adminlte_image()
     {
-        $profilePicturePath = Auth::user()->administrator->profile_picture;
+        $user = Auth::user();
+        if ($user && $user->administrator) {
+            $profilePicturePath = $user->administrator->profile_picture;
+        } else {
+            $profilePicturePath = null; // or a default path
+        }
 
         // Check if the profile picture exists and if it's stored in the public disk
         if ($profilePicturePath && Storage::disk('public')->exists($profilePicturePath)) {
