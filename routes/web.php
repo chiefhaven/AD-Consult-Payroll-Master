@@ -61,17 +61,27 @@ Route::get('/billings/quotation/download{id}', [BillingController::class, 'downl
 // Route::post('/leave/{year}/{month}/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('massDisapprove');
 
 // Route::get('/leave/{year?}/{month?}', [LeaveController::class, 'index']);
-Route::get('leaves/leaveView', [LeaveController::class, 'index'])->name('leaveView');
+// Route::get('leaves/leaveView', [LeaveController::class, 'index'])->name('leaveView');
 
 // Route::post('/leave/{year}/{month}/mass-approve', [LeaveController::class, 'massApprove'])->name('massApprove');
 // Route::post('/leave/{year}/{month}/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('massDisapprove');
 
-Route::post('/leaveView/mass-approve', [LeaveController::class, 'massApprove'])->name('massApprove');
-Route::post('/leaveView/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('massDisapprove');
+// Route::post('/leaveView/mass-approve', [LeaveController::class, 'massApprove'])->name('massApprove');
+// Route::post('/leaveView/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('massDisapprove');
 
-Route::post('/leave/approve/{id}', [LeaveController::class, 'approve'])->name('leave.approve');
-Route::post('/leave/disapprove/{id}', [LeaveController::class, 'disapprove'])->name('leave.disapprove');
+// Route::post('/leave/approve/{id}', [LeaveController::class, 'approve'])->name('leave.approve');
+// Route::post('/leave/disapprove/{id}', [LeaveController::class, 'disapprove'])->name('leave.disapprove');
 
+
+
+Route::prefix('leaves')->group(function () {
+    Route::get('/leaveView', [LeaveController::class, 'index'])->name('leaveView');
+    Route::get('/leavesData', [LeaveController::class, 'leavesData'])->name('leavesData');
+    Route::post('/mass-approve', [LeaveController::class, 'massApprove'])->name('mass-approve');
+    Route::post('/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('mass-disapprove');
+    Route::post('/approve/{id}', [LeaveController::class, 'approve'])->name('leaves.approve');
+    Route::post('/disapprove/{id}', [LeaveController::class, 'disapprove'])->name('leaves.disapprove');
+});
 
 
 

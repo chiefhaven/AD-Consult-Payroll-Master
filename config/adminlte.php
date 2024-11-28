@@ -410,9 +410,21 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11', // Updated to version 11
                 ],
-            ],
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css', // Add CSS for the latest version
+                ],
+
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css', // Add fontawesome css
+                ],
+
+            ]
         ],
         'Pace' => [
             'active' => false,

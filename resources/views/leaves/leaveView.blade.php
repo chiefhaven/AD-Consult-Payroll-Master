@@ -7,7 +7,7 @@
         Leave Management
     </h1>
     @push('css')
-        <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap4.min.css">
+        {{-- <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap4.min.css"> --}}
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -21,13 +21,15 @@
 
 <!-- Vue app container for Leave View component -->
 <div id="app">
-    <div class="row p-4">
+    <div class="row">
         <div class="col-md-4">
             <!-- Total Requests Card -->
             <div class="card text-white bg-secondary mb-1">
                 <div class="card-body">
                     <h5 class="card-title">Pending</h5>
-                    <p class="card-text">{{ $pendingRequests }}</p>
+                    <p class="card-text">
+                        @{{ leaves.filter(leave => leave.Status === 'Pending').length }}
+                    </p>
                 </div>
             </div>
         </div>
@@ -36,7 +38,9 @@
             <div class="card text-white bg-secondary mb-1">
                 <div class="card-body">
                     <h5 class="card-title">Approved</h5>
-                    <p class="card-text">{{ $approvedRequests }}</p>
+                    <p class="card-text">
+                        @{{ leaves.filter(leave => leave.Status === 'Approved').length }}
+                    </p>
                 </div>
             </div>
         </div>
@@ -45,14 +49,16 @@
             <div class="card text-white bg-secondary mb-1">
                 <div class="card-body">
                     <h5 class="card-title">Disapproved</h5>
-                    <p class="card-text">{{ $disapprovedRequests }}</p>
+                    <p class="card-text">
+                        @{{ leaves.filter(leave => leave.Status === 'Disapproved').length }}
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Mass Approve and Disapprove Buttons -->
-    <div class="row p-4">
+    <div class="row pt-4">
         <div class="col-md-12 mb-3">
             <button @click="massApprove" type="button" class="btn btn-success">Mass Approve</button>
             <button @click="massDisapprove" type="button" class="btn btn-danger">Mass Disapprove</button>
@@ -60,49 +66,50 @@
     </div>
 
     <!-- Data table -->
-    <div class="row p-4 mt-1">
-        <table id="leaveTable" class="table table-striped table-bordered">
-    <thead>
-        <tr>
-            <th><input type="checkbox" @click="toggleSelectAll" :checked="selectAll"></th>
-            <th>Employee ID</th>
-            <th>First Name</th>
-            <th>Surname</th>
-            <th>Start Date</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Reason</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr v-for="leave in leaves" >
-            <td><input type="checkbox" v-model="leave.selected"></td>
-            <td>@{{ leave.employee_no }}</td>  <!-- Use Vue data properties, not Blade variables -->
-            <td>@{{ leave.Name }}</td>
-            <td>@{{ leave.Surname }}</td>
-            <td>@{{ leave.start_date }}</td>
-            <td>@{{ leave.Type }}</td>
-            <td>@{{ leave.Status }}</td>
-            <td>@{{ leave.Reason }}</td>
-            <td> </td>
-        </tr>
-<div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" @click="toggleDropdown(leave.id)">
-                        Actions
-                    </button>
-                    <div v-if="leave.showDropdown">
-                        <ul>
-                            <li><a href="#" @click="approveLeave(leave.id)">Approve</a></li>
-                            <li><a href="#" @click="disapproveLeave(leave.id)">Disapprove</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
+    <div class="row mt-1">
+        <div class="box card p-3">
+            <table id="leavesTable" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        {{-- <th><input type="checkbox" @click="toggleSelectAll" :checked="selectAll"></th> --}}
+                        <th><input type="checkbox" v-model="selectAll" @change="toggleSelectAll"></th>
+                        <th style="min-width: 5em; width: 5em">ID #</th>
+                        <th style="min-width: 10em; width: 10em">First Name</th>
+                        <th>Surname</th>
+                        <th style="min-width: 5em; width: 5em">Start Date</th>
+                        <th style="min-width: 10em; width: 10em">Type</th>
+                        <th>Status</th>
+                        <th style="min-width: 10em; width: 10em">Reason</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="leave in leaves" >
+                        <td><input type="checkbox" v-model="leave.selected"></td>
+                        <td>@{{ leave.employee_no }}</td>  <!-- Use Vue data properties, not Blade variables -->
+                        <td>@{{ leave.Name }}</td>
+                        <td>@{{ leave.Surname }}</td>
+                        <td>@{{ leave.start_date }}</td>
+                        <td>@{{ leave.Type }}</td>
+                        <td>@{{ leave.Status }}</td>
+                        <td>@{{ leave.Reason }}</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" @click="toggleDropdown(leave.id)">
+                                    Actions
+                                </button>
+                                <div v-show="leave.showDropdown">
+                                    <ul>
+                                        <li><a href="#" @click="approveLeave(leave.id)">Approve</a></li>
+                                        <li><a href="#" @click="disapproveLeave(leave.id)">Disapprove</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -110,148 +117,155 @@
 
 @include('/components/layouts/footer_bottom')
 
-
 @push('js')
-
     <script>
 
-    const { ref, onMounted, createApp } = Vue;
+        const app = createApp({
+            setup() {
+                    // Axios CSRF token setup
+                    axios.defaults.headers.common['X-CSRF-TOKEN'] = document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute('content');
 
-    const app = createApp({
-        setup() {
-            const leaves = ref([]);
-            const selectAll = ref(false);
-            const statusCounts = ref({
-                Approved: 0,
-                Disapproved: 0,
-                Pending: 0,
-            });
-
-            // Fetch leave data from the API
-            const fetchLeaveData = () => {
-                axios.get('leaves/leaveView')
-                    .then(response => {
-                        console.log(response.data); // Debugging response
-                        leaves.value = response.data.leaves.map(leave => ({
-                            ...leave,
-                            selected: false, // Add a 'selected' property for checkbox logic
-                            showDropdown: false, // Initialize dropdown visibility
-                        }));
-                        statusCounts.value = {
-                            Approved: response.data.approvedRequests,
-                            Disapproved: response.data.disapprovedRequests,
-                            Pending: response.data.pendingRequests,
-                        };
-                    })
-                    .catch(error => console.error('Error fetching leave data:', error));
-            };
-
-            // Toggle all checkboxes
-            const toggleSelectAll = () => {
-                selectAll.value = !selectAll.value;
-                leaves.value.forEach(leave => {
-                    leave.selected = selectAll.value;
+                const leaves = ref([]);
+                const selectAll = ref(false);
+                const statusCounts = ref({
+                    Approved: 0,
+                    Disapproved: 0,
+                    Pending: 0,
                 });
-            };
 
-            // Toggle the dropdown visibility for a specific leave entry
-            const toggleDropdown = (leaveId) => {
-                leaves.value = leaves.value.map(leave => ({
-                    ...leave,
-                    showDropdown: leave.id === leaveId ? !leave.showDropdown : false,
-                }));
-            };
-
-            // Get the IDs of all selected leaves
-            const getSelectedIds = () => {
-                return leaves.value.filter(leave => leave.selected).map(leave => leave.id);
-            };
-
-            // Mass approve selected leave requests
-            const massApprove = () => {
-                const selectedIds = getSelectedIds();
-                if (selectedIds.length === 0) {
-                    alert('Please select at least one leave request.');
-                    return;
-                }
-                axios.post(`/leave/mass-approve`, { ids: selectedIds })
-                    .then(response => {
-                        updateCounts(response.data);
-                        alert('Mass approval successful!');
-                        fetchLeaveData();
-                    })
-                    .catch(error => console.error('Error approving leaves:', error));
-            };
-
-            // Mass disapprove selected leave requests
-            const massDisapprove = () => {
-                const selectedIds = getSelectedIds();
-                if (selectedIds.length === 0) {
-                    alert('Please select at least one leave request.');
-                    return;
-                }
-                axios.post(`/leave/mass-disapprove`, { ids: selectedIds })
-                    .then(response => {
-                        updateCounts(response.data);
-                        alert('Mass disapproval successful!');
-                        fetchLeaveData();
-                    })
-                    .catch(error => console.error('Error disapproving leaves:', error));
-            };
-
-            // Update the leave status counts
-            const updateCounts = (data) => {
-                statusCounts.value = {
-                    Approved: data.approvedRequests,
-                    Disapproved: data.disapprovedRequests,
-                    Pending: data.pendingRequests,
+                const fetchLeaveData = () => {
+                    NProgress.start();
+                    axios.get(`/leaves/leavesData`)
+                        .then(response => {
+                            leaves.value = response.data;
+                            initializeDataTable();
+                        })
+                        .catch(error => {
+                            console.error('Error fetching leave data:', error);
+                        })
+                        .finally(() => {
+                            NProgress.done();
+                        });
                 };
-            };
 
-            // Approve a single leave request
-            const approveLeave = (leaveId) => {
-                axios.post(`/leave/approve/${leaveId}`)
-                    .then(response => {
-                        alert('Leave approved');
-                        fetchLeaveData();
-                    })
-                    .catch(error => console.error('Error approving leave:', error));
-            };
+                const toggleSelectAll = () => {
+                    selectAll.value = !selectAll.value;
+                    leaves.value.forEach(leave => {
+                        leave.selected = selectAll.value;
+                    });
+                };
 
-            // Disapprove a single leave request
-            const disapproveLeave = (leaveId) => {
-                axios.post(`/leave/disapprove/${leaveId}`)
-                    .then(response => {
-                        alert('Leave disapproved');
-                        fetchLeaveData();
-                    })
-                    .catch(error => console.error('Error disapproving leave:', error));
-            };
+                const toggleDropdown = (leave) => {
+                    leave.showDropdown = !leave.showDropdown;
+                    leaves.value.forEach((l) => {
+                        if (l.id !== leave.id) l.showDropdown = false;
+                    });
+                };
 
-            // Fetch leave data when the component is mounted
+
+                const getSelectedIds = () => {
+                    return leaves.value.filter(leave => leave.selected).map(leave => leave.id);
+                };
+
+                const processLeaves = (action) => {
+                    const selectedIds = getSelectedIds();
+                    if (selectedIds.length === 0) {
+                        notification('Please select at least one leave request.', 'error');
+                        return;
+                    }
+                    axios.post(`/leaves/${action}`, { ids: selectedIds })
+                        .then(response => {
+                            updateCounts(response.data);
+                            notification(`Mass ${action} successful!`, 'success');
+                            fetchLeaveData();
+                        })
+                        .catch(error => console.error(`Error in ${action}:`, error));
+                };
+
+                const notification = ($text, $icon) =>{
+                    Swal.fire({
+                        toast: true,
+                        position: "top-end",
+                        html: $text,
+                        showConfirmButton: false,
+                        timer: 5500,
+                        timerProgressBar: true,
+                        icon: $icon,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                }
+
+                const massApprove = () => processLeaves('mass-approve');
+                const massDisapprove = () => processLeaves('mass-disapprove');
+
+                const updateCounts = (data) => {
+                    statusCounts.value = {
+                        Approved: data.approvedRequests,
+                        Disapproved: data.disapprovedRequests,
+                        Pending: data.pendingRequests,
+                    };
+                };
+
+                const approveLeave = (leaveId) => {
+                    // axios.post(`/leaves/approve/${leaveId}`)
+                    axios.post(`{{ route('leaves.approve', '') }}/${leaveId}`)
+
+                        .then(() => {
+                            alert('Leave approved');
+                            fetchLeaveData();
+                        })
+                        .catch(error => console.error('Error approving leave:', error));
+                };
+
+                const disapproveLeave = (leaveId) => {
+                    // axios.post(`/leaves/disapprove/${leaveId}`)
+                    axios.post(`{{ route('leaves.disapprove', '') }}/${leaveId}`)
+
+                        .then(() => {
+                            alert('Leave disapproved');
+                            fetchLeaveData();
+                        })
+                        .catch(error => console.error('Error disapproving leave:', error));
+                };
+
             onMounted(() => {
-                console.log('onMounted');
                 fetchLeaveData();
             });
 
-            return {
-                leaves,
-                selectAll,
-                statusCounts,
-                fetchLeaveData,
-                toggleSelectAll,
-                toggleDropdown,
-                getSelectedIds,
-                massApprove,
-                massDisapprove,
-                approveLeave,
-                disapproveLeave,
+            // Function to initialize DataTable after Vue has rendered the table
+            const initializeDataTable = () => {
+                setTimeout(() => {
+                    $('#leavesTable').DataTable({
+                        dom: 'Bfrtip',
+                        buttons: ['copy', 'excel', 'pdf', 'print'],
+                        scrollX: true,
+                        scrollY: true,
+                    });
+                }, 0); // Timeout ensures the DOM is ready
             };
-        },
-    });
 
-    // Mount the app to the DOM
-    app.mount('#app');
+                return {
+                    leaves,
+                    selectAll,
+                    statusCounts,
+                    fetchLeaveData,
+                    toggleSelectAll,
+                    toggleDropdown,
+                    getSelectedIds,
+                    massApprove,
+                    massDisapprove,
+                    approveLeave,
+                    disapproveLeave,
+                };
+            },
+        });
 
+        app.mount('#app');
     </script>
 @endpush
+

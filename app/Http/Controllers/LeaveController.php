@@ -10,34 +10,25 @@ class LeaveController extends Controller
 {
     public function index()
     {
+
+        return view('leaves.leaveView');
+
+    }
+
+    public function leavesData()
+    {
         $leaves = Leave::all();
 
-        // $leaves = Leave::orderBy('start_date', 'desc')->get();
-
-        // Consistent naming for status counts
-        $approvedRequests = $leaves->where('status', 'Approved')->count();
-        $disapprovedRequests = $leaves->where('status', 'Disapproved')->count();
-        $pendingRequests = $leaves->where('status', 'Pending')->count();
-
-        if (request()->wantsJson()) {
-            return response()->json([
-                'leaves' => $leaves,
-                'approvedRequests' => $approvedRequests,
-                'disapprovedRequests' => $disapprovedRequests,
-                'pendingRequests' => $pendingRequests,
-            ]);
-        }
-
-        return view('leaves.leaveView', compact('leaves', 'approvedRequests', 'disapprovedRequests', 'pendingRequests'));
-        // return view('leaves.leaveView', compact('leaves'));
+        return response()->json($leaves, 200);
 
     }
 
     public function massApprove(Request $request)
     {
+        // Validation with strict type checks
         $request->validate([
-            'ids' => 'required|array|min:1',
-            'ids.*' => 'integer|exists:leaves,id',
+            'ids' => 'required|array|min:1', // Ensures `ids` is a non-empty array
+            'ids.*' => 'required|integer|exists:leaves,id', // Ensures all elements are integers and exist in the `leaves` table
         ]);
 
         DB::beginTransaction();
@@ -64,9 +55,10 @@ class LeaveController extends Controller
 
     public function massDisapprove(Request $request)
     {
+    // Validation with strict type checks
         $request->validate([
-            'ids' => 'required|array|min:1',
-            'ids.*' => 'integer|exists:leaves,id',
+            'ids' => 'required|array|min:1', // Ensures `ids` is a non-empty array
+            'ids.*' => 'required|integer|exists:leaves,id', // Ensures all elements are integers and exist in the `leaves` table
         ]);
 
         DB::beginTransaction();
