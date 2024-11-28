@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -27,7 +29,8 @@ class User extends Authenticatable
         'email',
         'password',
         'client_id',
-        'employee_id'
+        'employee_id',
+        'administrator_id'
     ];
 
     /**
@@ -62,7 +65,15 @@ class User extends Authenticatable
 
     public function adminlte_image()
     {
-        return 'https://picsum.photos/300/300';
+        $profilePicturePath = Auth::user()->administrator->profile_picture;
+
+        // Check if the profile picture exists and if it's stored in the public disk
+        if ($profilePicturePath && Storage::disk('public')->exists($profilePicturePath)) {
+            return asset('storage/' . $profilePicturePath);
+        }
+
+        // Return a default image if no profile picture exists
+        return asset('storage/default-profile.png'); // Replace with the default image path if needed
     }
 
     public function adminlte_desc()

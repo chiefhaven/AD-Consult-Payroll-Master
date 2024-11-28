@@ -151,9 +151,11 @@ Route::get('/reports', Reports::class)->middleware(['auth']);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/admins', [AdministratorController::class, 'index'])->name('admins');
+    Route::get('/adminData', [AdministratorController::class, 'adminData'])->name('adminsData');
     Route::get('/add-admin', [AdministratorController::class, 'create'])->name('add-admin');
-    Route::get('/add-store', [AdministratorController::class, 'store'])->name('admin-store');
-    Route::get('/edit-admin', [AdministratorController::class, 'edit'])->name('edit-admin');
+    Route::post('/admin-store', [AdministratorController::class, 'store'])->name('admin-store');
+    Route::delete('/delete-admin/{admin}', [AdministratorController::class, 'destroy'])->name('delete-admin');
+    Route::put('/update-admin', [AdministratorController::class, 'update'])->name('update-admin');
 });
 
 Route::middleware(['auth'])->group(function () {

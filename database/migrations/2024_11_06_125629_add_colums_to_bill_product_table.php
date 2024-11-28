@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bill_product', function (Blueprint $table) {
-            $table->decimal('tax', 15, 2)->default(0)->after('item_discount'); // Adds tax column after the discount column
-            $table->string('taxType', 15)->default('None')->after('tax'); // Adds taxType column after the tax column
+            $table->decimal('tax', 15, 2)->default(0)->after('item_discount')->change(); // Adds tax column after the discount column
+            $table->string('taxType', 15)->default('None')->after('tax')->change(); // Adds taxType column after the tax column
         });
     }
 
