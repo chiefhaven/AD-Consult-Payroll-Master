@@ -100,8 +100,6 @@ Route::get('/update-client/{id}', UpdateClient::class)->name('update-employee')-
 
 Route::get('/payroll', Payroll::class)->middleware(['auth']);
 
-// Route::get('/leaves', Leaves::class)->middleware(['auth']);
-
 Route::get('/attendances', Attendances::class)->middleware(['auth']);
 
 Route::get('/tax-rates', TaxRateList::class)->middleware(['auth']);

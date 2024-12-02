@@ -28,7 +28,7 @@ class LeaveController extends Controller
         // Validation with strict type checks
         $request->validate([
             'ids' => 'required|array|min:1', // Ensures `ids` is a non-empty array
-            'ids.*' => 'required|integer|exists:leaves,id', // Ensures all elements are integers and exist in the `leaves` table
+            'ids.*' => 'required|exists:leaves,id', // Ensures all elements are integers and exist in the `leaves` table
         ]);
 
         DB::beginTransaction();
@@ -58,7 +58,7 @@ class LeaveController extends Controller
     // Validation with strict type checks
         $request->validate([
             'ids' => 'required|array|min:1', // Ensures `ids` is a non-empty array
-            'ids.*' => 'required|integer|exists:leaves,id', // Ensures all elements are integers and exist in the `leaves` table
+            'ids.*' => 'required|exists:leaves,id', // Ensures all elements are integers and exist in the `leaves` table
         ]);
 
         DB::beginTransaction();
@@ -83,19 +83,82 @@ class LeaveController extends Controller
         }
     }
 
-    public function approve($id)
-    {
+   public function approve($id)
+{
+    DB::beginTransaction();
+
+    try {
+        // Fetch the leave record and ensure it exists
         $leave = Leave::findOrFail($id);
+
+        // Update the status to 'Approved'
         $leave->update(['status' => 'Approved']);
 
-        return response()->json(['success' => true, 'message' => 'Leave approved']);
-    }
+        // Recalculate the status counts
+        $counts = [
+            'approved' => Leave::where('status', 'Approved')->count(),
+            'disapproved' => Leave::where('status', 'Disapproved')->count(),
+            'pending' => Leave::where('status', 'Pending')->count(),
+        ];
 
-    public function disapprove($id)
-    {
+        DB::commit();
+
+        // Return success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Leave approved successfully!',
+            'counts' => $counts,
+        ]);
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        // Return failure response
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to approve leave',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+
+public function disapprove($id)
+{
+    DB::beginTransaction();
+
+    try {
+        // Fetch the leave record and ensure it exists
         $leave = Leave::findOrFail($id);
+
+        // Update the status to 'Disapproved'
         $leave->update(['status' => 'Disapproved']);
 
-        return response()->json(['success' => true, 'message' => 'Leave disapproved']);
+        // Recalculate the status counts
+        $counts = [
+            'approved' => Leave::where('status', 'Approved')->count(),
+            'disapproved' => Leave::where('status', 'Disapproved')->count(),
+            'pending' => Leave::where('status', 'Pending')->count(),
+        ];
+
+        DB::commit();
+
+        // Return success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Leave disapproved successfully!',
+            'counts' => $counts,
+        ]);
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        // Return failure response
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to disapprove leave',
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
+
+
 }

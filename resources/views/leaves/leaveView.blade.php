@@ -95,16 +95,40 @@
                         <td>@{{ leave.Reason }}</td>
                         <td>
                             <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" @click="toggleDropdown(leave.id)">
-                                    Actions
-                                </button>
-                                <div v-show="leave.showDropdown">
-                                    <ul>
-                                        <li><a href="#" @click="approveLeave(leave.id)">Approve</a></li>
-                                        <li><a href="#" @click="disapproveLeave(leave.id)">Disapprove</a></li>
-                                    </ul>
-                                </div>
-                            </div>
+    <!-- Bootstrap Dropdown Toggle -->
+    <button
+        class="btn btn-secondary dropdown-toggle"
+        type="button"
+        id="dropdownMenuButton"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+    >
+        Actions
+    </button>
+
+    <!-- Bootstrap Dropdown Menu -->
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li>
+            <a
+                class="dropdown-item"
+                href="#"
+                @click.prevent="approveLeave(leave.id)"
+            >
+                Approve
+            </a>
+        </li>
+        <li>
+            <a
+                class="dropdown-item"
+                href="#"
+                @click.prevent="disapproveLeave(leave.id)"
+            >
+                Disapprove
+            </a>
+        </li>
+    </ul>
+</div>
+
                         </td>
                     </tr>
                 </tbody>
@@ -212,34 +236,52 @@
                 };
 
                 const approveLeave = (leaveId) => {
-                    // axios.post(`/leaves/approve/${leaveId}`)
                     axios.post(`{{ route('leaves.approve', '') }}/${leaveId}`)
-
-                        .then(() => {
-                            alert('Leave approved');
-                            fetchLeaveData();
-                        })
-                        .catch(error => console.error('Error approving leave:', error));
-                };
-
-                const disapproveLeave = (leaveId) => {
-                    // axios.post(`/leaves/disapprove/${leaveId}`)
+                    .then(response => {
+                        updateCounts(response.data);
+                        notification(`Approval successful!`, 'success');
+                        fetchLeaveData();
+                    })
+                    .catch(error => {
+                        console.error('Error approving leave:', error);
+                    });
+            };
+               const disapproveLeave = (leaveId) => {
                     axios.post(`{{ route('leaves.disapprove', '') }}/${leaveId}`)
-
-                        .then(() => {
-                            alert('Leave disapproved');
-                            fetchLeaveData();
-                        })
-                        .catch(error => console.error('Error disapproving leave:', error));
-                };
+                    .then(response => {
+                        updateCounts(response.data);
+                        notification(`Disapproval successful!`, 'success');
+                        fetchLeaveData();
+                    })
+                    .catch(error => {
+                        console.error('Error disapproving leave:', error);
+                    });
+            };
 
             onMounted(() => {
                 fetchLeaveData();
             });
 
             // Function to initialize DataTable after Vue has rendered the table
+            // const initializeDataTable = () => {
+            //     setTimeout(() => {
+            //         $('#leavesTable').DataTable({
+            //             dom: 'Bfrtip',
+            //             buttons: ['copy', 'excel', 'pdf', 'print'],
+            //             scrollX: true,
+            //             scrollY: true,
+            //         });
+            //     }, 0); // Timeout ensures the DOM is ready
+            // };
+
             const initializeDataTable = () => {
                 setTimeout(() => {
+                    // Check if DataTable is already initialized
+                    if ($.fn.DataTable.isDataTable('#leavesTable')) {
+                        $('#leavesTable').DataTable().clear().destroy(); // Properly clear and destroy the existing instance
+                    }
+
+                    // Reinitialize DataTable
                     $('#leavesTable').DataTable({
                         dom: 'Bfrtip',
                         buttons: ['copy', 'excel', 'pdf', 'print'],
@@ -248,6 +290,7 @@
                     });
                 }, 0); // Timeout ensures the DOM is ready
             };
+
 
                 return {
                     leaves,
