@@ -275,21 +275,21 @@
             // };
 
             const initializeDataTable = () => {
-                setTimeout(() => {
-                    // Check if DataTable is already initialized
-                    if ($.fn.DataTable.isDataTable('#leavesTable')) {
-                        $('#leavesTable').DataTable().clear().destroy(); // Properly clear and destroy the existing instance
-                    }
+    setTimeout(() => {
+        // Check if DataTable is already initialized
+        if ($.fn.DataTable.isDataTable('#leavesTable')) {
+            $('#leavesTable').DataTable()
+        }
 
-                    // Reinitialize DataTable
-                    $('#leavesTable').DataTable({
-                        dom: 'Bfrtip',
-                        buttons: ['copy', 'excel', 'pdf', 'print'],
-                        scrollX: true,
-                        scrollY: true,
-                    });
-                }, 0); // Timeout ensures the DOM is ready
-            };
+        // Reinitialize DataTable
+        $('#leavesTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: ['copy', 'excel', 'pdf', 'print'],
+            scrollX: true,
+            scrollY: true,
+        });
+    }, 0); // Timeout ensures the DOM is ready
+};
 
 
                 return {

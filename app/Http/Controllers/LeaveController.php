@@ -95,20 +95,22 @@ class LeaveController extends Controller
         $leave->update(['status' => 'Approved']);
 
         // Recalculate the status counts
-        $counts = [
-            'approved' => Leave::where('status', 'Approved')->count(),
-            'disapproved' => Leave::where('status', 'Disapproved')->count(),
-            'pending' => Leave::where('status', 'Pending')->count(),
-        ];
 
         DB::commit();
+        $approvedRequests = Leave::where('status', 'Approved')->count();
+        $disapprovedRequests = Leave::where('status', 'Disapproved')->count();
+        $pendingRequests = Leave::where('status', 'Pending')->count();
+
+
 
         // Return success response
         return response()->json([
-            'success' => true,
-            'message' => 'Leave approved successfully!',
-            'counts' => $counts,
-        ]);
+                'approvedRequests' => $approvedRequests,
+                'disapprovedRequests' => $disapprovedRequests,
+                'pendingRequests' => $pendingRequests,
+                'message' => ' Approval successful!',
+            ]);
+
     } catch (\Exception $e) {
         DB::rollBack();
 
