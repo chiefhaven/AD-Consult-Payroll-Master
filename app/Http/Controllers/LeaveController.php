@@ -85,18 +85,18 @@ class LeaveController extends Controller
 
    public function approve($id)
 {
-    DB::beginTransaction();
 
     try {
         // Fetch the leave record and ensure it exists
         $leave = Leave::findOrFail($id);
 
         // Update the status to 'Approved'
-        $leave->update(['status' => 'Approved']);
+        $leave->Status = 'Approved';
+
+        $leave->save();
 
         // Recalculate the status counts
 
-        DB::commit();
         $approvedRequests = Leave::where('status', 'Approved')->count();
         $disapprovedRequests = Leave::where('status', 'Disapproved')->count();
         $pendingRequests = Leave::where('status', 'Pending')->count();
@@ -105,6 +105,7 @@ class LeaveController extends Controller
 
         // Return success response
         return response()->json([
+                'leave' => $leave,
                 'approvedRequests' => $approvedRequests,
                 'disapprovedRequests' => $disapprovedRequests,
                 'pendingRequests' => $pendingRequests,
@@ -162,5 +163,14 @@ public function disapprove($id)
     }
 }
 
+public function show($id)
+    {
+        $leave = Leave::findOrFail($id);
+        if (request()->ajax()) {
+        return response()->json($leave);
+    }
+
+    return view('leaves.leaveDetail', compact('leave'));
+    }
 
 }

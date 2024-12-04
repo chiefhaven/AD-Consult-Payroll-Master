@@ -58,12 +58,12 @@
     </div>
 
     <!-- Mass Approve and Disapprove Buttons -->
-    <div class="row pt-4">
+    {{-- <div class="row pt-4">
         <div class="col-md-12 mb-3">
             <button @click="massApprove" type="button" class="btn btn-success">Mass Approve</button>
             <button @click="massDisapprove" type="button" class="btn btn-danger">Mass Disapprove</button>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Data table -->
     <div class="row mt-1">
@@ -71,8 +71,6 @@
             <table id="leavesTable" class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        {{-- <th><input type="checkbox" @click="toggleSelectAll" :checked="selectAll"></th> --}}
-                        <th><input type="checkbox" v-model="selectAll" @change="toggleSelectAll"></th>
                         <th style="min-width: 5em; width: 5em">ID #</th>
                         <th style="min-width: 10em; width: 10em">First Name</th>
                         <th>Surname</th>
@@ -85,7 +83,6 @@
                 </thead>
                 <tbody>
                     <tr v-for="leave in leaves" >
-                        <td><input type="checkbox" v-model="leave.selected"></td>
                         <td>@{{ leave.employee_no }}</td>  <!-- Use Vue data properties, not Blade variables -->
                         <td>@{{ leave.Name }}</td>
                         <td>@{{ leave.Surname }}</td>
@@ -126,6 +123,18 @@
                 Disapprove
             </a>
         </li>
+        <li>
+            <a
+                class="dropdown-item"
+                href="#"
+                data-toggle="modal"
+                data-target="#leaveDatail"
+                @click.prevent="viewLeaveDetails(leave)"
+                {{-- data-url="{{ route('leaveDetail', ['id' => $leave->id]) }}" --}}
+            >
+                View
+            </a>
+        </li>
     </ul>
 </div>
 
@@ -136,7 +145,7 @@
         </div>
     </div>
 </div>
-
+@include('leaves.leaveDetail')
 @endsection
 
 @include('/components/layouts/footer_bottom')
@@ -153,6 +162,7 @@
 
                 const leaves = ref([]);
                 const selectAll = ref(false);
+                const selectedLeave = ref(null);
                 const statusCounts = ref({
                     Approved: 0,
                     Disapproved: 0,
@@ -164,7 +174,6 @@
                     axios.get(`/leaves/leavesData`)
                         .then(response => {
                             leaves.value = response.data;
-                            initializeDataTable();
                         })
                         .catch(error => {
                             console.error('Error fetching leave data:', error);
@@ -174,7 +183,16 @@
                         });
                 };
 
-                const toggleSelectAll = () => {
+
+                const fetchLeaveData = () => {
+                    // Fetch all leave data
+                };
+                
+                const viewLeaveDetails = (leave) => {
+                selectedLeave.value = leave; // Set the selected leave details
+                };
+
+                 const toggleSelectAll = () => {
                     selectAll.value = !selectAll.value;
                     leaves.value.forEach(leave => {
                         leave.selected = selectAll.value;
@@ -236,6 +254,7 @@
                 };
 
                 const approveLeave = (leaveId) => {
+                    NProgress.start();
                     axios.post(`{{ route('leaves.approve', '') }}/${leaveId}`)
                     .then(response => {
                         updateCounts(response.data);
@@ -260,6 +279,7 @@
 
             onMounted(() => {
                 fetchLeaveData();
+                initializeDataTable();
             });
 
             // Function to initialize DataTable after Vue has rendered the table
@@ -304,6 +324,8 @@
                     massDisapprove,
                     approveLeave,
                     disapproveLeave,
+                    selectedLeave,
+                    viewLeaveDetails,
                 };
             },
         });

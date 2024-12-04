@@ -64,7 +64,7 @@
             <td>{{ $billing->issue_date }}</td>
             <td>{{ $billing->due_date }}</td>
             <td>
-                <a href="{{ route('billingView', ['id' => $billing->id]) }}">View</a>
+                <a  href="{{ route('billingView', ['id' => $billing->id]) }}" class="btn btn-primary"> View </a>
             </td>
         </tr>
         @endforeach

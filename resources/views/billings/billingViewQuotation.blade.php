@@ -29,20 +29,14 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body ">
-                    {{-- <canvas id="salesChart" style="height: 250px;"></canvas> --}}
-
                     <div class="row">
                         <div class="col md-5">
-
-
                             <div>
                                 <h4>QUOTE TO</h4>
                                 <p>{{ $billing->client_name }}</p>
                                 <p>{{ $billing->client->address }}</p>
                                 <p>{{ $billing->client->phone }}</p>
                             </div>
-
-
                         </div>
 
                         <div class="col md-5">
