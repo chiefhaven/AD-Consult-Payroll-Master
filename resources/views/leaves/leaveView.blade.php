@@ -92,60 +92,148 @@
                         <td>@{{ leave.Reason }}</td>
                         <td>
                             <div class="dropdown">
-    <!-- Bootstrap Dropdown Toggle -->
-    <button
-        class="btn btn-secondary dropdown-toggle"
-        type="button"
-        id="dropdownMenuButton"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-    >
-        Actions
-    </button>
+                                <!-- Bootstrap Dropdown Toggle -->
+                                <button
+                                    class="btn btn-secondary dropdown-toggle"
+                                    type="button"
+                                    id="dropdownMenuButton"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    Actions
+                                </button>
 
-    <!-- Bootstrap Dropdown Menu -->
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <li>
-            <a
-                class="dropdown-item"
-                href="#"
-                @click.prevent="approveLeave(leave.id)"
-            >
-                Approve
-            </a>
-        </li>
-        <li>
-            <a
-                class="dropdown-item"
-                href="#"
-                @click.prevent="disapproveLeave(leave.id)"
-            >
-                Disapprove
-            </a>
-        </li>
-        <li>
-            <a
-                class="dropdown-item"
-                href="#"
-                data-toggle="modal"
-                data-target="#leaveDatail"
-                @click.prevent="viewLeaveDetails(leave)"
-                {{-- data-url="{{ route('leaveDetail', ['id' => $leave->id]) }}" --}}
-            >
-                View
-            </a>
-        </li>
-    </ul>
-</div>
-
+                                <!-- Bootstrap Dropdown Menu -->
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <li>
+                                        <a
+                                            class="dropdown-item"
+                                            href="#"
+                                            @click.prevent="approveLeave(leave.id)"
+                                        >
+                                            Approve
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            class="dropdown-item"
+                                            href="#"
+                                            @click.prevent="disapproveLeave(leave.id)"
+                                        >
+                                            Disapprove
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            class="dropdown-item"
+                                            href="#"
+                                            data-toggle="modal"
+                                            data-target="#leaveDatail"
+                                            @click.prevent="viewLeaveDetails(leave)"
+                                            {{-- data-url="{{ route('leaveDetail', ['id' => $leave->id]) }}" --}}
+                                        >
+                                            View
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
+
+        </div>
+    </div>
+
+    {{-- modal code here --}}
+    <div
+    class="modal fade text-left"
+    id="leaveDatail"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+    v-if="selectedLeave"
+
+    >
+
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{ _('Leave Details') }}</h4>
+                <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                    @click="closeModal"
+                    >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div>
+                    <div class="row p-4">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-body ">
+                                        <div class="row">
+                                            <div class="col md-6">
+                                                <div class="card p-2">
+                                                   <h5>Employee ID</h5>
+                                                    <p>  @{{ selectedLeave.employee_no }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="col md-6">
+                                                <div class="card p-2">
+                                                    <h5>Name</h5>
+                                                    <p>@{{ selectedLeave.Name }}  @{{ selectedLeave.Surname }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h6>Leave Type</h6>
+                                                <p class="card p-2">@{{ selectedLeave.Type }}</p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h6>Status</h6>
+                                                <p class="card p-2">@{{ selectedLeave.Status }}</p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h6>Application Date</h6>
+                                                <p class="card p-2"> @{{ selectedLeave.start_date }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h6>Reason here</h6>
+                                                <p class="card p-2">@{{ selectedLeave.Reason }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h6>Leave Records</h6>
+                                                <p>records here</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-@include('leaves.leaveDetail')
+
+
+
+</div>
+{{-- @include('leaves.leaveDetail') --}}
 @endsection
 
 @include('/components/layouts/footer_bottom')
@@ -184,13 +272,25 @@
                 };
 
 
-                const fetchLeaveData = () => {
-                    // Fetch all leave data
-                };
+                // const fetchLeaveData = () => {
+                //     // Fetch all leave data
+                // };
 
                 const viewLeaveDetails = (leave) => {
-                selectedLeave.value = leave; // Set the selected leave details
+                selectedLeave.value = leave; // Update the selected leave
+                // $('#leaveDatail').modal('show'); // Show the modal
+
                 };
+
+                // $('#leaveDatail').on('hide.bs.modal', () => {
+                const closeModal = () => {
+                selectedLeave.value = null; // Clear the data when the modal is closed
+                };
+
+
+                // const viewLeaveDetails = (leave) => {
+                // selectedLeave.value = leave; // Set the selected leave details
+                // };
 
                  const toggleSelectAll = () => {
                     selectAll.value = !selectAll.value;
@@ -282,34 +382,22 @@
                 initializeDataTable();
             });
 
-            // Function to initialize DataTable after Vue has rendered the table
-            // const initializeDataTable = () => {
-            //     setTimeout(() => {
-            //         $('#leavesTable').DataTable({
-            //             dom: 'Bfrtip',
-            //             buttons: ['copy', 'excel', 'pdf', 'print'],
-            //             scrollX: true,
-            //             scrollY: true,
-            //         });
-            //     }, 0); // Timeout ensures the DOM is ready
-            // };
-
             const initializeDataTable = () => {
-    setTimeout(() => {
-        // Check if DataTable is already initialized
-        if ($.fn.DataTable.isDataTable('#leavesTable')) {
-            $('#leavesTable').DataTable()
-        }
+                setTimeout(() => {
+                    // Check if DataTable is already initialized
+                    if ($.fn.DataTable.isDataTable('#leavesTable')) {
+                        $('#leavesTable').DataTable()
+                    }
 
-        // Reinitialize DataTable
-        $('#leavesTable').DataTable({
-            dom: 'Bfrtip',
-            buttons: ['copy', 'excel', 'pdf', 'print'],
-            scrollX: true,
-            scrollY: true,
-        });
-    }, 0); // Timeout ensures the DOM is ready
-};
+                    // Reinitialize DataTable
+                    $('#leavesTable').DataTable({
+                        dom: 'Bfrtip',
+                        buttons: ['copy', 'excel', 'pdf', 'print'],
+                        scrollX: true,
+                        scrollY: true,
+                    });
+                }, 0); // Timeout ensures the DOM is ready
+                    };
 
 
                 return {
@@ -326,6 +414,7 @@
                     disapproveLeave,
                     selectedLeave,
                     viewLeaveDetails,
+                    closeModal,
                 };
             },
         });
