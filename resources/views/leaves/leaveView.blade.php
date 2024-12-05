@@ -187,7 +187,7 @@
                 const fetchLeaveData = () => {
                     // Fetch all leave data
                 };
-                
+
                 const viewLeaveDetails = (leave) => {
                 selectedLeave.value = leave; // Set the selected leave details
                 };
