@@ -170,7 +170,7 @@
     bottom: 0;
     left: 0;
     z-index: 1040;
-    background-color: #fff !important;
+    background-color: transparent  !important;
   }
 
   .modal-backdrop.fade {
@@ -204,6 +204,7 @@
     height: 100%;
     overflow: visible;
     outline: 0;
+    /* background-color: rgba(255, 255, 255, 0.9); Semi-transparent white for modal content */
 }
 
 .modal-content {

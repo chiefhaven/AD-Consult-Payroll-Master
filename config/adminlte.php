@@ -307,13 +307,15 @@ return [
         ],
         [
             'text' => 'Billings',
+            'url' => '/billings/billing',
             'icon' => 'fa fa-fw fa-coins',
-            'url' => 'billing',
+            
         ],
         [
             'text' => 'Leaves',
+            'url' => '/leaves/leaveView',
             'icon' => 'fa fa-fw fa-calendar',
-            'url' => 'leaveView',
+            
             ],
 
         ],

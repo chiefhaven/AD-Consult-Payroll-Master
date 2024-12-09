@@ -9,10 +9,17 @@
     @push('css')
         {{-- <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap4.min.css"> --}}
         <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
 
         <!-- Bootstrap JavaScript -->
         {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> --}}
+
+        <style>
+        #leaveDatail.modal {
+            position: fixed !important;
+        }
+        </style>
+
 
     @endpush
 @stop
@@ -66,8 +73,8 @@
     </div> --}}
 
     <!-- Data table -->
+
     <div class="row mt-1">
-        <div class="box card p-3">
             <table id="leavesTable" class="table table-striped table-bordered">
                 <thead>
                     <tr>
@@ -142,7 +149,7 @@
                 </tbody>
             </table>
 
-        </div>
+    
     </div>
 
     {{-- modal code here --}}
@@ -237,6 +244,23 @@
 @endsection
 
 @include('/components/layouts/footer_bottom')
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            $('#leavesTable').DataTable({
+                autoWidth: false,
+                responsive: true
+                // paging: true,
+                // search: true,
+                // ordering: true,
+                // info: true,
+                // lengthChange: true,
+                // pageLength: 10,
+            });
+        });
+    </script>
+@endpush
 
 @push('js')
     <script>
@@ -382,22 +406,39 @@
                 initializeDataTable();
             });
 
-            const initializeDataTable = () => {
-                setTimeout(() => {
-                    // Check if DataTable is already initialized
-                    if ($.fn.DataTable.isDataTable('#leavesTable')) {
-                        $('#leavesTable').DataTable()
-                    }
+            // const initializeDataTable = () => {
+            //     setTimeout(() => {
+            //         // Check if DataTable is already initialized
+            //         if ($.fn.DataTable.isDataTable('#leavesTable')) {
+            //             $('#leavesTable').DataTable(
+            //                 {
+            //             dom: 'Bfrtip',
+            //             buttons: ['copy', 'excel', 'pdf', 'print'],
+            //             scrollX: true,
+            //             scrollY: true,
+            //             paging: true, // Enable pagination
+            //             pageLength: 10, // Number of rows per page
+            //             lengthMenu: [5, 10, 25, 50], // Dropdown options for rows per page
+            //             ordering: true,
+                                    
+            //         }
+            //             ).destroy();
+            //         }
 
-                    // Reinitialize DataTable
-                    $('#leavesTable').DataTable({
-                        dom: 'Bfrtip',
-                        buttons: ['copy', 'excel', 'pdf', 'print'],
-                        scrollX: true,
-                        scrollY: true,
-                    });
-                }, 0); // Timeout ensures the DOM is ready
-                    };
+            //         // Reinitialize DataTable
+            //         $('#leavesTable').DataTable({
+            //             dom: 'Bfrtip',
+            //             buttons: ['copy', 'excel', 'pdf', 'print'],
+            //             scrollX: true,
+            //             scrollY: true,
+            //             paging: true, // Enable pagination
+            //             pageLength: 10, // Number of rows per page
+            //             lengthMenu: [5, 10, 25, 50], // Dropdown options for rows per page
+            //             ordering: true,
+                                    
+            //         });
+            //     }, 0); // Timeout ensures the DOM is ready
+            //         };
 
 
                 return {

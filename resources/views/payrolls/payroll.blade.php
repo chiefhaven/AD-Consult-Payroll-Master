@@ -33,13 +33,13 @@
 {{-- Rename section content to content_body --}}
 
 @section('content')
-        <table id="payrollTable" class="display">
+        <table id="payrollTable" class="table table-striped table-bordered"> 
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Total</th>
-                <th>date</th>
-                <th>total employees</th>
+                <th>Date</th>
+                <th>Total Employees</th>
                 <th>status</th>
             </tr>
         </thead>

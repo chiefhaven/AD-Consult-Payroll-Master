@@ -28,7 +28,7 @@
 
 {{-- Rename section content to content_body --}}
 
-@section('content')
+@section('content') 
 <div class="row ">
 
     <table id="myTable" class="table table-striped table-bordered">

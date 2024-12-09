@@ -20,7 +20,7 @@
 
                         <div class="col-md-3">
                             <a href="{{ route('leaveView') }}" style="text-decoration: none;">
-                            <x-adminlte-small-box title="Leaves" text="{{ App\Models\Leave::where('Status', 'Pending')->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count() }}" theme="secondary" />
+                            <x-adminlte-small-box title="Leaves" text="{{ App\Models\Leave::where('status', 'Pending')->get()->count() }}" theme="secondary" />
                             </a>
                         </div>
 
@@ -45,19 +45,6 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row mt-2">
-                        {{-- <div class="col-md-4">
-                            <a href="{{ route('reports') }}" style="text-decoration: none;">
-                            <x-adminlte-small-box title="Report" text="{{ App\Models\Reports::get()->count() }}" theme="secondary" />
-                            </a>
-                        </div> --}}
-
-                         {{-- <div class="col-md-4">
-                            <a href="{{ route('leaves') }}" style="text-decoration: none;">
-                            <x-adminlte-small-box title="Leaves" text="{{ App\Models\Leaves::get()->count() }}" theme="secondary" />
-                            </a>
-                        </div> --}}
-
-
                     </div>
                 </div>
             </div>
@@ -67,21 +54,21 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">Productivity Chart</h2>
+                    <h2 class="card-title">Billing Trend</h2>
 
                 </div>
                 <div class="card-body">
-                    <canvas id="salesChart" style="height: 250px;"></canvas>
+                    <canvas id="monthlyBillingChart" style="height: 250px;"></canvas>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">Organizational Chart</h2>
+                    <h2 class="card-title">Education Spread</h2>
                 </div>
                 <div class="card-body">
-                    <canvas id="salesChart" style="height: 250px;"></canvas>
+                    <canvas id="education_levelPieChart" style="height: 250px;"></canvas>
                 </div>
             </div>
         </div>
@@ -154,4 +141,57 @@
 
 
       </script>
+
+      {{-- billing chart --}}
+        <script>
+            var billingMonths = {!! json_encode($monthly_billings->pluck('month')) !!};
+            var billingTotals = {!! json_encode($monthly_billings->pluck('total')) !!};
+        </script>
+        <script>
+            $(function() {
+                var ctx = document.getElementById('monthlyBillingChart').getContext('2d');
+                var monthlyBillingChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: billingMonths,
+                        datasets: [{
+                            label: 'Monthly Billings',
+                            data: billingTotals,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4 // Smooth curves
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Month',
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Billing Amount ($)',
+                                },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+</script>
+
+
 @stop

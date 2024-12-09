@@ -40,12 +40,8 @@ Route::get('/payrolls', [PayrollController::class, 'index'])->name('payrolls');
 
 //Billing routes
 Route::get('/billings', [BillingController::class, 'index'])->name('billing');
-
-//Route::get('/billings/view/{id}', [BillingController::class, 'show'])->name('billingView');
 Route::get('/billings/view/{id}', [BillingController::class, 'show'])->name('billingView');
-
 Route::get('/billings/invoice/download{id}', [BillingController::class, 'downloadInvoice'])->name('download');
-//Route::get('/billings/view/{id}', [BillingController::class, 'show'])->name('billingViewQuotation');
 Route::get('/billings/quotation/download{id}', [BillingController::class, 'downloadQuotation'])->name('download');
 
 
