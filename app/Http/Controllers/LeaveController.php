@@ -23,65 +23,65 @@ class LeaveController extends Controller
 
     }
 
-    public function massApprove(Request $request)
-    {
-        // Validation with strict type checks
-        $request->validate([
-            'ids' => 'required|array|min:1', // Ensures `ids` is a non-empty array
-            'ids.*' => 'required|exists:leaves,id', // Ensures all elements are integers and exist in the `leaves` table
-        ]);
+    // public function massApprove(Request $request)
+    // {
+    //     // Validation with strict type checks
+    //     $request->validate([
+    //         'ids' => 'required|array|min:1', // Ensures `ids` is a non-empty array
+    //         'ids.*' => 'required|exists:leaves,id', // Ensures all elements are integers and exist in the `leaves` table
+    //     ]);
 
-        DB::beginTransaction();
+    //     DB::beginTransaction();
 
-        try {
-            Leave::whereIn('id', $request->input('ids'))->update(['status' => 'Approved']);
-            DB::commit();
+    //     try {
+    //         Leave::whereIn('id', $request->input('ids'))->update(['status' => 'Approved']);
+    //         DB::commit();
 
-            $approvedRequests = Leave::where('status', 'Approved')->count();
-            $disapprovedRequests = Leave::where('status', 'Disapproved')->count();
-            $pendingRequests = Leave::where('status', 'Pending')->count();
+    //         $approvedRequests = Leave::where('status', 'Approved')->count();
+    //         $disapprovedRequests = Leave::where('status', 'Disapproved')->count();
+    //         $pendingRequests = Leave::where('status', 'Pending')->count();
 
-            return response()->json([
-                'approvedRequests' => $approvedRequests,
-                'disapprovedRequests' => $disapprovedRequests,
-                'pendingRequests' => $pendingRequests,
-                'message' => 'Mass approval successful!',
-            ]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['error' => 'Failed to approve leaves', 'message' => $e->getMessage()], 500);
-        }
-    }
+    //         return response()->json([
+    //             'approvedRequests' => $approvedRequests,
+    //             'disapprovedRequests' => $disapprovedRequests,
+    //             'pendingRequests' => $pendingRequests,
+    //             'message' => 'Mass approval successful!',
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return response()->json(['error' => 'Failed to approve leaves', 'message' => $e->getMessage()], 500);
+    //     }
+    // }
 
-    public function massDisapprove(Request $request)
-    {
-    // Validation with strict type checks
-        $request->validate([
-            'ids' => 'required|array|min:1', // Ensures `ids` is a non-empty array
-            'ids.*' => 'required|exists:leaves,id', // Ensures all elements are integers and exist in the `leaves` table
-        ]);
+    // public function massDisapprove(Request $request)
+    // {
+    // // Validation with strict type checks
+    //     $request->validate([
+    //         'ids' => 'required|array|min:1', // Ensures `ids` is a non-empty array
+    //         'ids.*' => 'required|exists:leaves,id', // Ensures all elements are integers and exist in the `leaves` table
+    //     ]);
 
-        DB::beginTransaction();
+    //     DB::beginTransaction();
 
-        try {
-            Leave::whereIn('id', $request->input('ids'))->update(['status' => 'Disapproved']);
-            DB::commit();
+    //     try {
+    //         Leave::whereIn('id', $request->input('ids'))->update(['status' => 'Disapproved']);
+    //         DB::commit();
 
-            $approvedRequests = Leave::where('status', 'Approved')->count();
-            $disapprovedRequests = Leave::where('status', 'Disapproved')->count();
-            $pendingRequests = Leave::where('status', 'Pending')->count();
+    //         $approvedRequests = Leave::where('status', 'Approved')->count();
+    //         $disapprovedRequests = Leave::where('status', 'Disapproved')->count();
+    //         $pendingRequests = Leave::where('status', 'Pending')->count();
 
-            return response()->json([
-                'approvedRequests' => $approvedRequests,
-                'disapprovedRequests' => $disapprovedRequests,
-                'pendingRequests' => $pendingRequests,
-                'message' => 'Mass disapproval successful!',
-            ]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['error' => 'Failed to disapprove leaves', 'message' => $e->getMessage()], 500);
-        }
-    }
+    //         return response()->json([
+    //             'approvedRequests' => $approvedRequests,
+    //             'disapprovedRequests' => $disapprovedRequests,
+    //             'pendingRequests' => $pendingRequests,
+    //             'message' => 'Mass disapproval successful!',
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return response()->json(['error' => 'Failed to disapprove leaves', 'message' => $e->getMessage()], 500);
+    //     }
+    // }
 
    public function approve($id)
 {
@@ -125,43 +125,22 @@ class LeaveController extends Controller
 }
 
 
-public function disapprove($id)
+public function disapproveLeave($id)
 {
-    DB::beginTransaction();
+    $leave = Leave::findOrFail($id);
+    $leave->status = 'disapproved';  // Update the status to 'disapproved'
+    $leave->save();  // Save the updated leave record
 
-    try {
-        // Fetch the leave record and ensure it exists
-        $leave = Leave::findOrFail($id);
+    // Get the updated counts for approved, disapproved, and pending leaves
+    $counts = [
+        'approved' => Leave::where('status', 'approved')->count(),
+        'disapproved' => Leave::where('status', 'disapproved')->count(),
+        'pending' => Leave::where('status', 'pending')->count()
+    ];
 
-        // Update the status to 'Disapproved'
-        $leave->update(['status' => 'Disapproved']);
-
-        // Recalculate the status counts
-        $counts = [
-            'approved' => Leave::where('status', 'Approved')->count(),
-            'disapproved' => Leave::where('status', 'Disapproved')->count(),
-            'pending' => Leave::where('status', 'Pending')->count(),
-        ];
-
-        DB::commit();
-
-        // Return success response
-        return response()->json([
-            'success' => true,
-            'message' => 'Leave disapproved successfully!',
-            'counts' => $counts,
-        ]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-
-        // Return failure response
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to disapprove leave',
-            'error' => $e->getMessage(),
-        ], 500);
-    }
+    return response()->json($counts);  // Return the updated counts as a JSON response
 }
+
 
 public function show($id)
     {

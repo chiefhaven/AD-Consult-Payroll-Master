@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+
 use Illuminate\Support\Str;
 
 class Employee extends Model
@@ -107,5 +108,10 @@ class Employee extends Model
     public function leave()
     {
         return $this->hasMany(Leave::class);
+    }
+    
+    public function payroll()
+    {
+        return $this->hasMany(Payroll::class);
     }
 }

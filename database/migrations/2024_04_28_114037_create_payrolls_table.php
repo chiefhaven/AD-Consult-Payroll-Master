@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payrolls', function (Blueprint $table) {
-            $table->id();
-            $table->char('employee_id');
+            $table->uuid('id')->primary()->unique();
+            $table->foreignId('employee_id');
             $table->date('payment_date');
             $table->enum('pay_period',['Weekly','Bi weekly','Monthly']);
             $table->decimal('gross_pay');

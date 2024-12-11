@@ -76,7 +76,7 @@ Route::prefix('leaves')->group(function () {
     Route::post('/mass-approve', [LeaveController::class, 'massApprove'])->name('mass-approve');
     Route::post('/mass-disapprove', [LeaveController::class, 'massDisapprove'])->name('mass-disapprove');
     Route::post('/approve/{id}', [LeaveController::class, 'approve'])->name('leaves.approve');
-    Route::post('/disapprove/{id}', [LeaveController::class, 'disapprove'])->name('leaves.disapprove');
+    Route::post('/disapprove/{id}', [LeaveController::class, 'disapproveLeave'])->name('leaves.disapprove');
     Route::get('/leaveDetails/{id}', [LeaveController::class, 'show'])->name('leaveDetails');
 
 });

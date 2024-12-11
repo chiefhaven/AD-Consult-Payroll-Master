@@ -54,7 +54,7 @@
 
 @section('adminlte_js')
     <script>
-        const { ref, onMounted, createApp, watch } = Vue;
+        const { nextTic, ref, onMounted, createApp, watch } = Vue;
 
     </script>
 

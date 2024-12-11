@@ -33,7 +33,58 @@
 {{-- Rename section content to content_body --}}
 
 @section('content')
-        <table id="payrollTable" class="table table-striped table-bordered"> 
+<div>
+<div id="">
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Total Requests Card -->
+            <div class="card text-white bg-secondary mb-1">
+                <div class="card-body">
+                    <h5 class="card-title">Total Payroll Amount</h5>
+                    <p class="card-text">
+                       
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <!-- Approved Requests Card -->
+            <div class="card text-white bg-secondary mb-1">
+                <div class="card-body">
+                    <h5 class="card-title">No. of Employees</h5>
+                    <p class="card-text">
+
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <!-- Disapproved Requests Card -->
+            <div class="card text-white bg-secondary mb-1">
+                <div class="card-body">
+                    <h5 class="card-title">Pay Period</h5>
+                    <p class="card-text">
+                       
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <!-- Disapproved Requests Card -->
+            <div class="card text-white bg-secondary mb-1">
+                <div class="card-body">
+                    <h5 class="card-title">Disbursement Date</h5>
+                    <p class="card-text">
+                       
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div>
+
+     <table id="payrollTable" class="table table-striped table-bordered"> 
         <thead>
             <tr>
                 <th>Name</th>
@@ -57,15 +108,12 @@
         </tbody>
     </table>
 
-    {{-- <x-adminlte-datatable id="payroll" :heads="$heads">
-    @foreach($config['data'] as $row)
-        <tr>
-            @foreach($row as $cell)
-                <td>{!! $cell !!}</td>
-            @endforeach
-        </tr>
-    @endforeach
-    </x-adminlte-datatable> --}}
+
+</div>
+
+</div>
+       
+   
 
 @stop
 
