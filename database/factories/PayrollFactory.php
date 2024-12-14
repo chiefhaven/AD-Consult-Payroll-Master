@@ -12,20 +12,20 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class PayrollFactory extends Factory
 {
     protected $model = Payroll::class;
-    
+
     public function definition()
     {
-        $employeeNos = Employee::pluck('employee_no')->toArray();
+        $employeeIds  = Employee::pluck('id')->toArray();
         return [
-            'employee_id' => $this->faker->randomElement($employeeNos),
+            'employee_id' => $this->faker->randomElement($employeeIds),
             'payment_date'=> $this->faker->dateTimeThisYear(),
-            'pay_period'=> $this->faker->dateTimeThisYear(),
+            'pay_period'=> $this->faker->randomElement(['Weekly','Bi weekly','Monthly']),
             'gross_pay' => $this->faker->randomFloat(2, 30000, 150000),
             'net_pay' => $this->faker->randomFloat(2, 30000, 150000),
             'deductions' => $this->faker->randomFloat(2, 3000, 1500),
-            'compansation' => $this->faker->randomFloat(2, 3000, 1500),
-            'payment_method' => $this->faker->randomElement(['Cheque','Bank Transfer','Cash']),
-            'payment_status' =>$this->faker->randomElement(['Draft','Paid']),
+            'compansation' => $this->faker->randomElement(['Commission','Bonus']),
+            'payment_method' => $this->faker->randomElement(['Direct Deposit','Cheque']),
+            'payment_status' => 'Draft',
         ];
     }
 }

@@ -25,7 +25,7 @@
                         </div>
 
                          <div class="col-md-3">
-                            <a href="{{ route('payrolls') }}" style="text-decoration: none;">
+                            <a href="{{ route('payrollsummary') }}" style="text-decoration: none;">
                             <x-adminlte-small-box title="Payroll" text="{{ App\Models\Payroll::get()->count() }}" theme="secondary" />
                             </a>
                         </div>

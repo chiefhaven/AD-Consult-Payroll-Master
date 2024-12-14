@@ -2,7 +2,7 @@
 
 {{-- Extend and customize the browser title --}}
 
-@section('title', 'Employees')
+@section('title', 'Payroll')
 
 {{-- Extend and customize the page content header --}}
 
@@ -34,7 +34,6 @@
 
 @section('content')
 <div>
-<div id="">
     <div class="row">
         <div class="col-md-3">
             <!-- Total Requests Card -->
@@ -42,7 +41,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Total Payroll Amount</h5>
                     <p class="card-text">
-                       
+
                     </p>
                 </div>
             </div>
@@ -64,7 +63,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Pay Period</h5>
                     <p class="card-text">
-                       
+
                     </p>
                 </div>
             </div>
@@ -75,46 +74,50 @@
                 <div class="card-body">
                     <h5 class="card-title">Disbursement Date</h5>
                     <p class="card-text">
-                       
+
                     </p>
                 </div>
             </div>
         </div>
     </div>
 
-<div>
 
-     <table id="payrollTable" class="table table-striped table-bordered"> 
+    <div class="col mt-3">
+
+
+     <table id="payrollTable" class="table table-striped table-bordered">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Total</th>
-                <th>Date</th>
-                <th>Total Employees</th>
-                <th>status</th>
+                <th>Employee ID</th>
+                <th>First name</th>
+                <th>Surname</th>
+                <th>Gross Pay</th>
+                <th>Net Pay</th>
+                <th>Deductions</th>
+                <th>Payment Method</th>
+                <th>Status</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($payrolls as $payroll)
+            @foreach ($groupRecords as $record)
                 <tr>
-                    <td>{{ $payroll->name }}</td>
-                    <td>{{ $payroll->total }}</td>
-                    <td>{{ $payroll->date }}</td>
-                    <td>{{ $payroll->total_employees }}</td>
-                    <td>{{ $payroll->status }}</td>
-
+                    <td>EMP-{{ $record->employee->hiredate }}-{{ $record->employee->employee_no  }}</td>
+                    <td>{{ $record->employee->fname }}</td>
+                    <td>{{ $record->employee->sname }}</td>
+                    <td>{{ number_format($record->gross_pay, 2) }}</td>
+                    <td>{{ number_format($record->net_pay, 2) }}</td>
+                    <td>{{ number_format($record->deductions, 2) }}</td>
+                    <td>{{ $record->payment_method }}</td>
+                    <td>{{ $record->payment_status }}</td>
+                    <td>---</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-
-
 </div>
 
 </div>
-       
-   
-
 @stop
 
 {{-- Create a common footer --}}

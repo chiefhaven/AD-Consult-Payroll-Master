@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Payroll;
 use App\Models\Billing;
 use App\Models\Employee;
 use App\Models\Client;
@@ -19,6 +20,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+
         Billing::factory()->count(50)->create([
             // 'status' => 'Active',
             ]);
@@ -26,6 +29,8 @@ class DatabaseSeeder extends Seeder
         Employee::factory()->count(50)->create([
             'status' => 'Active',
             ]);
+            
+        Payroll::factory()->count(50)->create();
 
         Client::factory()->count(50)->create([
             'status' => 'Active',
@@ -53,7 +58,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
+        $this->call(EmployeeSeeder::class);
         $this->call(LeaveSeeder::class);
+        $this->call(PayrollSeeder::class);
+
 
 
     }
