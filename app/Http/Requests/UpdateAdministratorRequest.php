@@ -22,7 +22,18 @@ class UpdateAdministratorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'sirname' => 'required|string|max:255',
+            'phone' => 'required|string|max:15',
+            'alt_phone' => 'nullable|string|max:15',
+            'street_address' => 'nullable|string|max:255',
+            'district' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'role' => 'nullable|string|max:255',
+            'is_active' => 'required|boolean',
         ];
     }
+
 }
