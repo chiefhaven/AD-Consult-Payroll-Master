@@ -155,7 +155,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/add-admin', [AdministratorController::class, 'create'])->name('add-admin');
     Route::post('/admin-store', [AdministratorController::class, 'store'])->name('admin-store');
     Route::delete('/delete-admin/{admin}', [AdministratorController::class, 'destroy'])->name('delete-admin');
-    Route::put('/update-admin', [AdministratorController::class, 'update'])->name('update-admin');
+    Route::put('/update-admin/{administrator}', [AdministratorController::class, 'update'])->name('update-admin');
+});
+
+Route::prefix('api')->middleware(['auth'])->group(function () {
+    Route::put('/update-admin', [AdministratorController::class, 'update']);
 });
 
 Route::middleware(['auth'])->group(function () {
