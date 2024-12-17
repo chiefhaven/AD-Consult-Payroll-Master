@@ -14,32 +14,43 @@ class PayrollController extends Controller
      */
 public function index()
 {
-    // Fetch all payroll data
     $payrolls = Payroll::all();
 
-    // Group payrolls by year and month
-    $groupedPayrolls = $payrolls->groupBy(function($payroll) {
-        return Carbon::parse($payroll->payment_date)->format('Y-m'); // Format as 'year-month'
+    // Group by month
+    $groupedPayrolls = $payrolls->groupBy(function ($payroll) {
+        return Carbon::parse($payroll->payment_date)->format('Y-m');
     });
 
-
-    // Calculate total net pay for each month
-    $totalsByMonth = $groupedPayrolls->map(function($group) {
+    // Calculate totals and counts for each period
+    $periodGroupedPayrolls = $groupedPayrolls->map(function ($group) {
         return [
-            'total_net_pay' => $group->sum('net_pay'), // Sum of net_pay only
-            'employee_count' => $group->count(), // Count of records (number of employees)
-            'status' => $group->every(fn($payroll) => $payroll->payment_status === 'Draft') ? 'Draft' : 'Paid',
-
+            'Monthly' => [
+                'records' => $group->where('pay_period', 'Monthly'),
+                'total_net_pay' => $group->where('pay_period', 'Monthly')->sum('net_pay'),
+                'employee_count' => $group->where('pay_period', 'Monthly')->count(),
+                'status' => $group->where('pay_period', 'Monthly')->every(fn($p) => $p->payment_status === 'Draft') ? 'Draft' : 'Paid',
+            ],
+            'Bi-Weekly' => [
+                'records' => $group->where('pay_period', 'Bi-weekly'),
+                'total_net_pay' => $group->where('pay_period', 'Bi-weekly')->sum('net_pay'),
+                'employee_count' => $group->where('pay_period', 'Bi-weekly')->count(),
+                'status' => $group->where('pay_period', 'Bi-weekly')->every(fn($p) => $p->payment_status === 'Draft') ? 'Draft' : 'Paid',
+            ],
+            'Weekly' => [
+                'records' => $group->where('pay_period', 'Weekly'),
+                'total_net_pay' => $group->where('pay_period', 'Weekly')->sum('net_pay'),
+                'employee_count' => $group->where('pay_period', 'Weekly')->count(),
+                'status' => $group->where('pay_period', 'Weekly')->every(fn($p) => $p->payment_status === 'Draft') ? 'Draft' : 'Paid',
+            ],
         ];
     });
 
-
-    // Return the view with grouped data and totals
     return view('payrolls.payroll_summary', [
-        'groupedPayrolls' => $groupedPayrolls,
-        'totalsByMonth' => $totalsByMonth
+        'groupedPayrolls' => $periodGroupedPayrolls,
     ]);
 }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -97,9 +108,17 @@ public function index()
             ->whereMonth('payment_date', substr($monthYear, 5, 2))
             ->get();
 
+        // Calculate total amount (sum of net_pay)
+        $totalAmount = $groupRecords->sum('net_pay');
+
+        // Count the number of payroll records
+        $recordCount = $groupRecords->count();
+
         return view('payrolls.payroll', [
             'groupRecords' => $groupRecords,
             'monthYear' => $monthYear,
+            'totalAmount' => $totalAmount,
+            'recordCount' => $recordCount,
         ]);
     }
 

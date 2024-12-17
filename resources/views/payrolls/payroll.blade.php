@@ -41,7 +41,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Total Payroll Amount</h5>
                     <p class="card-text">
-
+                        MWK <strong>{{ number_format($totalAmount, 2) }}</strong>
                     </p>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                 <div class="card-body">
                     <h5 class="card-title">No. of Employees</h5>
                     <p class="card-text">
-
+                        <strong>{{ $recordCount }}</strong>
                     </p>
                 </div>
             </div>
