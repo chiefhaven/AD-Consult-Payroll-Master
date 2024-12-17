@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateAdministratorRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class AdministratorController extends Controller
 {
@@ -108,7 +109,7 @@ class AdministratorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAdministratorRequest $request, Administrator $administrator)
+    public function update(UpdateAdministratorRequest $request)
     {
 
         // Validate input data
@@ -116,23 +117,27 @@ class AdministratorController extends Controller
             'first_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string|max:255',
             'sirname' => 'required|string|max:255',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'phone' => 'nullable|string|max:20',
-            'alt_phone' => 'nullable|string|max:20',
+            'phone' => 'required|string|max:15',
+            'alt_phone' => 'nullable|string|max:15',
             'street_address' => 'nullable|string|max:255',
             'district' => 'nullable|string|max:255',
             'country' => 'nullable|string|max:255',
-            'role' => 'nullable|string|in:it_admin,hr_admin,finance_admin,super_admin',
-            'password' => 'nullable|string|min:8',  // Make password optional during update
-            'is_active' => 'nullable|boolean',  // Optional, will be handled if provided
+            'department' => 'nullable|string|max:255',
+            'role' => 'nullable|string|max:255',
+            'is_active' => 'required|boolean',
+            'admin_id' => 'required',
         ]);
 
         // Handle profile picture upload if provided
         if ($request->hasFile('profile_picture')) {
             $file = $request->file('profile_picture');
-            $path = $file->store('profile_pictures', 'public'); // Save to `storage/app/public/profile_pictures`
+            $path = $file->store('profile_pictures', 'public'); // Save to the `storage/app/public/profile_pictures` directory
             $validated['profile_picture'] = $path;
         }
+
+        $validated = $request->all();
+
+        $administrator = Administrator::find($validated['admin_id']);
 
         // Update the administrator record
         $administrator->update($validated);
