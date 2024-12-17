@@ -163,6 +163,7 @@
             const showEditAdminModal = ref(false);
 
             const form = ref({
+                admin_id: '',
                 first_name: '',        // first_name'
                 middle_name: '',       // Optional field
                 sirname: '',           // Required field
@@ -182,13 +183,16 @@
             const storeAdmin = async () => {
                 NProgress.start();
 
+                // Include admin_id in the form data
+                form.value.admin_id = adminData.value.id;
+
                 isSubmitting.value = true;
                 errors.value = {}; // Clear previous errors
 
                 // Prepare FormData
                 const formData = new FormData();
+                formData.append('_method', 'PUT');
 
-                // Populate FormData
                 Object.keys(form.value).forEach((key) => {
                   if (key === 'profile_picture' && form.value[key]) {
                     formData.append(key, form.value[key]); // File handling
@@ -197,46 +201,28 @@
                   }
                 });
 
-                // Debug: Log contents of FormData
-                for (const [key, value] of formData.entries()) {
-                  console.log(`${key}:`, value);
-                }
-
                 try {
-                  const response = await axios.put('/update-admin', formData, {
+                  // Use the admin ID in the endpoint
+                  const response = await axios.post(`/api/update-admin`, formData, {
                     headers: {
                       'Content-Type': 'multipart/form-data',
                     },
                   });
 
-                  // Reset form after successful submission
-                  form.value = {
-                    first_name: '',
-                    middle_name: '',
-                    sirname: '',
-                    profile_picture: null,
-                    phone: '',
-                    alt_phone: '',
-                    street_address: '',
-                    district: '',
-                    country: '',
-                    department: '',
-                    role: '',
-                    is_active: true,
-                  };
+                  fetchAdmins()
+                  showEditAdminModal.value = false;
 
-                  // Success message or redirect
-                  notification('Admin added successifully, page redirecting...', 'success');
-
-                  window.location.href = '/admins';
-
+                  // Success notification
+                  notification('Admin updated successfully!', 'success')
                 } catch (error) {
                   if (error.response && error.response.data.errors) {
-                    // Capture validation errors from the backend
+                    // Capture and display validation errors
                     errors.value = error.response.data.errors;
-                    console.log('Admin created successfully:', errors.value);
+                    notification('Failed to update admin', 'error');
 
+                    console.log('Update errors:', errors.value);
                   } else {
+                    notification('An unexpected error occurred. Please try again.', 'error');
                     console.error('An error occurred:', error);
                   }
                 } finally {
@@ -244,7 +230,6 @@
                   NProgress.done();
                 }
             };
-
 
             const handleFileUpload = (event) => {
                 form.value.profile_picture = event.target.files[0];
@@ -306,14 +291,14 @@
                     error.value = "Failed to fetch admins.";
                 } finally {
                     loading.value = false;
-                    NProgress.done();
-
                 }
             };
 
             onMounted(() => {
                 NProgress.start();
                 fetchAdmins();
+
+                NProgress.done();
             });
 
             const deleteAdmin = async (admin) => {
