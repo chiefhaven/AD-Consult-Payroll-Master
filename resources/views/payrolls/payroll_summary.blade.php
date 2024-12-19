@@ -59,18 +59,14 @@
         </tr>
     </thead>
     <tbody>
-    @foreach ($periodGroups as $monthYear => $payrolls)
-        <tr onclick="window.location='{{ route('payrolls.group', ['monthYear' => $monthYear]) }}'" style="cursor: pointer;">
-
-            <td>PY-{{ $monthYear }}</td>
-            <td>{{ number_format($periodGroups[$monthYear]['total_net_pay'], 2) }}</td>
-            <td>{{ \Carbon\Carbon::createFromFormat('Y-m', $monthYear)->format('F Y') }}</td>
-            <td>{{ $periodGroups[$monthYear]['employee_count'] }}</td>
-            <td>{{ $periodGroups[$monthYear]['status'] }} </td>
-
-
-        </tr>
-        @endforeach
+     @foreach ($groupedPayrolls as $monthYear => $data)
+                <tr onclick="window.location='{{ route('payrolls.group', ['monthYear' => $monthYear]) }}'" style="cursor: pointer;">
+                    <td>{{ \Carbon\Carbon::createFromFormat('Y-m', $monthYear)->format('F Y') }}</td>
+                    <td>{{ number_format($data['total_net_pay'], 2) }}</td>
+                    <td>{{ $data['employee_count'] }}</td>
+                    <td>{{ $data['status'] }}</td>
+                </tr>
+            @endforeach
     </tbody>
 </table>
 </div>
@@ -134,13 +130,6 @@
     });
         });
     </script>
-@endpush
-@push('js')
-    $(document).ready(function () {
-    // Function to switch periods
-
-});
-
 @endpush
 
 
