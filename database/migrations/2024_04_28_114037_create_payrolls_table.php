@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('deductions');
             $table->enum('compansation',['commission','bonus']);
             $table->enum('payment_method',['Direct Deposit','Cheque']);
-            $table->enum('payment_status',['Draft','Approved','Paid']);
+            $table->enum('payment_status',['Draft','Approved','Cancelled','Paid']);
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');

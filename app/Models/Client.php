@@ -73,4 +73,8 @@ class Client extends Model
     {
         return $this->hasMany(Billing::class);
     }
+    public function payroll()
+    {
+        return $this->hasMany(Payroll::class);
+    }
 }
