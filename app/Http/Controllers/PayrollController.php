@@ -20,7 +20,7 @@ public function index()
     // Fetch all payroll records grouped by their pay dates
     $payrolls = DB::table('payrolls')
         ->select(
-            DB::raw('DATE_FORMAT(pay_date, "%Y-%m") as month_year'),
+            DB::raw('DATE_FORMAT(payment_date, "%Y-%m") as month_year'),
             DB::raw('SUM(net_pay) as total_net_pay'),
             DB::raw('COUNT(id) as employee_count'),
             DB::raw('CASE
@@ -29,8 +29,8 @@ public function index()
                         ELSE "Paid"
                      END as status')
         )
-        ->groupBy(DB::raw('DATE_FORMAT(pay_date, "%Y-%m")'))
-        ->orderBy(DB::raw('DATE_FORMAT(pay_date, "%Y-%m")'), 'desc')
+        ->groupBy(DB::raw('DATE_FORMAT(payment_date, "%Y-%m")'))
+        ->orderBy(DB::raw('DATE_FORMAT(payment_date, "%Y-%m")'), 'desc')
         ->get()
         ->groupBy('month_year');
 

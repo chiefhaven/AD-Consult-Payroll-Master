@@ -63,6 +63,7 @@
                 <tr onclick="window.location='{{ route('payrolls.group', ['monthYear' => $monthYear]) }}'" style="cursor: pointer;">
                     <td>{{ \Carbon\Carbon::createFromFormat('Y-m', $monthYear)->format('F Y') }}</td>
                     <td>{{ number_format($data['total_net_pay'], 2) }}</td>
+                    <td>{{ \Carbon\Carbon::createFromFormat('Y-m', $monthYear)->format('Y-m-d')}}</td>
                     <td>{{ $data['employee_count'] }}</td>
                     <td>{{ $data['status'] }}</td>
                 </tr>
