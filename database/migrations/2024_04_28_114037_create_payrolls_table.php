@@ -17,7 +17,7 @@ return new class extends Migration
             $table->date('payment_date');
             $table->enum('pay_period',['Weekly','Bi weekly','Monthly']);
             $table->decimal('gross_pay');
-            $table->decimal('net_pay');
+            $table->decimal('net_pay')->nullable();
             $table->decimal('deductions');
             $table->enum('compansation',['commission','bonus']);
             $table->enum('payment_method',['Direct Deposit','Cheque']);
