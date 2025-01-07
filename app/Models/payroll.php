@@ -35,8 +35,11 @@ protected static function boot()
         'pay_period',
         'gross_pay',
         'net_pay',
-        'deductions',
-        'compansation',
+        'commission',
+        'bonus',
+        'health_insurance',
+        'total_tax_amount',
+        'other_deductions',
         'payment_method',
         'payment_status'
     ];
@@ -48,5 +51,6 @@ protected static function boot()
      public function client()
     {
         return $this->belongsTo(Client::class);
-    }
+
+   }
 }
