@@ -23,14 +23,15 @@ public function index()
             DB::raw('DATE_FORMAT(payment_date, "%Y-%m") as month_year'),
             DB::raw('SUM(net_pay) as total_net_pay'),
             DB::raw('COUNT(id) as employee_count'),
-            'pay_period',
+            DB::raw('pay_period'),
+            // 'pay_period',
             DB::raw('CASE
                         WHEN SUM(CASE WHEN payment_status = "Draft" THEN 1 ELSE 0 END) = COUNT(id)
                         THEN "Draft"
                         ELSE "Paid"
                      END as status')
         )
-        ->groupBy(DB::raw('DATE_FORMAT(payment_date, "%Y-%m")'),'pay_period')
+        ->groupBy(DB::raw('DATE_FORMAT(payment_date, "%Y-%m")'), 'pay_period')
         ->orderBy(DB::raw('DATE_FORMAT(payment_date, "%Y-%m")'), 'desc')
         ->get()
         ->groupBy('month_year');
@@ -38,12 +39,11 @@ public function index()
     // Transform the results into a structured format
     $groupedPayrolls = [];
     foreach ($payrolls as $payroll) {
-        $groupedPayrolls[$payroll->pay_period][$payroll->month_year][] = $payroll;
+        $groupedPayrolls[(string) $payroll->pay_period][$payroll->month_year][] = $payroll;
     }
 
     return view('payrolls.payroll_summary', compact('groupedPayrolls'));
 }
-
 
 
 

@@ -7,12 +7,6 @@
         Leave Management
     </h1>
     @push('css')
-        {{-- <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap4.min.css"> --}}
-        <!-- Bootstrap CSS -->
-        {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
-
-        <!-- Bootstrap JavaScript -->
-        {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> --}}
 
         <style>
         #leaveDatail.modal {
@@ -149,7 +143,7 @@
                 </tbody>
             </table>
 
-    
+
     </div>
 
     {{-- modal code here --}}
@@ -160,7 +154,6 @@
     role="dialog"
     aria-hidden="true"
     v-if="selectedLeave"
-
     >
 
     <div class="modal-dialog modal-lg" role="document">
@@ -375,7 +368,7 @@
                 // const massApprove = () => processLeaves('mass-approve');
                 // const massDisapprove = () => processLeaves('mass-disapprove');
 
-               
+
 
             //     const approveLeave = (id) => {
             //         NProgress.start();
@@ -392,15 +385,15 @@
             //         });
             // };
 
-             const approveLeave = (id) => { 
+             const approveLeave = (id) => {
                 axios.post(`{{ route('leaves.approve', '') }}/${id}`)
                 .then(response => {
                     // Update the counts based on the server response
                     updateCounts(response.data);
-                    
+
                     // Show a notification that the disapproval was successful
                     notification(`Approval successful!`, 'success');
-                    
+
                     // Fetch updated leave data and reinitialize the DataTable
                     fetchLeaveData().then(() => {
                         initializeDataTable(); // Reinitialize the DataTable with the updated data
@@ -413,15 +406,15 @@
 
 
             const disapproveLeave = (id) => {
-            
+
                 return axios.post(`{{ route('leaves.disapprove', '') }}/${id}`)
                 .then(response => {
                     // Update the counts based on the server response
                     updateCounts(response.data);
-                    
+
                     // Show a notification that the disapproval was successful
                     notification(`Disapproval successful!`, 'success');
-                    
+
                     // Fetch updated leave data and reinitialize the DataTable
                     fetchLeaveData().then(() => {
                 initializeDataTable(); // Reinitialize the DataTable with the updated data
@@ -431,7 +424,7 @@
                 .catch(error => {
                     console.error('Error disapproving leave:', error);
                 });
-                
+
             };
 
 
@@ -449,7 +442,7 @@
 // };
 
 
-            
+
 const initializeDataTable = () => {
     try {
         // Destroy existing DataTable instance if it exists
