@@ -1,5 +1,6 @@
 const app = createApp({
     setup() {
+
         const periods = ["Monthly", "Bi-Weekly", "Weekly"];
         const selectedPeriod = ref("Monthly");
         const payrollData = ref(window.groupedPayrolls || {}); // Pass data from Blade to JS
@@ -54,6 +55,9 @@ const app = createApp({
             formatCurrency,
         };
     },
+
+    
 });
 
-app.mount("#app");
+app.mount("#appp");
+

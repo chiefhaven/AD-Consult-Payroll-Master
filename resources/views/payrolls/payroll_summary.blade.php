@@ -7,7 +7,7 @@
 @stop
 
 @section('content')
-<div id="app">
+<div id="appp">
   <div class="col">
     <div class="row mb-2">
       <ul class="nav nav-tabs">
@@ -57,4 +57,6 @@
 @push('js')
 
 <script type="module" src="{{ asset('js/payroll.js') }}"></script>
+
+
 @endpush
