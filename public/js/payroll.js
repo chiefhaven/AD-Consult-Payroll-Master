@@ -17,17 +17,18 @@ const app = createApp({
             return date.toISOString().split('T')[0]; // Convert to ISO string and return 'yyyy-MM-dd'
         };
 
-        const filteredPayrolls = computed(() => {
-            const data = payrollData.value[selectedPeriod.value];
-            if (!data) return [];
-            return Object.entries(data).map(([monthYear, records]) => ({
-                monthYear,
-                totalNetPay: records.reduce((sum, record) => sum + record.net_pay, 0),
-                employeeCount: records.length,
-                status: records.every((record) => record.status === "Draft") ? "Draft" : "Paid",
-                date: formatDate(monthYear), // Use the native date formatting function
-            }));
-        });
+const filteredPayrolls = computed(() => {
+    const data = payrollData.value[selectedPeriod.value];
+    if (!data) return [];
+    return Object.entries(data)
+        .map(([key, value]) => ({
+            period: key,
+            totalNetPay: value.totalNetPay,
+            records: value.records,
+        }));
+});
+
+
 
         const setPeriod = (period) => {
             selectedPeriod.value = period;
@@ -56,7 +57,7 @@ const app = createApp({
         };
     },
 
-    
+
 });
 
 app.mount("#appp");

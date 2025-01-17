@@ -58,5 +58,8 @@
 
 <script type="module" src="{{ asset('js/payroll.js') }}"></script>
 
+<script>
+    window.groupedPayrolls = @json($groupedPayrolls);
+</script>
 
 @endpush

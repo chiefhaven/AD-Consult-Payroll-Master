@@ -17,87 +17,38 @@ class PayrollController extends Controller
 
 public function index()
 {
-    // Fetch all payroll records grouped by their pay dates
+    // Fetch all payroll records grouped by their pay dates and periods
     $payrolls = DB::table('payrolls')
         ->select(
-            DB::raw('DATE_FORMAT(payment_date, "%Y-%m") as month_year'),
-            DB::raw('SUM(net_pay) as total_net_pay'),
-            DB::raw('COUNT(id) as employee_count'),
-            DB::raw('IFNULL(pay_period, "Unknown") as pay_period'), // Handle null pay_period
-            DB::raw('CASE
-                        WHEN SUM(CASE WHEN payment_status = "Draft" THEN 1 ELSE 0 END) = COUNT(id)
-                        THEN "Draft"
-                        ELSE "Paid"
-                     END as status')
+            'id', // Include individual record ID
+            DB::raw('DATE_FORMAT(payment_date, "%Y-%m") as month_year'), // Group by year-month
+            'net_pay', // Include individual net pay
+            'payment_status as status', // Include individual status
+            DB::raw('IFNULL(pay_period, "Unknown") as pay_period') // Handle null pay_period
         )
-        ->groupBy(DB::raw('DATE_FORMAT(payment_date, "%Y-%m")'), 'pay_period')
-        ->orderBy(DB::raw('DATE_FORMAT(payment_date, "%Y-%m")'), 'desc')
+        ->orderBy(DB::raw('DATE_FORMAT(payment_date, "%Y-%m")'), 'desc') // Sort by month-year
         ->get()
-        ->groupBy('pay_period'); // Group by pay_period instead of month_year for structured data
+        ->groupBy('pay_period'); // Group by pay_period for structured data
 
-    // Transform the results into a structured format
-    $groupedPayrolls = [];
+$groupedPayrolls = [];
     foreach ($payrolls as $payPeriod => $records) {
-        foreach ($records as $payroll) {
-            $groupedPayrolls[(string) $payPeriod][$payroll->month_year][] = $payroll;
+        $totalNetPay = 0; // Initialize total net pay for this pay period
+        foreach ($records as $record) {
+            $groupedPayrolls[$payPeriod][$record->month_year][] = [
+                'net_pay' => $record->net_pay,
+                'status' => $record->status,
+            ];
+            $totalNetPay += $record->net_pay; // Accumulate total net pay
         }
+        // Add total net pay for the pay period
+        $groupedPayrolls[$payPeriod]['totalNetPay'] = $totalNetPay;
     }
 
+
+    // Pass the structured data to the view
     return view('payrolls.payroll_summary', compact('groupedPayrolls'));
 }
-
-
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorepayrollRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(payroll $payroll)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(payroll $payroll)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatepayrollRequest $request, payroll $payroll)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(payroll $payroll)
-    {
-        //
-    }
-
-    public function showGroup($monthYear)
+public function showGroup($monthYear)
     {
         // Fetch records for the specified group and include related employee data
         $groupRecords = Payroll::with('employee')
@@ -118,6 +69,4 @@ public function index()
             'recordCount' => $recordCount,
         ]);
     }
-
-
 }
