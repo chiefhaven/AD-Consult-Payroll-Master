@@ -2,7 +2,8 @@ const app = createApp({
     setup() {
         const periods = ["Monthly", "Bi-Weekly", "Weekly"];
         const selectedPeriod = ref("Monthly");
-        const payrollData = ref(window.groupedPayrolls || {});
+        const payrollData = ref(validatePayrollData(window.groupedPayrolls) || {});
+
 
         const formatMonthYear = (monthYear) => {
             const [year, month] = monthYear.split("-");
