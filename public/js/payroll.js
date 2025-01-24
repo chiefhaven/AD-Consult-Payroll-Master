@@ -1,34 +1,26 @@
 const app = createApp({
     setup() {
-
         const periods = ["Monthly", "Bi-Weekly", "Weekly"];
         const selectedPeriod = ref("Monthly");
-        const payrollData = ref(window.groupedPayrolls || {}); // Pass data from Blade to JS
+        const payrollData = ref(window.groupedPayrolls || {});
 
-        // Format month-year to 'MMMM yyyy' (e.g., "January 2025")
         const formatMonthYear = (monthYear) => {
-            const date = new Date(`${monthYear}-01`); // Add a day to make it a valid date
-            return date.toLocaleString('default', { year: 'numeric', month: 'long' });
+            const [year, month] = monthYear.split("-");
+            const date = new Date(year, month - 1);
+            return new Intl.DateTimeFormat("en", { month: "long", year: "numeric" }).format(date);
         };
 
-        // Format month-year to 'yyyy-MM-dd' (e.g., "2025-01-01")
-        const formatDate = (monthYear) => {
-            const date = new Date(`${monthYear}-01`); // Add a day to make it a valid date
-            return date.toISOString().split('T')[0]; // Convert to ISO string and return 'yyyy-MM-dd'
-        };
-
-const filteredPayrolls = computed(() => {
-    const data = payrollData.value[selectedPeriod.value];
-    if (!data) return [];
-    return Object.entries(data)
-        .map(([key, value]) => ({
-            period: key,
-            totalNetPay: value.totalNetPay,
-            records: value.records,
-        }));
-});
-
-
+        const filteredPayrolls = computed(() => {
+            const data = payrollData.value?.[selectedPeriod.value];
+            if (!data) return [];
+            return Object.entries(data)
+                .filter(([key]) => key !== "totalNetPay")
+                .map(([key, value]) => ({
+                    period: key,
+                    totalNetPay: value.totalNetPay || 0,
+                    records: value.records || [],
+                }));
+        });
 
         const setPeriod = (period) => {
             selectedPeriod.value = period;
@@ -56,9 +48,6 @@ const filteredPayrolls = computed(() => {
             formatCurrency,
         };
     },
-
-
 });
 
 app.mount("#appp");
-
