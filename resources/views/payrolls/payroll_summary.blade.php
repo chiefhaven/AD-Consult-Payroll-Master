@@ -67,6 +67,7 @@
 <script type="module" src="{{ asset('js/payroll.js') }}"></script>
 
 <script>
+    console.log('Raw PHP Grouped Payrolls:', @json($groupedPayrolls));
     // Pass grouped payroll data from controller to Vue
     window.groupedPayrolls = @json($groupedPayrolls);
 </script>

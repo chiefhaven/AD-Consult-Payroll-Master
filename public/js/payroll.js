@@ -1,8 +1,11 @@
 const app = createApp({
     setup() {
+
+        console.log("Vue App Initialized");
+        //take off from here for the troubleshooting
         const periods = ["Monthly", "Bi-Weekly", "Weekly"];
         const selectedPeriod = ref("Monthly");
-        const payrollData = ref(validatePayrollData(window.groupedPayrolls) || {});
+        const payrollData = ref(window.groupedPayrolls || {});
 
 
         const formatMonthYear = (monthYear) => {
@@ -13,6 +16,7 @@ const app = createApp({
 
         const filteredPayrolls = computed(() => {
             const data = payrollData.value?.[selectedPeriod.value];
+            console.log("Filtered Data:", data);
             if (!data) return [];
             return Object.entries(data)
                 .filter(([key]) => key !== "totalNetPay")
