@@ -1,56 +1,59 @@
 const app = createApp({
     setup() {
-
         console.log("Vue App Initialized");
-        //take off from here for the troubleshooting
-        const periods = ["Monthly", "Bi-Weekly", "Weekly"];
-        const selectedPeriod = ref("Monthly");
-        const payrollData = ref(window.groupedPayrolls || {});
 
+        const periods = ["Monthly", "Weekly", "Bi-Weekly", "All"];
+        const selectedPeriod = ref(window.selectedFilter || "All"); // Use the filter passed from the controller
+        const payrollData = ref([]);
+        const totalNetPay = ref(0);
+        const currentPage = ref(1);
+        const lastPage = ref(1);
 
-        const formatMonthYear = (monthYear) => {
-            const [year, month] = monthYear.split("-");
-            const date = new Date(year, month - 1);
-            return new Intl.DateTimeFormat("en", { month: "long", year: "numeric" }).format(date);
+        // Fetch payroll data from the server (returns JSON)
+        const fetchPayrollData = async (page = 1, period = "All") => {
+            try {
+                const response = await fetch(`/api/payrolls?page=${page}&filter=${period}`);
+                const data = await response.json();
+
+                payrollData.value = data.data;
+                totalNetPay.value = data.totalNetPay;
+                currentPage.value = data.currentPage;
+                lastPage.value = data.lastPage;
+            } catch (error) {
+                console.error("Error fetching payroll data:", error);
+            }
         };
 
-        const filteredPayrolls = computed(() => {
-            const data = payrollData.value?.[selectedPeriod.value];
-            console.log("Filtered Data:", data);
-            if (!data) return [];
-            return Object.entries(data)
-                .filter(([key]) => key !== "totalNetPay")
-                .map(([key, value]) => ({
-                    period: key,
-                    totalNetPay: value.totalNetPay || 0,
-                    records: value.records || [],
-                }));
+        // Fetch data on initial load
+        fetchPayrollData(currentPage.value, selectedPeriod.value);
+
+        // Watch the selected period and fetch new data based on the selected period
+        watch(selectedPeriod, (newPeriod) => {
+            fetchPayrollData(currentPage.value, newPeriod);
         });
 
-        const setPeriod = (period) => {
-            selectedPeriod.value = period;
+        // Pagination methods
+        const nextPage = () => {
+            if (currentPage.value < lastPage.value) {
+                fetchPayrollData(currentPage.value + 1, selectedPeriod.value);
+            }
         };
 
-        const goToPayrollDetail = (monthYear) => {
-            const url = `/payrolls/${monthYear}`;
-            window.location.href = url;
+        const prevPage = () => {
+            if (currentPage.value > 1) {
+                fetchPayrollData(currentPage.value - 1, selectedPeriod.value);
+            }
         };
-
-        const formatCurrency = (amount) =>
-            new Intl.NumberFormat("en-MW", {
-                style: "currency",
-                currency: "MWK",
-            }).format(amount);
 
         return {
             periods,
             selectedPeriod,
             payrollData,
-            filteredPayrolls,
-            setPeriod,
-            goToPayrollDetail,
-            formatMonthYear,
-            formatCurrency,
+            totalNetPay,
+            currentPage,
+            lastPage,
+            nextPage,
+            prevPage,
         };
     },
 });
