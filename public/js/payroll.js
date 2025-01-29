@@ -1,20 +1,25 @@
+const { createApp, ref, watch, computed } = Vue;
+
 const app = createApp({
     setup() {
         console.log("Vue App Initialized");
 
         const periods = ["Monthly", "Weekly", "Bi-Weekly", "All"];
-        const selectedPeriod = ref(window.selectedFilter || "All"); // Use the filter passed from the controller
+        const selectedPeriod = ref(window.selectedFilter || "All");
         const payrollData = ref([]);
         const totalNetPay = ref(0);
         const currentPage = ref(1);
         const lastPage = ref(1);
 
-        // Fetch payroll data from the server (returns JSON)
         const fetchPayrollData = async (page = 1, period = "All") => {
             try {
-                const response = await fetch(`/api/payrolls?page=${page}&filter=${period}`);
+                const response = await fetch(`/payrolls?page=${page}&filter=${period}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                });
                 const data = await response.json();
-
                 payrollData.value = data.data;
                 totalNetPay.value = data.totalNetPay;
                 currentPage.value = data.currentPage;
@@ -27,7 +32,7 @@ const app = createApp({
         // Fetch data on initial load
         fetchPayrollData(currentPage.value, selectedPeriod.value);
 
-        // Watch the selected period and fetch new data based on the selected period
+        // Watch the selected period
         watch(selectedPeriod, (newPeriod) => {
             fetchPayrollData(currentPage.value, newPeriod);
         });
@@ -45,17 +50,24 @@ const app = createApp({
             }
         };
 
+        // Computed property
+        const filteredPayrolls = computed(() => {
+            return payrollData.value;
+        });
+
         return {
             periods,
             selectedPeriod,
             payrollData,
+            filteredPayrolls,
             totalNetPay,
             currentPage,
             lastPage,
             nextPage,
             prevPage,
+            fetchPayrollData
         };
-    },
+    }
 });
 
 app.mount("#appp");

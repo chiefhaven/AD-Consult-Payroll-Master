@@ -9,44 +9,39 @@ class PayrollController extends Controller
 {
     /**
      * Fetch payroll data with filters and pagination for API requests.
-     */
-    public function index(Request $request)
-    {
-        // Get the selected filter (defaults to 'All')
-        $filter = $request->input('filter', 'All');
-        $page = $request->input('page', 1);  // Current page (pagination)
+     */public function index(Request $request)
+{
+    $period = $request->input('filter', 'All');
+    $page = $request->input('page', 1);
 
-        // Create a base query
-        $payrollsQuery = Payroll::select(
-            'id',
-            DB::raw('DATE_FORMAT(payment_date, "%Y-%m") as month_year'),
-            'net_pay',
-            'payment_status as status',
-            'pay_period'
-        );
+    // Create a base query
+    $payrollsQuery = Payroll::select(
+        'id',
+        DB::raw('DATE_FORMAT(payment_date, "%Y-%m") as month_year'),
+        'net_pay',
+        'payment_status as status',
+        'pay_period'
+    );
 
-        // Apply filter if specified
-        if ($filter !== 'All') {
-            $payrollsQuery->where('pay_period', $filter);
-        }
-
-        // Paginate the data (e.g., 10 items per page)
-        $payrolls = $payrollsQuery->paginate(10);
-
-        // Return the data in JSON format
-        // return response()->json([
-        //     'data' => $payrolls->items(),
-        //     'totalNetPay' => $payrolls->sum('net_pay'),
-        //     'currentPage' => $payrolls->currentPage(),
-        //     'lastPage' => $payrolls->lastPage(),
-        // ]);
-        return view('payrolls.payroll_summary', [
-    'data' => $payrolls->items(),
-    'totalNetPay' => $payrolls->sum('net_pay'),
-    'currentPage' => $payrolls->currentPage(),
-    'lastPage' => $payrolls->lastPage(),
-    'perPage' => $payrolls->perPage(),
-    'total' => $payrolls->total()
-]);
+    // Apply filter if specified
+    if ($period !== 'All') {
+        $payrollsQuery->where('pay_period', $period);
     }
+
+    // Paginate the data
+    $payrollData = $payrollsQuery->paginate(10);
+    $totalNetPay = $payrollData->sum('net_pay');
+    $lastPage = $payrollData->lastPage();
+
+    if($request->wantsJson()) {
+        return response()->json([
+            'data' => $payrollData,
+            'totalNetPay' => $totalNetPay,
+            'currentPage' => $page,
+            'lastPage' => $lastPage
+        ]);
+    }
+
+    return view('payrolls.payroll_summary', compact('payrollData'));
+}
 }
