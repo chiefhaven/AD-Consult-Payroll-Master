@@ -4,7 +4,7 @@ const app = createApp({
     setup() {
         console.log("Vue App Initialized");
 
-        const periods = ["Monthly", "Weekly", "Bi-Weekly", "All"];
+        const periods = [ "All","Monthly", "Bi-Weekly","Weekly" ];
         const selectedPeriod = ref(window.selectedFilter || "All");
         const payrollData = ref([]);
         const totalNetPay = ref(0);
@@ -21,6 +21,7 @@ const app = createApp({
                 });
                 const data = await response.json();
                 payrollData.value = data.data;
+                console.log(payrollData.value);
                 totalNetPay.value = data.totalNetPay;
                 currentPage.value = data.currentPage;
                 lastPage.value = data.lastPage;
@@ -57,6 +58,7 @@ const app = createApp({
 
         return {
             periods,
+            fetchPayrollData,
             selectedPeriod,
             payrollData,
             filteredPayrolls,
@@ -65,7 +67,7 @@ const app = createApp({
             lastPage,
             nextPage,
             prevPage,
-            fetchPayrollData
+
         };
     }
 });
