@@ -44,11 +44,13 @@ protected static function boot()
         'payment_status'
     ];
 
-     public function employee()
+   public function employee()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->hasMany(Employee::class);
     }
-     public function client()
+
+
+    public function client()
     {
         return $this->belongsTo(Client::class);
 

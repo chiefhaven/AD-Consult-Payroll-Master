@@ -37,7 +37,7 @@ Route::get('/employees', [EmployeeController::class, 'index'])->name('employees'
 
 //payroll routes
 Route::get('/payrolls', [PayrollController::class, 'index'])->name('payrollsummary');
-Route::get('/payrolls/group/{monthYear}', [PayrollController::class, 'showGroup'])->name('payrolls.group');
+Route::get('/payrolls/{period}', [PayrollController::class, 'show'])->name('payrolls.show');
 
 
 //Billing routes

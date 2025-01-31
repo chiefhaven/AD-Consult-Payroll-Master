@@ -1,73 +1,49 @@
-const { createApp, ref, watch, computed } = Vue;
-
 const app = createApp({
     setup() {
         console.log("Vue App Initialized");
 
-        const periods = [ "All","Monthly", "Bi-Weekly","Weekly" ];
-        const selectedPeriod = ref(window.selectedFilter || "All");
         const payrollData = ref([]);
-        const totalNetPay = ref(0);
-        const currentPage = ref(1);
-        const lastPage = ref(1);
 
-        const fetchPayrollData = async (page = 1, period = "All") => {
+        const fetchPayrollData = async () => {
             try {
-                const response = await fetch(`/payrolls?page=${page}&filter=${period}`, {
+                const response = await fetch("/payrolls", {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
                         'Accept': 'application/json'
                     }
                 });
                 const data = await response.json();
-                payrollData.value = data.data;
-                console.log(payrollData.value);
-                totalNetPay.value = data.totalNetPay;
-                currentPage.value = data.currentPage;
-                lastPage.value = data.lastPage;
+                payrollData.value = data;  // Directly assign the fetched data
+                console.log("Fetched Payroll Data:", payrollData.value);
             } catch (error) {
                 console.error("Error fetching payroll data:", error);
             }
         };
 
+
+          // Navigate to payroll page based on period (month-year)
+        const goToPayrollDetails = (period) => {
+            const encodedPeriod = encodeURIComponent(period);
+            window.location.href = `/payrolls/${encodedPeriod}`;
+        };
+
         // Fetch data on initial load
-        fetchPayrollData(currentPage.value, selectedPeriod.value);
+        fetchPayrollData();
 
-        // Watch the selected period
-        watch(selectedPeriod, (newPeriod) => {
-            fetchPayrollData(currentPage.value, newPeriod);
-        });
-
-        // Pagination methods
-        const nextPage = () => {
-            if (currentPage.value < lastPage.value) {
-                fetchPayrollData(currentPage.value + 1, selectedPeriod.value);
-            }
+        const formatCurrency = (value) => {
+            return new Intl.NumberFormat('en-MW', { style: 'currency', currency: 'MWK' }).format(value);
         };
 
-        const prevPage = () => {
-            if (currentPage.value > 1) {
-                fetchPayrollData(currentPage.value - 1, selectedPeriod.value);
-            }
+        const formatMonthYear = (dateString) => {
+            const options = { year: 'numeric', month: 'long' };
+            return new Date(dateString).toLocaleDateString('en-MW', options);
         };
-
-        // Computed property
-        const filteredPayrolls = computed(() => {
-            return payrollData.value;
-        });
 
         return {
-            periods,
-            fetchPayrollData,
-            selectedPeriod,
             payrollData,
-            filteredPayrolls,
-            totalNetPay,
-            currentPage,
-            lastPage,
-            nextPage,
-            prevPage,
-
+            goToPayrollDetails,
+            formatCurrency,
+            formatMonthYear,
         };
     }
 });
