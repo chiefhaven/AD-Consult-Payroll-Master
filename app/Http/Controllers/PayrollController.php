@@ -56,16 +56,37 @@ class PayrollController extends Controller
     return view('payrolls.payroll_summary', compact('payrolls'));
 }
 
-public function show($period)
+   public function show($period)
 {
-    // Decode period (in case of URL encoding)
+    // Decode period (if URL-encoded)
     $decodedPeriod = urldecode($period);
 
-    // Fetch payrolls for the selected period
-    $payrolls = Payroll::whereRaw('DATE_FORMAT(payment_date, "%Y-%m") = ?', [$decodedPeriod])
+    // Fetch payroll records for the selected period
+    $payrolls = Payroll::with('employee') // Load employee details
+        ->select(
+            'employee_id',
+            'gross_pay',
+            'net_pay',
+            'other_deductions',
+            'payment_method',
+            'payment_status',
+            'payment_date',
+            DB::raw('DATE_FORMAT(payment_date, "%Y-%m") as period')
+        )
+        ->whereRaw('DATE_FORMAT(payment_date, "%Y-%m") = ?', [$decodedPeriod])
         ->orderBy('payment_date', 'desc')
         ->get();
-    return view('payrolls.payroll', compact('payrolls','decodedPeriod'));
+
+    // Compute summary values
+    $totalAmount = $payrolls->sum('net_pay');
+    $recordCount = $payrolls->count();
+    $latestPayroll = $payrolls->first(); // Get latest payroll entry for additional details
+    $monthYear = $decodedPeriod;
+
+    // Pass to the view
+    return view('payrolls.payroll', compact('payrolls', 'totalAmount', 'recordCount', 'monthYear', 'latestPayroll'));
 }
+
+
 
 }

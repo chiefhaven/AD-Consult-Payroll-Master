@@ -68,9 +68,10 @@
                 <div class="card-body">
                     <h5 class="card-title">Pay Period</h5>
                     <p class="card-text">
-                        <strong>{{ \Carbon\Carbon::createFromFormat('Y-m', $monthYear)->format('F Y') }}</strong>
-
+                        <strong>{{ \Carbon\Carbon::parse($latestPayroll->payment_date)->format('F Y') }}</strong>
                     </p>
+
+
                 </div>
             </div>
         </div>
@@ -106,41 +107,32 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($groupRecords as $record)
-                <tr>
-                    <td>EMP-{{ $record->employee->hiredate }}-{{ $record->employee->employee_no  }}</td>
-                    <td>{{ $record->employee->fname }}</td>
-                    <td>{{ $record->employee->sname }}</td>
-                    <td>{{ number_format($record->gross_pay, 2) }}</td>
-                    <td>{{ number_format($record->net_pay, 2) }}</td>
-                    <td>{{ number_format($record->other_deductions, 2) }}</td>
-                    <td>{{ $record->payment_method }}</td>
-                    <td>{{ $record->payment_status }}</td>
-                    <td>
-                        <div class="dropdown">
-                            <button
-                                class="btn btn-secondary dropdown-toggle"
-                                type="button"
-                                id="dropdownMenuButton"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Actions
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <li>
-                                    <a class="dropdown-item" href="#approve">Approve</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#disapprove">Disapprove</a>
-                                </li>
+    @foreach ($payrolls as $record)
+        <tr>
+            <td>EMP-{{ $record->employee->hiredate }}-{{ $record->employee->employee_no }}</td>
+            <td>{{ $record->employee->fname }}</td>
+            <td>{{ $record->employee->sname }}</td>
+            <td>{{ number_format($record->gross_pay, 2) }}</td>
+            <td>{{ number_format($record->net_pay, 2) }}</td>
+            <td>{{ number_format($record->other_deductions, 2) }}</td>
+            <td>{{ $record->payment_method }}</td>
+            <td>{{ $record->payment_status }}</td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Actions
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#approve">Approve</a></li>
+                        <li><a class="dropdown-item" href="#disapprove">Disapprove</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    @endforeach
+</tbody>
 
-                            </ul>
-                        </div>
-                    </td>
-
-                </tr>
-            @endforeach
-        </tbody>
     </table>
 </div>
 

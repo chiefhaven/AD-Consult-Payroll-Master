@@ -109,9 +109,9 @@ class Employee extends Model
     {
         return $this->hasMany(Leave::class);
     }
-    
+
     public function payroll()
     {
-        return $this->hasMany(Payroll::class);
+        return $this->hasMany(Payroll::class, 'employee_id', 'id');
     }
 }
