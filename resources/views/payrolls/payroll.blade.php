@@ -5,7 +5,10 @@
 @section('title', 'Payroll')
 
 @section('content_header')
-    <h1>&nbsp; Payroll Details</h1>
+    <h1  class="text-muted">
+        &nbsp; Payroll Details
+    </h1>
+
 @stop
 
 

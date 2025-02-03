@@ -3,7 +3,10 @@
 @section('title', 'Payrolls')
 
 @section('content_header')
-    <h1>&nbsp; All Payrolls</h1>
+
+    <h1 class="text-muted">
+        &nbsp;Payroll Management
+    </h1>
 @stop
 
 @section('content')

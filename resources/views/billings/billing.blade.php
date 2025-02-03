@@ -4,9 +4,18 @@
 
 @section('title', 'Billing')
 
+
+
+
 {{-- Extend and customize the page content header --}}
 
 @section('content_header')
+
+<h1 class="text-muted">
+        Billing Management
+    </h1>
+    
+{{--
     @hasSection('content_header_title')
         <h1 class="text-muted">
             @yield('content_header_title', 'adminlte')
@@ -18,7 +27,7 @@
                 </small>
             @endif
         </h1>
-    @endif
+    @endif --}}
 
     @push('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap4.min.css">
@@ -28,7 +37,7 @@
 
 {{-- Rename section content to content_body --}}
 
-@section('content') 
+@section('content')
 <div class="row ">
 
     <table id="myTable" class="table table-striped table-bordered">
