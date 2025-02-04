@@ -1,6 +1,18 @@
 .card {
     border-radius: 0px !important;
+    border: none; /* Removes the border outline */
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1); /* Soft drop shadow */
+    border-radius: 8px; /* Slightly rounded corners for a smooth look */
+    transition: box-shadow 0.3s ease-in-out; /* Smooth transition effect */
 }
+
+.card:hover {
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow on hover */
+}
+
+
+
+
 .card-title {
     font-weight: 600;
 }

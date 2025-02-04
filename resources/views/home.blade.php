@@ -13,12 +13,29 @@
                 <div class="col-lg-12">
                     <div class="row mt-2">
                         <div class="col-md-3">
-                            <a href="{{ route('employees') }}" style="text-decoration: none;">
+                            <a href="{{ route('billing') }}" style="text-decoration: none;">
                             <x-adminlte-small-box
-                                title="Employees"
-                                text="{{ App\Models\Employee::get()->count() }}"
+                                title="Billings"
+                                text="{{ App\Models\Billing::get()->count() }}"
                                 theme="light"
-                                icon="fas fa-users small-icon" />
+                                icon="fas fa-coins small-icon "
+                                class="card"
+                                style="border: none"
+
+                                />
+                            </a>
+                        </div>
+
+                        <div class="col-md-3">
+                            <a href="{{ route('payrollsummary') }}" style="text-decoration: none;">
+                            <x-adminlte-small-box
+                                title="Payroll"
+                                text="{{ App\Models\Payroll::get()->count() }}"
+                                theme="light"
+                                icon="fas fa-receipt small-icon "
+                                class="card"
+                                style="border: none"
+                            />
                             </a>
                         </div>
 
@@ -29,33 +46,22 @@
                                 text="{{ App\Models\Leave::where('status', 'Pending')->get()->count() }}"
                                 theme="light"
                                 icon="fas fa-sign-out-alt small-icon"
-
-
+                                class="card"
+                                style="border: none"
                             />
                             </a>
                         </div>
 
-                         <div class="col-md-3">
-                            <a href="{{ route('payrollsummary') }}" style="text-decoration: none;">
+
+                        <div class="col-md-3">
+                            <a href="{{ route('employees') }}" style="text-decoration: none;">
                             <x-adminlte-small-box
-                                title="Payroll"
-                                text="{{ App\Models\Payroll::get()->count() }}"
-                                theme="secondary"
-                                icon="fas fa-receipt small-icon text-white"
-
-
-                            />
-                            </a>
-                        </div>
-
-                         <div class="col-md-3">
-                            <a href="{{ route('billing') }}" style="text-decoration: none;">
-                            <x-adminlte-small-box
-                                title="Billings"
-                                text="{{ App\Models\Billing::get()->count() }}"
-                                theme="secondary"
-                                icon="fas fa-coins small-icon text-white"
-
+                                title="Employees"
+                                text="{{ App\Models\Employee::get()->count() }}"
+                                theme="light"
+                                icon="fas fa-users small-icon"
+                                class="card"
+                                style="border: none"
                                 />
                             </a>
                         </div>
@@ -101,7 +107,7 @@
 
 @section('css')
     {{-- Add here extra stylesheets --}}
-    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/resources/css/app.css">
 @stop
 
 @section('js')
