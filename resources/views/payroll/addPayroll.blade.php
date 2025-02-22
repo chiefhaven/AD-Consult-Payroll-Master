@@ -399,7 +399,7 @@
                 // Handle success response
             } catch (error) {
                 isSubmitting.value = false;
-                notification('Error saving payroll', 'success');
+                notification('Error saving payroll', 'error');
 
                 console.error('Error saving payroll:', error);
                 // Handle error response
