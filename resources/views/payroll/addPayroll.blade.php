@@ -387,9 +387,10 @@
                     payrollStatus: payrollStatus.value,
                     payrollMonthYear: payrollMonthYear.value,
                 });
+                console.log(response.status)
 
-                if (response.status === 'success') {
-                    window.location.href = `/client-view/${clientId.value}`;
+                if (response.status == 200) {
+                    window.location.href = `/client/${clientId.value}`;
                 }
 
                 // Handle success response
