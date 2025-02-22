@@ -73,6 +73,20 @@
                         </div>
 
                         <x-adminlte-select2
+                            name="state.billType"
+                            v-model="state.billType"
+                            label="Bill type:"
+                            fgroup-class="col-md-6"
+                            class="{ 'is-invalid': $errors->has('status') }"
+                            data-placeholder="Select an option..."
+                            autocomplete="off">
+                            <option value="" disabled>Please select an option...</option>
+                            <option>Quotation</option>
+                            <option>Proforma Invoice</option>
+                            <option>Invoice</option>
+                        </x-adminlte-select2>
+
+                        <x-adminlte-select2
                             name="state.status"
                             v-model="state.status"
                             label="Status:"

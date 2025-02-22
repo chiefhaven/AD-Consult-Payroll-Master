@@ -106,8 +106,10 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/all-sales', [BillingController::class, 'index'])->name('billing');
+    Route::get('/all-quotations', [BillingController::class, 'quotationIndex'])->name('all-quotations');
     Route::get('/view-bill/{bill}', [BillingController::class, 'show'])->name('showBill');
     Route::get('/add-sale', [BillingController::class, 'create'])->name('add-sale');
+    Route::get('/add-quotation', [BillingController::class, 'create'])->name('add-quotation');
     Route::post('/edit-bill/{billing}', [BillingController::class, 'edit'])->name('edit-sale');
     Route::put('/store-sale', [BillingController::class, 'store'])->name('store-sale');
     Route::put('/update-sale', [BillingController::class, 'update'])->name('update-sale');
@@ -118,11 +120,11 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/all-payments', [PaymentController::class, 'index'])->name('payments');
     Route::get('/view-payments/{payment}', [PaymentController::class, 'show'])->name('paymentShow');
-    Route::get('/add-payment', [PaymentController::class, 'create'])->name('paymentsCreate'); // Changed from add-sale
-    Route::post('/store-payment', [PaymentController::class, 'store'])->name('paymentsStore'); // Changed to POST
-    Route::get('/edit-payment/{payment}', [PaymentController::class, 'edit'])->name('paymentsEdit'); // Changed to GET
-    Route::put('/update-payment/{payment}', [PaymentController::class, 'update'])->name('paymentsUpdate'); // Added {payment} parameter
-    Route::get('/print-payment/{payment}', [PaymentController::class, 'paymentPdf'])->name('paymentPrint'); // Updated name
+    Route::get('/add-payment', [PaymentController::class, 'create'])->name('paymentsCreate');
+    Route::post('/store-payment', [PaymentController::class, 'store'])->name('paymentsStore');
+    Route::get('/edit-payment/{payment}', [PaymentController::class, 'edit'])->name('paymentsEdit');
+    Route::put('/update-payment/{payment}', [PaymentController::class, 'update'])->name('paymentsUpdate');
+    Route::get('/print-payment/{payment}', [PaymentController::class, 'paymentPdf'])->name('paymentPrint');
     Route::delete('/delete-payment/{payment}', [PaymentController::class, 'destroy'])->name('paymentDestroy');
 });
 

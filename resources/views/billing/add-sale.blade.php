@@ -35,6 +35,7 @@
                 paymentTerms: 0,
                 termsUnits: '',
                 status: 'Draft',
+                billType: 'Invoice',
                 notes: '',
                 payment_method: 'cash',
                 amountToPay: 0,
@@ -261,8 +262,12 @@
                     if (response.status === 200) {
                         notification('Bill created successfully', 'success');
 
-                        //window.location.href = '/all-sales';
-                        return;
+                        if (state.value.billType === 'Quotation') {
+                            window.location.href = '/all-quotations';
+                            return; // Prevents the second redirection
+                        }
+
+                        window.location.href = '/all-sales';
                     }
                 } catch (error) {
                     // Handle error
