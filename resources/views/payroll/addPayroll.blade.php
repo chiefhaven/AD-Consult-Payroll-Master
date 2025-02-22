@@ -42,9 +42,8 @@
                             name="payrollMonthYear"
                             label="Payroll month year"
                             placeholder="Payroll Month/Year"
-                            value="{{ $payroll_month_year }}"
+                            v-model="payrollMonthYear"
                             fgroup-class="col-md-4"
-                            class="{{ $errors->has('payroll_group_name') ? 'is-invalid' : '' }}"
                             id="payroll_month_year"
                             autocomplete="off"
                         />
@@ -72,17 +71,17 @@
                     </div>
                 </div>
             </div>
-            <div class="card">
+            <div class="card mb-3 p-4">
                 <table class="table table-responsive" id="payroll_table">
                     <thead>
                         <tr>
                             <th class="text-nowrap" style="width: auto;">Employee</th>
-            <th class="text-nowrap" style="width: auto; min-width: 70px;">Gross</th>
-            <th class="text-nowrap" style="width: auto;">Earnings</th>
-            <th class="text-nowrap" style="width: auto;">Deductions</th>
-            <th class="text-nowrap" style="width: auto;">Paye</th>
-            <th class="text-nowrap" style="width: auto;">Net Salary</th>
-            <th class="text-nowrap" style="width: auto;">Total Pay</th>
+                            <th class="text-nowrap" style="width: auto; min-width: 70px;">Gross (K)</th>
+                            <th class="text-nowrap" style="width: auto;">Earnings (K)</th>
+                            <th class="text-nowrap" style="min-width: 150px;">Deductions (K)</th>
+                            <th class="text-nowrap" style="min-width: 150px;">Paye (K)</th>
+                            <th class="text-nowrap" style="min-width: 150px;">Net Salary(K)</th>
+                            <th class="text-nowrap" style="min-width: 150px;">Total Pay(K)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -98,6 +97,7 @@
                                     v-model="payrollStates[index].salary"
                                     autocomplete="off"
                                 />
+                                 {{--  K@{{ payroll.salary }}  --}}
                                 <p>
                                     <x-adminlte-select2
                                         name="pay_period"
@@ -224,12 +224,15 @@
                                 </div>
                             </td>
                             <td>
-                                <input name="paye" v-model="payrollStates[index].paye" hidden>
-                                @{{ formatCurrency(payroll.paye) }}
+                                <input name="totalPaye" v-model="payrollStates[index].totalPaye" hidden>
+                                @{{ formatCurrency(payroll.totalPaye) }}
                             </td>
                             <td>
                                 <input name="net_salary" v-model="payrollStates[index].net_salary" hidden>
                                 @{{ formatCurrency(payroll.net_salary) }}
+                            </td>
+                            <td>
+                                @{{ formatCurrency(payroll.totalPay) }}
                             </td>
                         </tr>
                     </tbody>
@@ -270,7 +273,7 @@
         payrolls.value = @json($payrolls);
         payrolls.value = Object.values(payrolls.value);
 
-        const payrollMonthYear = ref('');
+
         const client = ref('');
         const clientId = ref('');
         const action = ref('');
@@ -278,18 +281,22 @@
         const earningsRows = ref({});
         const deductionsRows = ref({});
         const payrollStates = ref([]);
+        const payrollMonthYear = ref('');
 
         onMounted(() => {
+            clientId.value = "{{ $client->id }}"
+            payrollMonthYear.value = "{{ $payroll_month_year }}"
             payrolls.value.forEach((payroll) => {
                 // Initialize state for each payroll
                 const state = {
-                    salary: payroll.salary || 0, // Ensure basic_pay is set correctly
-                    paye: payroll.paye || 0, // Default to 0 if paye is not defined
-                    deductions: payroll.deductions || '', // Default to empty string if deductions not defined
-                    net_salary: payroll.net_salary || 0, // Default to 0 if net_salary is not defined
+                    salary: payroll.employee.salary || 0, // Ensure basic_pay is set correctly
+                    totalPaye: payroll.totalPaye || 0, // Default to 0 if paye is not defined
+                    deductions: payroll.deductions || 0,
+                    net_salary: payroll.net_salary || 0,
+                    totalPay: payroll.totalPay || 0,
                     employeeId: payroll.employee.id,
                     employeeName: `${payroll.employee.fname || ''} ${payroll.employee.mname || ''} ${payroll.employee.sname || ''}`.trim(), // Combine names
-                    payPeriod: payroll.pay_period || '' // Default to empty string if pay_period is not defined
+                    payPeriod: payroll.employee.pay_period || '' // Default to empty string if pay_period is not defined
                 };
 
                 payrollStates.value.push(state); // Push the initialized state to payrollStates
@@ -301,13 +308,13 @@
         const state = ref(
             {
                 salary: 0,
-                paye: 0,
+                totalPaye: 0,
                 deductions: 0,
-                paye: 0,
                 net_salary: 0,
                 employeeId:'',
                 basic_pay: 0,
                 payPeriod:'',
+                totalPay: 0,
             }
         )
 
@@ -315,7 +322,7 @@
         @foreach($payrolls as $payroll)
             earningsRows.value[{{ $loop->index }}] = [{ description: 'Bonus', amount: {{ $payroll['bonus']}} }];
             deductionsRows.value[{{ $loop->index }}] = [{ description: '', amount: '' }];
-            state.value.salary[{{ $loop->index }}] = {{ $payroll['salary'] }};
+            state.value.salary[{{ $loop->index }}] = [{{{ $payroll['salary'] }}}];
         @endforeach
 
         // Add a new earnings row for a specific payroll
@@ -372,19 +379,25 @@
         const submitPayroll = async () => {
             NProgress.start();
             try {
+            console.log(payrollMonthYear.value);
+                console.log(payrollStates.value);
                 const response = await axios.post('/save-payroll', {
                     payrolls: payrollStates.value,
                     clientId: clientId.value,
                     payrollStatus: payrollStatus.value,
                     payrollMonthYear: payrollMonthYear.value,
-                    status: status.value
                 });
+
+                if (response.status === 'success') {
+                    window.location.href = `/client-view/${clientId.value}`;
+                }
+
                 // Handle success response
             } catch (error) {
                 console.error('Error saving payroll:', error);
                 // Handle error response
             } finally{
-                Nprogress.done();
+                NProgress.done();
             }
         };
 

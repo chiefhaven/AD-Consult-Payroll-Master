@@ -85,20 +85,21 @@ class PayrollController extends Controller
                 // Get employee info and populate the payrolls array
                 $tax = new BusinessUtil();
 
+                $totalPaye = 0;
+
                 if ($employee->paye == 1) {
-                    $calculatedTax = $tax->calculatePaye($employee->basic_pay);
-                    $paye = $calculatedTax;
-                } else {
-                    $paye = 0;
+                    $calculatedTax = $tax->calculatePaye($employee->salary);
+                    $totalPaye = $calculatedTax;
                 }
 
                 $payrolls[$employee->id] = [
                     'employee' => $employee,
-                    'salary' => $employee->basic_pay,
-                    'net_salary' => $employee->basic_pay - $paye,
+                    'salary' => $employee->salary,
+                    'net_salary' => $employee->salary - $totalPaye,
                     'pay_period' => $employee->pay_period,
                     'bonus' => $employee->bonus,
-                    'paye' =>  $paye,
+                    'totalPaye' =>  $totalPaye,
+                    'totalPay' => $employee->salary + $employee->bonus - $totalPaye,
                 ];
             }
 
@@ -136,11 +137,11 @@ class PayrollController extends Controller
 
         $payroll_month_year = $post['payrollMonthYear'];
         $status = $post['payrollStatus'];
-        $client = $post['client'];
+        $client = $post['clientId'];
 
         $payroll_date = BusinessUtil::date($payroll_month_year);
 
-        $employeePayments = $post['payroll'];
+        $employeePayments = $post['payrolls'];
 
         $payroll = new payroll();
         $payroll->group = $payroll_month_year;
@@ -153,7 +154,7 @@ class PayrollController extends Controller
 
         foreach ($employeePayments as $data) {
             // Processing each employee's payroll
-            $employeeId = $data['employee'];
+            $employeeId = $data['employeeId'];
             $salary = (float) $data['salary'];
             $earningDescription = $data['earning_description'] ?? null;
             $earningAmount = (float) ($data['earning_amount'] ?? 0);
@@ -161,7 +162,7 @@ class PayrollController extends Controller
             $deductionAmount = (float) ($data['deduction_amount'] ?? 0);
             $tax = new BusinessUtil();
             $paye = $tax->calculatePaye($salary);
-            $payPeriod = $data['pay_period'];
+            $payPeriod = $data['payPeriod'];
 
             // Calculating the net salary
             $netSalary = $salary - $paye;
@@ -195,7 +196,7 @@ class PayrollController extends Controller
         // After successfully adding payroll
         Alert::toast('Payroll added successfully!', 'success');
 
-        return redirect()->route('view-client', ['client' => $client, 'data' => $data]);
+        return response()->json(['status'=>'success']);
     }
 
     /**
