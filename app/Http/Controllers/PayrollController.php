@@ -193,9 +193,6 @@ class PayrollController extends Controller
             return false;
         }
 
-        // After successfully adding payroll
-        Alert::toast('Payroll added successfully!', 'success');
-
         return response()->json(['status'=>'success']);
     }
 

@@ -31,7 +31,7 @@
     <div class="col-lg-12">
         @include('includes/error')
         @section('plugins.Select2', true)
-        <form @submit.prevent="submitPayroll"> <!-- Prevent default submission -->
+        <form> <!-- Prevent default submission -->
             @csrf
             <div class="card mb-3 p-4">
                 <div class="box-body">
@@ -239,8 +239,13 @@
                 </table>
             </div>
             <div class="mt-3">
-                <button type="submit" class="btn btn-primary btn-lg">
-                    Add
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-lg"
+                    :disabled="isSubmitting"
+                    @click="submitPayroll"
+                >
+                    @{{ isSubmitting ? 'Adding payroll...' : 'Add' }}
                 </button>
             </div>
         </form>
@@ -282,6 +287,7 @@
         const deductionsRows = ref({});
         const payrollStates = ref([]);
         const payrollMonthYear = ref('');
+        const isSubmitting = ref(false);
 
         onMounted(() => {
             clientId.value = "{{ $client->id }}"
@@ -365,11 +371,7 @@
 
         // Handle form submission
         const handleSubmit = () => {
-            // Log form data to the console
-            console.log('Form submitted:', {
-                earningsRows: earningsRows.value,
-                deductionsRows: deductionsRows.value
-            });
+
         };
 
         const formatCurrency = (value) => {
@@ -377,19 +379,20 @@
         };
 
         const submitPayroll = async () => {
+            isSubmitting.value = true;
             NProgress.start();
             try {
-            console.log(payrollMonthYear.value);
-                console.log(payrollStates.value);
+
                 const response = await axios.post('/save-payroll', {
                     payrolls: payrollStates.value,
                     clientId: clientId.value,
                     payrollStatus: payrollStatus.value,
                     payrollMonthYear: payrollMonthYear.value,
                 });
-                console.log(response.status)
+
 
                 if (response.status == 200) {
+                    notification('Payroll added successifully, page redirecting...', 'success');
                     window.location.href = `/client/${clientId.value}`;
                 }
 
@@ -401,6 +404,22 @@
                 NProgress.done();
             }
         };
+
+        const notification = ($text, $icon) =>{
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                html: $text,
+                showConfirmButton: false,
+                timer: 5500,
+                timerProgressBar: true,
+                icon: $icon,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                  }
+              });
+        }
 
         return {
             earningsRows,
@@ -421,7 +440,8 @@
             formatCurrency,
             payrollStates,
             state,
-            submitPayroll
+            submitPayroll,
+            isSubmitting
 
         };
     }})
