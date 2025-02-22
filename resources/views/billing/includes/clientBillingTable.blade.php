@@ -55,7 +55,9 @@
                             </div>
                         </div>
                     </td>
-                    <td>{{ $item->created_at }}</td>
+                    <td>
+                        {{ $item->created_at }}
+                    </td>
                     <td>
                         @if($item->is_invoice == 1)
                             Invoice
@@ -63,13 +65,19 @@
                             Quotation
                         @endif
                     </td>
-                    <td>{{ $item->is_quotation }}</td>
-                    <td class="text-end">{{ $item->quantity }}</td>
+                    <td>
+                        {{ $item->is_quotation }}
+                    </td>
+                    <td class="text-end">
+                        {{ $item->quantity }}
+                    </td>
                     <td class="text-end">{{ number_format($item->total_amount, 2) }}</td>
                     <td class="text-end">{{ number_format($item->total_paid, 2) }}</td>
                     <td class="text-end">{{ number_format($item->balance, 2) }}</td>
                     <td class="text-end">{{ number_format($item->discount, 2) }}</td>
                     <td class="text-end">{{ number_format($item->tax, 2) }}</td>
+                    <td>{{ $item->payment_status }}</td>
+                    <td>{{ $item->payment_status }}</td>
                     <td>{{ $item->payment_status }}</td>
                 </tr>
             @endforeach
