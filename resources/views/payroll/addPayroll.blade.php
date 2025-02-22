@@ -398,6 +398,9 @@
 
                 // Handle success response
             } catch (error) {
+                isSubmitting.value = false;
+                notification('Error saving payroll', 'success');
+
                 console.error('Error saving payroll:', error);
                 // Handle error response
             } finally{
@@ -407,8 +410,6 @@
 
         const notification = ($text, $icon) =>{
             Swal.fire({
-                toast: true,
-                position: "top-end",
                 html: $text,
                 showConfirmButton: false,
                 timer: 5500,
