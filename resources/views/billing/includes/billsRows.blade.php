@@ -69,6 +69,7 @@
         K{{ number_format($bill->products->map(function($product) {
             return $product->pivot->price * $product->pivot->quantity;
         })->sum(), 2) }}
+    </td>
     <td class="text-end">
         K{{ number_format($bill->products->sum('pivot.item_discount'), 2) }}
     </td>

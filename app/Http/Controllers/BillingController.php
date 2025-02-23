@@ -32,8 +32,8 @@ class BillingController extends Controller
      */
     public function index()
     {
-        $billing = Billing::with('products', 'payments')->where('billing_type', 'invoice')->get();
-        return view("billing.sales", compact("billing"));
+        $bills = Billing::with('products', 'payments')->where('billing_type', 'invoice')->get();
+        return view("billing.sales", compact("bills"));
     }
 
     /**
