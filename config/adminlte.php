@@ -299,6 +299,23 @@ return [
             'topnav_right' => true,
         ],
 
+        [
+            'type' => 'navbar-notification',
+            'id' => 'my-notification',
+            'icon' => 'fas fa-bell',
+            'icon_color' => 'default',
+            'label' => 0,
+            'label_color' => 'danger',
+            'url' => 'notifications/show',
+            'topnav_right' => true,
+            'dropdown_mode' => true,
+            'dropdown_flabel' => 'All notifications',
+            'update_cfg' => [
+                'url' => 'notifications',
+                'period' => 30,
+            ],
+        ],
+
         // Sidebar items:
         [
             'text' => 'Home',

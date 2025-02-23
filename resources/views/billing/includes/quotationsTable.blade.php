@@ -5,15 +5,15 @@
             <tr>
                 <th class="text-center" style="width: 100px;">Actions</th>
                 <th style="min-width: 150px;">Date</th>
+                <th style="min-width: 150px;">Due Date</th>
+                <th style="min-width: 90px;">Status</th>
                 <th style="min-width: 150px;">Quotation No.</th>
                 <th style="min-width: 150px;">Client</th>
                 <th class="text-end" style="min-width: 150px;">Items Qty</th>
-                <th class="text-end" style="min-width: 150px;">Total Amount</th>
-                <th class="text-end" style="min-width: 150px;">Total Paid</th>
-                <th class="text-end" style="min-width: 150px;">Balance</th>
+                <th class="text-end" style="min-width: 150px;">Item Amount</th>
                 <th class="text-end" style="min-width: 150px;">Discount</th>
                 <th class="text-end" style="min-width: 150px;">Tax</th>
-                <th style="min-width: 150px;">Quotation Status</th>
+                <th class="text-end" style="min-width: 150px;">Grand total</th>
             </tr>
           </thead>
           <tbody>

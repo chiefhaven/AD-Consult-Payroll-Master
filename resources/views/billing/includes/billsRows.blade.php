@@ -53,6 +53,9 @@
     <td>
         coming soon
     </td>
+    <td class="text-end">
+        {{ $bill->status }}
+    </td>
     <td>
         {{ $bill->invoice_number }}
     </td>
@@ -66,39 +69,41 @@
         K{{ number_format($bill->products->map(function($product) {
             return $product->pivot->price * $product->pivot->quantity;
         })->sum(), 2) }}
-    </td>
     <td class="text-end">
         K{{ number_format($bill->products->sum('pivot.item_discount'), 2) }}
     </td>
     <td class="text-end">
         K{{ number_format($bill->products->sum('pivot.tax'), 2) }}
     </td>
+    </td>
     <td class="text-end">
         K{{ number_format($bill->products->sum('pivot.total'), 2) }}
     </td>
-    <td class="text-end">
-        K{{ number_format($bill->payments->sum('payment_amount'), 2) }}
-    </td>
-    <td>
-        K{{ number_format($balance), 2 }}
-    </td>
-    <td>
-        <button class="btn btn-sm
-            @if ($balance == 0)
-                btn-success
-            @elseif ($balance > 0 && $paidAmount > 0))
-                btn-primary
-            @else
-                btn-warning
-            @endif">
-            @if ($balance == 0)
-                Paid
-            @elseif ($balance > 0 && $paidAmount > 0)
-                Partial Payment
-            @else
-                Due
-            @endif
-        </button>
+    @if ($bill->billing_type == 'invoice')
+        <td class="text-end">
+            K{{ number_format($bill->payments->sum('payment_amount'), 2) }}
+        </td>
+        <td>
+            K{{ number_format($balance), 2 }}
+        </td>
+        <td>
+            <button class="btn btn-sm
+                @if ($balance == 0)
+                    btn-success
+                @elseif ($balance > 0 && $paidAmount > 0))
+                    btn-primary
+                @else
+                    btn-warning
+                @endif">
+                @if ($balance == 0)
+                    Paid
+                @elseif ($balance > 0 && $paidAmount > 0)
+                    Partial Payment
+                @else
+                    Due
+                @endif
+            </button>
 
-    </td>
+        </td>
+    @endif
 </tr>

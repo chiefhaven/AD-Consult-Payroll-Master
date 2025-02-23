@@ -194,3 +194,7 @@
     }
 }
 
+.modal{
+    overflow: scroll !important;
+}
+
