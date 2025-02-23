@@ -48,6 +48,9 @@
         </div>
     </td>
     <td>
+        {{ $bill->client->client_name }}
+    </td>
+    <td>
         {{ \Carbon\Carbon::parse($bill->billing_date)->format('d F, Y') }}
     </td>
     <td>
@@ -58,9 +61,6 @@
     </td>
     <td>
         {{ $bill->invoice_number }}
-    </td>
-    <td>
-        {{ $bill->client->client_name }}
     </td>
     <td class="text-end">
         {{ $bill->products->sum('pivot.quantity') }}

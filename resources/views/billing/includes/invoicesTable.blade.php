@@ -1,14 +1,14 @@
 <div class="table-responsive" id="viewClient">
-    @if( !$billing->isEmpty())
+    @if( !$bills->isEmpty())
       <table id="invoicesSalesTable" class="table table-bordered table-striped table-vcenter display nowrap">
           <thead>
             <tr>
                 <th class="text-center" style="width: 100px;">Actions</th>
+                <th style="min-width: 150px;">Client</th>
                 <th style="min-width: 150px;">Date</th>
                 <th style="min-width: 150px;">Due Date</th>
                 <th style="min-width: 90px;">Status</th>
                 <th style="min-width: 150px;">Invoice No.</th>
-                <th style="min-width: 150px;">Client</th>
                 <th class="text-end" style="min-width: 150px;">Items Qty</th>
                 <th class="text-end" style="min-width: 150px;">Item total</th>
                 <th class="text-end" style="min-width: 150px;">Discount</th>
@@ -20,7 +20,7 @@
             </tr>
           </thead>
           <tbody>
-            @foreach ($billing as $bill)
+            @foreach ($bills as $bill)
                 @if ($bill->billing_type == 'invoice')
                     @include('billing.includes.billsRows')
                 @endif
