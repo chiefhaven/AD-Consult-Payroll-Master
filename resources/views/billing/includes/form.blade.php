@@ -77,13 +77,13 @@
                             v-model="state.billType"
                             label="Bill type:"
                             fgroup-class="col-md-6"
-                            class="{ 'is-invalid': $errors->has('status') }"
+                            class="{ 'is-invalid': $errors->has('billType') }"
                             data-placeholder="Select an option..."
                             autocomplete="off">
                             <option value="" disabled>Please select an option...</option>
-                            <option>Quotation</option>
+                            <option>quotation</option>
                             <option>Proforma Invoice</option>
-                            <option>Invoice</option>
+                            <option>invoice</option>
                         </x-adminlte-select2>
 
                         <x-adminlte-select2

@@ -34,12 +34,13 @@
                 saleDate: '',
                 paymentTerms: 0,
                 termsUnits: '',
-                status: 'Draft',
+                status: '',
                 notes: '',
                 payment_method: '',
                 amountToPay: 0,
                 paidAmount: 0,
                 chequeAccountNumber: '',
+                billType: '',
             });
 
             const totalSales = computed(() => {
@@ -93,6 +94,7 @@
                     state.paymentTerms = {!! json_encode($billing->paymentTerms) !!};
                     state.termsUnits = {!! json_encode($billing->termsUnits) !!};
                     state.status = {!! json_encode($billing->status) !!};
+                    state.billType = {!! json_encode($billing->billing_type) !!};
 
                     quantities.value = {!! json_encode($billing->products->map(function($product) {
                         return $product->pivot->quantity;

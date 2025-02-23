@@ -236,12 +236,13 @@ class BillingController extends Controller
 
         // Update the billing record in the database
         $billing->update([
-            'client_id' => $request->client,
-            'billing_type' => 'invoice',
+            'client_id' => $request->client, // Assuming you have a client ID
+            'billing_type' => $state['billType'],
             'bill_status' => $state['status'],
             'billing_date' => $state['saleDate'],
             'paymentTerms' => $state['paymentTerms'],
             'termsUnits' => $state['termsUnits'],
+            'status' => $state['status'],
             'total_amount' => $grandTotal,
         ]);
 

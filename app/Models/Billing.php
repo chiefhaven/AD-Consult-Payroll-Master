@@ -50,7 +50,8 @@ class Billing extends Model
         'shipping_address',
         'transaction_id',
         'payment_gateway',
-        'attachment_path'
+        'attachment_path',
+        'status'
     ];
 
 
