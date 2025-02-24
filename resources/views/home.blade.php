@@ -3,12 +3,14 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>&nbsp;</h1>
+    <div class="col-md-12">
+        <h2>Welcome <strong>{{ Auth::user()->name }}</strong></h2>
+    </div>
 @stop
 
 @section('content')
 <div id="home" v-cloak>
-    <div class="row p-4">
+    <div class="row">
         <div class="col-md-9">
             <div class="row">
                 <div class="col-lg-12">
