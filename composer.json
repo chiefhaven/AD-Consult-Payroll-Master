@@ -19,7 +19,7 @@
         "nesbot/carbon": "^3.8",
         "rappasoft/laravel-livewire-tables": "^3.2",
         "realrashid/sweet-alert": "^7.2",
-        "spatie/laravel-permission": "^6.10",
+        "spatie/laravel-permission": "^6.16",
         "woodsandwalker/laravel-countries": "^1.0"
     },
     "require-dev": {
