@@ -4,7 +4,7 @@
 
 @section('content_header')
     <div class="col-md-12">
-        <h2>Welcome <strong>{{ Auth::user()->name }}</strong></h2>
+        @include('/includes/quotes')
     </div>
 @stop
 
@@ -12,15 +12,6 @@
 <div id="home" v-cloak>
     <div class="row">
         <div class="col-md-7">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="border mb-3 p-4 card">
-                        <div class="box-body">
-                            @include('/includes/quotes')
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row mt-1">
