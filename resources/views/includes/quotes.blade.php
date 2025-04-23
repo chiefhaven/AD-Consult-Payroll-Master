@@ -1,4 +1,4 @@
-<div class="col-md-12 col-xl-12 mb-4">
+<div class="col-md-12 col-xl-12 mt-4">
     <h1>
         @php
             $client = Auth::user()->client;
