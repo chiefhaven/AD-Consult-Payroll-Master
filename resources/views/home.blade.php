@@ -11,20 +11,19 @@
 @section('content')
 <div id="home" v-cloak>
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-7">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="border mb-3 p-4 card">
                         <div class="box-body">
-                            <h3>@{{ greetings }}</h3>
-                            {{ \Illuminate\Foundation\Inspiring::quote() }}
+                            @include('/includes/quotes')
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="row mt-5">
+                    <div class="row mt-1">
                         <div class="col-md-4">
                             <a href="{{ route('clients') }}" class="text-decoration-none">
                                 <x-adminlte-small-box

@@ -438,35 +438,36 @@
 
             const submitSmsForm = async () => {
                 try {
-                    this.loading = true;
-                    this.error = null;
+                    loading.value = true;
+                    error.value = null;
 
                     // Submit logic (e.g., API call)
-                    console.log("SMS Configuration:", this.smsForm);
+                    console.log("SMS Configuration:", smsForm.value);
 
                     // Example success message
                     alert("SMS Configuration saved successfully!");
                 } catch (err) {
-                    this.error = "Failed to save SMS configuration.";
+                    error.value = "Failed to save SMS configuration.";
                 } finally {
-                    this.loading = false;
+                    loading.value = false;
                 }
             };
 
             const submitBusinessInfo = async () => {
                 try {
-                    this.loading = true;
-                    this.error = null;
+                    loading.value = true;
+                    error.value = null;
 
                     // Example submission logic
-                    console.log("Business Information:", this.businessForm);
+                    console.log("Business Information:", businessForm.value);
 
                     // Example success message
                     alert("Business Information saved successfully!");
+
                 } catch (err) {
-                    this.error = "Failed to save business information.";
+                    error.value = "Failed to save business information.";
                 } finally {
-                    this.loading = false;
+                    loading.value = false;
                 }
             };
 
